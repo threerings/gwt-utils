@@ -1,0 +1,78 @@
+<?xml version="1.0" standalone="yes"?>
+<!-- build configuration -->
+<project name="gwt-utils" default="compile" basedir=".">
+
+  <!-- configuration properties -->
+  <property name="app.name"    value="gwt-utils"/>
+  <property name="deploy.dir"  value="dist"/>
+  <property name="gwtjar.dir"  value="${deploy.dir}/gwt-jar"/>
+  <property name="javadoc.home" value="${deploy.dir}/docs"/>
+
+  <!-- import some targets to enumerate library dependencies -->
+  <property name="libs.dir" value="lib"/>
+  <import file="etc/libs-incl.xml"/>
+
+  <!-- declare our classpath -->
+  <path id="classpath">
+    <pathelement location="${deploy.dir}/classes"/>
+    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+  </path>
+
+  <!-- prepares the application directories -->
+  <target name="prepare">
+    <mkdir dir="${deploy.dir}"/>
+    <mkdir dir="${deploy.dir}/classes"/>
+    <mkdir dir="${deploy.dir}/lib"/>
+    <copy todir="${deploy.dir}/lib" flatten="true">
+      <fileset refid="${app.name}.libs"/>
+    </copy>
+  </target>
+
+  <!-- cleans out the intermediate build files -->
+  <target name="clean">
+    <delete dir="${deploy.dir}/classes"/>
+    <delete dir="${deploy.dir}/docs"/>
+    <delete dir="${gwtjar.dir}"/>
+    <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.jar"/></delete>
+  </target>
+
+  <!-- wipes the entire build directory clean -->
+  <target name="distclean">
+    <delete dir="${deploy.dir}"/>
+  </target>
+
+  <!-- build the java class files -->
+  <target name="compile" depends="prepare">
+    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+           debug="on" optimize="${build.optimize}" deprecation="on"
+           source="1.5" target="1.5">
+      <classpath refid="classpath"/>
+      <compilerarg value="-Xlint"/>
+      <compilerarg value="-Xlint:-serial"/>
+    </javac>
+  </target>
+
+  <!-- builds our distribution jar files -->
+  <target name="dist" depends="prepare,compile">
+    <jar destfile="${deploy.dir}/${app.name}.jar">
+      <!-- include our build classfiles -->
+      <fileset dir="${deploy.dir}/classes" includes="**"/>
+      <!-- include the source for code to be compiled to JavaScript -->
+      <fileset dir="src/java">
+        <include name="com/threerings/gwt/**"/>
+        <exclude name="com/threerings/gwt/rebind/**"/>
+        <exclude name="com/threerings/gwt/tools/**"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <!-- builds the javadoc documentation -->
+  <target name="javadoc" depends="prepare">
+    <javadoc sourcepath="src/java" packagenames="com.threerings.*"
+             destdir="${javadoc.home}" additionalparam="-breakiterator">
+      <classpath refid="classpath"/>
+      <link href="http://java.sun.com/j2se/1.5/docs/api/"/>
+      <link href="http://samskivert.com/code/samskivert/samskivert/docs/api"/>
+    </javadoc>
+  </target>
+</project>
