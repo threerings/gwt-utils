@@ -1,0 +1,29 @@
+<!-- $Id$                                      -->
+<!-- Various GWT related tools and utilities.  -->
+<module>
+  <inherits name="com.samskivert.Utils"/>
+
+  <source path="ui"/>
+  <source path="util"/>
+  <public path="css"/>
+  <stylesheet src="threerings.css"/>
+
+  <replace-with class="com.threerings.gwt.ui.WidgetUtilImplMozilla">
+    <when-type-is class="com.threerings.gwt.ui.WidgetUtilImpl"/>
+    <any>
+      <when-property-is name="user.agent" value="gecko"/>
+      <when-property-is name="user.agent" value="gecko1_8"/>
+    </any>
+  </replace-with>
+
+  <replace-with class="com.threerings.gwt.ui.WidgetUtilImplIE6">
+    <when-type-is class="com.threerings.gwt.ui.WidgetUtilImpl"/>
+    <any>
+      <when-property-is name="user.agent" value="ie6"/>
+    </any>
+  </replace-with>
+
+  <generate-with class="com.threerings.gwt.rebind.MessagesLookupGenerator">
+    <when-type-assignable class="com.threerings.gwt.util.MessagesLookup" />
+  </generate-with>
+</module>

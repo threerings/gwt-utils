@@ -1,0 +1,12 @@
+/**
+ * Styles for our GWT components.
+ */
+
+/** FloatPanel styles */
+.fpFloatLeft {
+  float: left;
+}
+
+.fpClear {
+  clear: both;
+}
