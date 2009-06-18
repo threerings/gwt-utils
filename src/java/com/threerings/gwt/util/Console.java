@@ -6,9 +6,9 @@ package com.threerings.gwt.util;
 import com.google.gwt.core.client.GWT;
 
 /**
- * Provides a mechanism for logging to GWT or Firebug.
+ * Provides console related routines (presently just logging).
  */
-public class Log
+public class Console
 {
     /**
      * Formats and logs a message. If we are running in HostedMode the log message will be reported
@@ -34,16 +34,16 @@ public class Log
             if (error != null) {
                 sb.append(": ").append(error);
             }
-            consoleLog(sb.toString(), error);
+            firebugLog(sb.toString(), error);
         } else {
             GWT.log(sb.toString(), (Throwable)error);
         }
     }
 
     /**
-     * Records a log message to the JavaScript console.
+     * Records a log message to the JavaScript console via Firebug.
      */
-    protected static native void consoleLog (String message, Object error) /*-{
+    protected static native void firebugLog (String message, Object error) /*-{
         if ($wnd.console) {
             if (error != null) {
                 $wnd.console.info(message, error);
