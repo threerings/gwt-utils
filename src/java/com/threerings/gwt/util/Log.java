@@ -6,7 +6,7 @@ package com.threerings.gwt.util;
 import com.google.gwt.core.client.GWT;
 
 /**
- * Does something extraordinary.
+ * Provides a mechanism for logging to GWT or Firebug.
  */
 public class Log
 {
