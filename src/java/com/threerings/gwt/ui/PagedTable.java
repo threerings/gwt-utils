@@ -39,6 +39,7 @@ public abstract class PagedTable<T> extends PagedWidget<T>
         for (int row=0; row<list.size(); ++row) {
             if (addRow(table, createRow(list.get(row)))) {
                 table.getRowFormatter().setStyleName(table.getRowCount()-1, "row" + (row%2));
+                didAddRow(table, table.getRowCount()-1, list.get(row));
             }
         }
 
@@ -64,6 +65,13 @@ public abstract class PagedTable<T> extends PagedWidget<T>
     {
         // By default, don't show a header
         return null;
+    }
+
+    /**
+     * Lets subclasses know that a row was just added, for example to customize row styles.
+     */
+    protected void didAddRow (SmartTable table, int row, T item)
+    {
     }
 
     /** From a data item, create a table row in the form of a list of widgets. */
