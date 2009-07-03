@@ -10,6 +10,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
+
+import com.threerings.gwt.ui.EnterClickAdapter;
 
 /**
  * Allows one to wire up a button and a service call into one concisely specified little chunk of
@@ -30,13 +33,18 @@ public abstract class ClickCallback<T>
      */
     public ClickCallback (HasClickHandlers trigger)
     {
+        this(trigger, null);
+    }
+
+    /**
+     * Creates a callback for the supplied trigger (the constructor will automatically add this
+     * callback to the trigger as a click listener). Failure will automatically be reported.
+     */
+    public ClickCallback (HasClickHandlers trigger, TextBox onEnter)
+    {
         _trigger = trigger;
-        _clickreg = _trigger.addClickHandler(_onClick);
-        if (_trigger instanceof Label) {
-            // make sure to add our style, but don't doubly add it if it's already added
-            ((Label)_trigger).removeStyleName("actionLabel");
-            ((Label)_trigger).addStyleName("actionLabel");
-        }
+        _onEnter = onEnter;
+        setEnabled(true); // this will wire up all of our bits
     }
 
     // from interface AsyncCallback
@@ -97,8 +105,15 @@ public abstract class ClickCallback<T>
             _clickreg.removeHandler();
             _clickreg = null;
         }
+        if (_enterreg != null) {
+            _enterreg.removeHandler();
+            _enterreg = null;
+        }
         if (enabled) {
             _clickreg = _trigger.addClickHandler(_onClick);
+            if (_onEnter != null) {
+                _onEnter.addKeyPressHandler(new EnterClickAdapter(_onClick));
+            }
         }
     }
 
@@ -110,4 +125,7 @@ public abstract class ClickCallback<T>
 
     protected HasClickHandlers _trigger;
     protected HandlerRegistration _clickreg;
+
+    protected TextBox _onEnter;
+    protected HandlerRegistration _enterreg;
 }
