@@ -33,13 +33,13 @@
     <delete dir="${deploy.dir}/classes"/>
     <delete dir="${deploy.dir}/docs"/>
     <delete dir="${gwtjar.dir}"/>
-    <delete dir="src/java/**/*Messages.java"/>
     <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.jar"/></delete>
   </target>
 
   <!-- wipes the entire build directory clean -->
   <target name="distclean">
     <delete dir="${deploy.dir}"/>
+    <delete dir="src/java/**/*Messages.java"/>
   </target>
 
   <!-- regenerates our i18n messages classes -->
