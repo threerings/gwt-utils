@@ -6,7 +6,7 @@
   <source path="ui"/>
   <source path="util"/>
   <public path="css"/>
-  <stylesheet src="threerings.css"/>
+  <stylesheet src="gwt-utils.css"/>
 
   <replace-with class="com.threerings.gwt.ui.WidgetUtilImplMozilla">
     <when-type-is class="com.threerings.gwt.ui.WidgetUtilImpl"/>
