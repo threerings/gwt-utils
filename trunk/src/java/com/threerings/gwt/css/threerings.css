@@ -29,3 +29,30 @@
   padding: 25px;
   color: #FF0000;
 }
+
+/** Widgets styles */
+.actionLabel {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.inline {
+  display: inline;
+}
+
+/** InlineLabel styles */
+.inlineL {
+  display: inline;
+  margin-left: 5px;
+}
+
+.inlineR {
+  display: inline;
+  margin-right: 5px;
+}
+
+.inlineLR {
+  display: inline;
+  margin-left: 5px;
+  margin-right: 5px;
+}
