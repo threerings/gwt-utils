@@ -172,5 +172,5 @@ public class WidgetUtil
         return value.substring(0, index);
     }
 
-    protected static WidgetUtilImpl _impl = (WidgetUtilImpl)GWT.create(WidgetUtilImpl.class);
+    protected static WidgetUtilImpl _impl = GWT.create(WidgetUtilImpl.class);
 }
