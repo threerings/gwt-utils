@@ -33,6 +33,7 @@
     <delete dir="${deploy.dir}/classes"/>
     <delete dir="${deploy.dir}/docs"/>
     <delete dir="${gwtjar.dir}"/>
+    <delete dir="src/java/**/*Messages.java"/>
     <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.jar"/></delete>
   </target>
 
@@ -41,8 +42,17 @@
     <delete dir="${deploy.dir}"/>
   </target>
 
+  <!-- regenerates our i18n messages classes -->
+  <target name="gmsgs">
+    <taskdef name="i18nsync" classname="com.threerings.gwt.tools.I18nSyncTask"
+             classpathref="classpath"/>
+    <i18nsync srcdir="src/java">
+      <fileset dir="src/java" includes="**/*Messages.properties"/>
+    </i18nsync>
+  </target>
+
   <!-- build the java class files -->
-  <target name="compile" depends="prepare">
+  <target name="compile" depends="prepare,gmsgs">
     <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on"
            source="1.5" target="1.5">
