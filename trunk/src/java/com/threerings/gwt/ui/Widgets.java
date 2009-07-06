@@ -5,6 +5,7 @@ package com.threerings.gwt.ui;
 
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -103,7 +104,7 @@ public class Widgets
     public static Label newCustomActionLabel (String text, String style, ClickHandler handler)
     {
         Label label = newLabel(text, style);
-        UIUtil.maybeAddClickHandler(label, handler);
+        maybeAddClickHandler(label, handler);
         return label;
     }
 
@@ -231,7 +232,14 @@ public class Widgets
         PushButton button = new PushButton();
         button.setStyleName(style);
         button.addStyleName("actionLabel");
-        UIUtil.maybeAddClickHandler(button, onClick);
+        maybeAddClickHandler(button, onClick);
         return button;
+    }
+
+    protected static void maybeAddClickHandler (HasClickHandlers target, ClickHandler onClick)
+    {
+        if (onClick != null) {
+            target.addClickHandler(onClick);
+        }
     }
 }
