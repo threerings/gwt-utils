@@ -4,9 +4,9 @@
 package com.threerings.gwt.util;
 
 import java.util.Date;
-import java.text.SimpleDateFormat;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 /**
  * Time and date utility methods.
@@ -119,9 +119,9 @@ public class DateUtil
         date.setSeconds(0);
     }
 
-    protected static final SimpleDateFormat _tfmt = new SimpleDateFormat("h:mmaa");
-    protected static final SimpleDateFormat _mfmt = new SimpleDateFormat("MMM dd");
-    protected static final SimpleDateFormat _yfmt = new SimpleDateFormat("MMM dd, yyyy");
+    protected static final DateTimeFormat _tfmt = DateTimeFormat.getFormat("h:mmaa");
+    protected static final DateTimeFormat _mfmt = DateTimeFormat.getFormat("MMM dd");
+    protected static final DateTimeFormat _yfmt = DateTimeFormat.getFormat("MMM dd, yyyy");
 
     protected static final UtilMessages _msgs = GWT.create(UtilMessages.class);
 }
