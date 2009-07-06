@@ -225,6 +225,18 @@ public class Widgets
         return button;
     }
 
+    /**
+     * Makes a widget that takes up horizontal and or vertical space. Shim shimminy shim shim
+     * shiree.
+     */
+    public static Widget newShim (int width, int height)
+    {
+        Label shim = new Label("");
+        shim.setWidth(width + "px");
+        shim.setHeight(height + "px");
+        return shim;
+    }
+
     protected static void maybeAddClickHandler (HasClickHandlers target, ClickHandler onClick)
     {
         if (onClick != null) {
