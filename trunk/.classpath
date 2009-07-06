@@ -6,5 +6,5 @@
 	<classpathentry kind="lib" path="/export/ooo-libs/extlibs/java/gwt-dev-linux.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/samskivert"/>
 	<classpathentry kind="lib" path="/export/ooo-libs/extlibs/java/google-collect.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="dist/eclasses"/>
 </classpath>
