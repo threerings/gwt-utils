@@ -44,6 +44,13 @@
 
   <!-- regenerates our i18n messages classes -->
   <target name="gmsgs">
+    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+           debug="on" deprecation="on" source="1.5" target="1.5">
+      <classpath refid="classpath"/>
+      <compilerarg value="-Xlint"/>
+      <compilerarg value="-Xlint:-serial"/>
+      <include name="**/I18nSyncTask.java"/>
+    </javac>
     <taskdef name="i18nsync" classname="com.threerings.gwt.tools.I18nSyncTask"
              classpathref="classpath"/>
     <i18nsync srcdir="src/java">
@@ -54,8 +61,7 @@
   <!-- build the java class files -->
   <target name="compile" depends="prepare,gmsgs">
     <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
-           debug="on" optimize="${build.optimize}" deprecation="on"
-           source="1.5" target="1.5">
+           debug="on" deprecation="on" source="1.5" target="1.5">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
