@@ -3,7 +3,6 @@
 
 package com.threerings.gwt.ui;
 
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -166,7 +165,15 @@ public class Widgets
      */
     public static TextBox newTextBox (String text, int maxLength, int visibleLength)
     {
-        TextBox box = new TextBox();
+        return initTextBox(new TextBox(), text, maxLength, visibleLength);
+    }
+
+    /**
+     * Configures a text box with all of the configuration that you're bound to want to do. This is
+     * useful for configuring a PasswordTextBox.
+     */
+    public static TextBox initTextBox (TextBox box, String text, int maxLength, int visibleLength)
+    {
         if (text != null) {
             box.setText(text);
         }
@@ -191,24 +198,6 @@ public class Widgets
         }
         if (height > 0) {
             area.setVisibleLines(height);
-        }
-        return area;
-    }
-
-    /**
-     * Creates a text area with a listener and style instead of width/height
-     */
-    public static TextArea newTextArea (String text, String style, ChangeHandler handler)
-    {
-        TextArea area = new TextArea();
-        if (text != null) {
-            area.setText(text);
-        }
-        if (style != null) {
-            area.addStyleName(style);
-        }
-        if (handler != null) {
-            area.addChangeHandler(handler);
         }
         return area;
     }
