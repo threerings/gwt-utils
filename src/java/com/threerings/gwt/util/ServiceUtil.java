@@ -14,7 +14,7 @@ public class ServiceUtil
     /**
      * Binds the supplied service to the specified entry point.
      */
-    public static Object bind (Object service, String entryPoint)
+    public static <T> T bind (T service, String entryPoint)
     {
         ((ServiceDefTarget)service).setServiceEntryPoint(entryPoint);
         return service;
