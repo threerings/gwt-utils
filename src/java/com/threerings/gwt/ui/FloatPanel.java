@@ -26,19 +26,22 @@ public class FloatPanel extends FlowPanel
         super.add(clear);
     }
 
-    @Override public void add (Widget widget)
+    @Override // from FlowPanel
+    public void add (Widget widget)
     {
         // insert it at the end, before the clear box
         insert(widget, this.getWidgetCount() - 1);
     }
 
-    @Override public void insert (Widget widget, int beforeIndex)
+    @Override // from FlowPanel
+    public void insert (Widget widget, int beforeIndex)
     {
         widget.addStyleName("fpFloatLeft");
         super.insert(widget, beforeIndex);
     }
 
-    @Override public boolean remove (Widget widget)
+    @Override // from FlowPanel
+    public boolean remove (Widget widget)
     {
         if (super.remove(widget)) {
             widget.removeStyleName("fpFloatLeft");
