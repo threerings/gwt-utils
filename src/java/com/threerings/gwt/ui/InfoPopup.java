@@ -13,12 +13,19 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class InfoPopup extends PopupPanel
 {
+    /**
+     * Creates an info popup with the supplied message. It will automatically dismiss itself after
+     * a time proportional to the length of the message has elapsed.
+     */
     public InfoPopup (String message)
     {
         this(new Label(message));
         _autoClearTimeout = Math.max(MIN_AUTO_CLEAR_DELAY, message.length() * PER_CHAR_CLEAR_DELAY);
     }
 
+    /**
+     * Creates an info popup with the supplied contents.
+     */
     public InfoPopup (Widget contents)
     {
         super(true);
@@ -26,6 +33,18 @@ public class InfoPopup extends PopupPanel
         setWidget(contents);
     }
 
+    /**
+     * Converts this info popup into an error popup (via a CSS style change) and returns self.
+     */
+    public InfoPopup toError ()
+    {
+        setStyleName("errorPopup");
+        return this;
+    }
+
+    /**
+     * Displays this info popup directly below the specified widget.
+     */
     public void showNear (Widget parent)
     {
         setPopupPosition(parent.getAbsoluteLeft(),
@@ -33,6 +52,9 @@ public class InfoPopup extends PopupPanel
         show();
     }
 
+    /**
+     * Displays this info popup in the center of the page.
+     */
     public void showCentered ()
     {
         center(); // this will show us

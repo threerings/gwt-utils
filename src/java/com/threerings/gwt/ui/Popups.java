@@ -32,8 +32,7 @@ public class Popups
      */
     public static void error (String message)
     {
-        // TODO: style this differently than info feedback
-        new InfoPopup(message).showCentered();
+        new InfoPopup(message).toError().showCentered();
     }
 
     /**
@@ -45,7 +44,6 @@ public class Popups
         if (source instanceof FocusWidget) {
             ((FocusWidget)source).setFocus(true);
         }
-        // TODO: style this differently than info feedback
-        new InfoPopup(message).showNear(source);
+        new InfoPopup(message).toError().showNear(source);
     }
 }
