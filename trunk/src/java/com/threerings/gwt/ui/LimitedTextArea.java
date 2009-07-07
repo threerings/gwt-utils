@@ -17,6 +17,7 @@ public class LimitedTextArea extends VerticalPanel
 {
     public LimitedTextArea (int maxChars, int width, int height)
     {
+        setStyleName("gwt-LimitedTextArea");
         _maxChars = maxChars;
 
         add(_area = new TextArea());
@@ -27,7 +28,7 @@ public class LimitedTextArea extends VerticalPanel
         _area.setVisibleLines(height);
         setHorizontalAlignment(ALIGN_RIGHT);
         add(_remaining = new Label());
-        _remaining.setStyleName("tipLabel");
+        _remaining.setStyleName("Remaining");
         updateRemaining();
     }
 
