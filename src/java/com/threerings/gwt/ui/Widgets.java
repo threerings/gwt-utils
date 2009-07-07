@@ -186,6 +186,8 @@ public class Widgets
 
     /**
      * Creates a text area with all of the configuration that you're bound to want to do.
+     *
+     * @param width the width of the text area or -1 to use the default (or CSS styled) width.
      */
     public static TextArea newTextArea (String text, int width, int height)
     {
@@ -198,6 +200,20 @@ public class Widgets
         }
         if (height > 0) {
             area.setVisibleLines(height);
+        }
+        return area;
+    }
+
+    /**
+     * Creates a limited text area with all of the configuration that you're bound to want to do.
+     *
+     * @param width the width of the text area or -1 to use the default (or CSS styled) width.
+     */
+    public static LimitedTextArea newTextArea (String text, int width, int height, int maxLength)
+    {
+        LimitedTextArea area = new LimitedTextArea(maxLength, width, height);
+        if (text != null) {
+            area.setText(text);
         }
         return area;
     }
