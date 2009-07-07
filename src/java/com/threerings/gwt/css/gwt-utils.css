@@ -56,3 +56,8 @@
   margin-left: 5px;
   margin-right: 5px;
 }
+
+/** LimitedTextArea styles. */
+.gwt-LimitedTextArea .Remaining {
+  font-size: 12px;
+}
