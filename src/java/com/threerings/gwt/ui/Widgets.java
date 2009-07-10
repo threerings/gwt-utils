@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
@@ -105,6 +106,18 @@ public class Widgets
         Label label = newLabel(text, style);
         maybeAddClickHandler(label, handler);
         return label;
+    }
+
+    /**
+     * Creates a new HTML element with the specified contents and style.
+     */
+    public static HTML newHTML (String text, String styleName)
+    {
+        HTML html = new HTML(text);
+        if (styleName != null) {
+            html.setStyleName(styleName);
+        }
+        return html;
     }
 
     /**
