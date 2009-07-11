@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
@@ -64,15 +65,41 @@ public class Widgets
     }
 
     /**
-     * Creates a label with the supplied text and style.
+     * Creates a row of widgets in a horizontal panel with a 5 pixel gap between them.
      */
-    public static Label newLabel (String text, String styleName)
+    public static HorizontalPanel newRow (Widget... contents)
+    {
+        HorizontalPanel row = new HorizontalPanel();
+        for (Widget widget : contents) {
+            if (row.getWidgetCount() > 0) {
+                row.add(newShim(5, 5));
+            }
+            row.add(widget);
+        }
+        return row;
+    }
+
+    /**
+     * Creates a label with the supplied text and style and optional additional styles.
+     */
+    public static Label newLabel (String text, String styleName, String... auxStyles)
     {
         Label label = new Label(text);
         if (styleName != null) {
             label.setStyleName(styleName);
         }
+        for (String auxStyle : auxStyles) {
+            label.addStyleName(auxStyle);
+        }
         return label;
+    }
+
+    /**
+     * Creates an inline label with optional additional styles.
+     */
+    public static Label newInlineLabel (String text, String... auxStyles)
+    {
+        return newLabel(text, "inline", auxStyles);
     }
 
     /**
@@ -90,21 +117,11 @@ public class Widgets
      */
     public static Label newActionLabel (String text, String style, ClickHandler onClick)
     {
-        Label label = newCustomActionLabel(text, style, onClick);
+        Label label = newLabel(text, style);
         if (onClick != null) {
             label.addStyleName("actionLabel");
+            label.addClickHandler(onClick);
         }
-        return label;
-    }
-
-    /**
-     * Creates a label that triggers an action using the supplied text and listener. The label will
-     * only be styled with the specified style.
-     */
-    public static Label newCustomActionLabel (String text, String style, ClickHandler handler)
-    {
-        Label label = newLabel(text, style);
-        maybeAddClickHandler(label, handler);
         return label;
     }
 
