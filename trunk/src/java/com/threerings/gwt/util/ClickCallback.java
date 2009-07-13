@@ -68,6 +68,35 @@ public abstract class ClickCallback<T>
     }
 
     /**
+     * Configures this callback with a plain text confirmation message.
+     */
+    public ClickCallback<T> setConfirmText (String message)
+    {
+        _confirmMessage = message;
+        _confirmHTML = false;
+        return this;
+    }
+
+    /**
+     * Configures this callback with an HTML confirmation message.
+     */
+    public ClickCallback<T> setConfirmHTML (String message)
+    {
+        _confirmMessage = message;
+        _confirmHTML = true;
+        return this;
+    }
+
+    /**
+     * Configures the choices to be shown in the confirmation dialog.
+     */
+    public ClickCallback<T> setConfirmChoices (String confirm, String abort)
+    {
+        _confirmChoices = new String[] { confirm, abort };
+        return this;
+    }
+
+    /**
      * This method is called when the trigger button is clicked. Pass <code>this</code> as the
      * {@link AsyncCallback} to a service method. Return true from this method if a service request
      * was initiated and the button that triggered it should be disabled.
@@ -89,38 +118,10 @@ public abstract class ClickCallback<T>
         return cause.getMessage();
     }
 
-    /**
-     * If a callback wishes to require confirmation it can override this method and return a
-     * message that will be displayed to confirm the action before it is taken.
-     */
-    protected String getConfirmMessage ()
-    {
-        return null;
-    }
-
-    /**
-     * Returns the choices given to the user when confirming the callback. The default choices on
-     * the confirm dialog are "No", "Yes".
-     */
-    protected String[] getConfirmChoices ()
-    {
-        return new String[] { "No", "Yes" };
-    }
-
-    /**
-     * Override this method and return true if you wish your confirm message to be interpreted as
-     * HTML. Be careful!
-     */
-    protected boolean confirmMessageIsHTML ()
-    {
-        return false;
-    }
-
     protected void takeAction (boolean confirmed)
     {
         // if we have no confirmation message or are already confirmed, do the deed
-        String confmsg = getConfirmMessage();
-        if (confirmed || confmsg == null) {
+        if (confirmed || _confirmMessage == null) {
             if (callService()) {
                 setEnabled(false);
             }
@@ -137,20 +138,19 @@ public abstract class ClickCallback<T>
         final PopupPanel confirm = new PopupPanel();
         confirm.setStyleName("gwt-ConfirmPopup");
         SmartTable contents = new SmartTable(5, 0);
-        if (confirmMessageIsHTML()) {
-            contents.setHTML(0, 0, confmsg, 2, "Message");
+        if (_confirmHTML) {
+            contents.setHTML(0, 0, _confirmMessage, 2, "Message");
         } else {
-            contents.setText(0, 0, confmsg, 2, "Message");
+            contents.setText(0, 0, _confirmMessage, 2, "Message");
         }
-        String[] choices = getConfirmChoices();
-        contents.setWidget(1, 0, new Button(choices[0], new ClickHandler() {
+        contents.setWidget(1, 0, new Button(_confirmChoices[1], new ClickHandler() {
             public void onClick (ClickEvent event) {
                 confirm.hide(); // abort!
                 onAborted();
             }
         }));
         contents.getFlexCellFormatter().setHorizontalAlignment(1, 0, HasAlignment.ALIGN_CENTER);
-        contents.setWidget(1, 1, new Button(choices[1], new ClickHandler() {
+        contents.setWidget(1, 1, new Button(_confirmChoices[0], new ClickHandler() {
             public void onClick (ClickEvent event) {
                 confirm.hide();
                 onConfirmed();
@@ -225,6 +225,10 @@ public abstract class ClickCallback<T>
 
     protected HasClickHandlers _trigger;
     protected HandlerRegistration _clickreg;
+
+    protected String _confirmMessage;
+    protected boolean _confirmHTML;
+    protected String[] _confirmChoices = { "Yes", "No" };
 
     protected TextBox _onEnter;
     protected HandlerRegistration _enterreg;
