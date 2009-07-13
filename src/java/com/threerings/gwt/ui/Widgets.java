@@ -38,7 +38,15 @@ public class Widgets
     }
 
     /**
-     * Creates a FlowPanel with the provided style
+     * Creates a FlowPanel with the supplied widgets.
+     */
+    public static FlowPanel newFlowPanel (Widget... contents)
+    {
+        return newFlowPanel(null, contents);
+    }
+
+    /**
+     * Creates a FlowPanel with the provided style and widgets.
      */
     public static FlowPanel newFlowPanel (String styleName, Widget... contents)
     {
