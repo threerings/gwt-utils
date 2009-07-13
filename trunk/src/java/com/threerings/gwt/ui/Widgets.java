@@ -128,11 +128,14 @@ public class Widgets
     /**
      * Creates a new HTML element with the specified contents and style.
      */
-    public static HTML newHTML (String text, String styleName)
+    public static HTML newHTML (String text, String styleName, String... auxStyles)
     {
         HTML html = new HTML(text);
         if (styleName != null) {
             html.setStyleName(styleName);
+        }
+        for (String auxStyle : auxStyles) {
+            html.addStyleName(auxStyle);
         }
         return html;
     }
