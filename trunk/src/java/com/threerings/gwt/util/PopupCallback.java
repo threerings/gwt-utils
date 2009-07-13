@@ -10,11 +10,9 @@ import com.threerings.gwt.ui.Popups;
 
 /**
  * A base class for callbacks that automatically report errors via {@link Popups#error} or {@link
- * Popups#errorNear} as well as logs the raw error to the {@link Console}. A project should extend
- * this and implement {@link #formatError} to create a PopupCallback class that it can use in place
- * of {@link AsyncCallback}.
+ * Popups#errorNear} as well as logs the raw error to the {@link Console}.
  */
-public abstract class AbstractPopupCallback<T> implements AsyncCallback<T>
+public abstract class PopupCallback<T> implements AsyncCallback<T>
 {
     // from AsyncCallback<T>
     public void onFailure (Throwable cause)
@@ -30,19 +28,26 @@ public abstract class AbstractPopupCallback<T> implements AsyncCallback<T>
     /**
      * Creates a callback that will display its error in the middle of the page.
      */
-    protected AbstractPopupCallback ()
+    protected PopupCallback ()
     {
     }
 
     /**
      * Creates a callback that will display its error near the supplied widget.
      */
-    protected AbstractPopupCallback (Widget errorNear)
+    protected PopupCallback (Widget errorNear)
     {
         _errorNear = errorNear;
     }
 
-    protected abstract String formatError (Throwable cause);
+    /**
+     * Formats the error indicated by the supplied throwable. The default implementation simply
+     * returns {@link Throwable#getMessage}.
+     */
+    protected String formatError (Throwable cause)
+    {
+        return cause.getMessage();
+    }
 
     protected Widget _errorNear;
 }
