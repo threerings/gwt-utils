@@ -128,6 +128,12 @@ public abstract class ClickCallback<T>
         }
 
         // otherwise display a confirmation panel
+        setEnabled(false);
+        displayConfirmPopup();
+    }
+
+    protected void displayConfirmPopup ()
+    {
         final PopupPanel confirm = new PopupPanel();
         confirm.setStyleName("gwt-ConfirmPopup");
         SmartTable contents = new SmartTable(5, 0);
@@ -140,18 +146,29 @@ public abstract class ClickCallback<T>
         contents.setWidget(1, 0, new Button(choices[0], new ClickHandler() {
             public void onClick (ClickEvent event) {
                 confirm.hide(); // abort!
+                onAborted();
             }
         }));
         contents.getFlexCellFormatter().setHorizontalAlignment(1, 0, HasAlignment.ALIGN_CENTER);
         contents.setWidget(1, 1, new Button(choices[1], new ClickHandler() {
             public void onClick (ClickEvent event) {
                 confirm.hide();
-                takeAction(true);
+                onConfirmed();
             }
         }));
         contents.getFlexCellFormatter().setHorizontalAlignment(1, 1, HasAlignment.ALIGN_CENTER);
         confirm.setWidget(contents);
         confirm.center();
+    }
+
+    protected void onConfirmed ()
+    {
+        takeAction(true);
+    }
+
+    protected void onAborted ()
+    {
+        setEnabled(true);
     }
 
     protected void setEnabled (boolean enabled)
