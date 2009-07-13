@@ -77,7 +77,19 @@ public class Widgets
      */
     public static HorizontalPanel newRow (Widget... contents)
     {
+        return newRow(null, contents);
+    }
+
+    /**
+     * Creates a row of widgets in a horizontal panel with a 5 pixel gap between them. The supplied
+     * style name is added to the container panel.
+     */
+    public static HorizontalPanel newRow (String styleName, Widget... contents)
+    {
         HorizontalPanel row = new HorizontalPanel();
+        if (styleName != null) {
+            row.setStyleName(styleName);
+        }
         for (Widget widget : contents) {
             if (row.getWidgetCount() > 0) {
                 row.add(newShim(5, 5));
