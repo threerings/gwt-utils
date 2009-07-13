@@ -25,6 +25,15 @@ public class ValueHTML<T> extends HTML
         _value = value;
     }
 
+    /**
+     * Creates a value HTML with the supplied value and CSS style.
+     */
+    public ValueHTML (String styleName, Value<T> value)
+    {
+        this(value);
+        setStyleName(styleName);
+    }
+
     // from Value.Listener<T>
     public void valueChanged (T value)
     {

@@ -25,6 +25,15 @@ public class ValueLabel<T> extends Label
         _value = value;
     }
 
+    /**
+     * Creates a value label with the supplied value and CSS style.
+     */
+    public ValueLabel (String styleName, Value<T> value)
+    {
+        this(value);
+        setStyleName(styleName);
+    }
+
     // from Value.Listener<T>
     public void valueChanged (T value)
     {
