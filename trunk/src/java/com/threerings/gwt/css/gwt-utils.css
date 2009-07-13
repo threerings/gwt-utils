@@ -57,7 +57,16 @@
   margin-right: 5px;
 }
 
-/** LimitedTextArea styles. */
+/** LimitedTextArea styles */
 .gwt-LimitedTextArea .Remaining {
   font-size: 12px;
+}
+
+/** ClickCallback styles */
+.gwt-ConfirmPopup {
+  border: 1px solid;
+  background: #FFFFFF;
+}
+
+.gwt-ConfirmPopup .Message {
 }
