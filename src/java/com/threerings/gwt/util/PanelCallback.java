@@ -12,11 +12,9 @@ import com.threerings.gwt.ui.Widgets;
 /**
  * A base class for callbacks that automatically report errors by clearing a target {@link Panel}
  * and adding a {@link Label} to it. The label will be styled as <code>errorLabel</code>, a basic
- * style for which is defined in the CSS file accompanying this library. A project should extend
- * this and implement {@link #formatError} to create a PanelCallback class that it can use in place
- * of {@link AsyncCallback}.
+ * style for which is defined in the CSS file accompanying this library.
  */
-public abstract class AbstractPanelCallback<T> implements AsyncCallback<T>
+public abstract class PanelCallback<T> implements AsyncCallback<T>
 {
     // from AsyncCallback<T>
     public void onFailure (Throwable cause)
@@ -26,12 +24,19 @@ public abstract class AbstractPanelCallback<T> implements AsyncCallback<T>
         Console.log("Service request failed", cause);
     }
 
-    protected AbstractPanelCallback (Panel panel)
+    protected PanelCallback (Panel panel)
     {
         _panel = panel;
     }
 
-    protected abstract String formatError (Throwable cause);
+    /**
+     * Formats the error indicated by the supplied throwable. The default implementation simply
+     * returns {@link Throwable#getMessage}.
+     */
+    protected String formatError (Throwable cause)
+    {
+        return cause.getMessage();
+    }
 
     protected Panel _panel;
 }
