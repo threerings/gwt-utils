@@ -11,8 +11,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 
 import com.threerings.gwt.ui.EnterClickAdapter;
+import com.threerings.gwt.ui.Popups;
 
 /**
  * Allows one to wire up a button and a service call into one concisely specified little chunk of
@@ -78,7 +80,30 @@ public abstract class ClickCallback<T>
      * Reports a failure to the user. Derived classes can override this and customize the way
      * failure is reported if they so desire.
      */
-    protected abstract void reportFailure (Throwable cause);
+    protected void reportFailure (Throwable cause)
+    {
+        Widget near = _onEnter;
+        if (near == null && _trigger instanceof Widget) {
+            near = (Widget)_trigger;
+        }
+        if (_onEnter != null) {
+            _onEnter.setFocus(true);
+        }
+        if (near == null) {
+            Popups.error(formatError(cause));
+        } else {
+            Popups.errorNear(formatError(cause), near);
+        }
+    }
+
+    /**
+     * Formats the error indicated by the supplied throwable. The default implementation simply
+     * returns {@link Throwable#getMessage}.
+     */
+    protected String formatError (Throwable cause)
+    {
+        return cause.getMessage();
+    }
 
     protected void takeAction ()
     {
