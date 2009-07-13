@@ -14,13 +14,22 @@ import com.google.gwt.user.client.ui.Widget;
 public class InfoPopup extends PopupPanel
 {
     /**
+     * Computes a reasonable delay after which it should be safe to automatically clear a transient
+     * informational message.
+     */
+    public static int computeAutoClearDelay (String message)
+    {
+        return Math.max(MIN_AUTO_CLEAR_DELAY, message.length() * PER_CHAR_CLEAR_DELAY);
+    }
+
+    /**
      * Creates an info popup with the supplied message. It will automatically dismiss itself after
      * a time proportional to the length of the message has elapsed.
      */
     public InfoPopup (String message)
     {
         this(new Label(message));
-        _autoClearTimeout = Math.max(MIN_AUTO_CLEAR_DELAY, message.length() * PER_CHAR_CLEAR_DELAY);
+        _autoClearTimeout = computeAutoClearDelay(message);
     }
 
     /**
@@ -63,12 +72,11 @@ public class InfoPopup extends PopupPanel
     protected void onAttach ()
     {
         super.onAttach();
-        Timer autoClear = new Timer() {
+        new Timer() {
             public void run () {
                 hide();
             }
-        };
-        autoClear.schedule(_autoClearTimeout);
+        }.schedule(_autoClearTimeout);
     }
 
     // we use an int here because that's what Timer wants; whee!
