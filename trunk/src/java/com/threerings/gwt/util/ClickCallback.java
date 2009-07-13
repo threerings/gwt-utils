@@ -142,13 +142,14 @@ public abstract class ClickCallback<T>
                 confirm.hide(); // abort!
             }
         }));
+        contents.getFlexCellFormatter().setHorizontalAlignment(1, 0, HasAlignment.ALIGN_CENTER);
         contents.setWidget(1, 1, new Button(choices[1], new ClickHandler() {
             public void onClick (ClickEvent event) {
                 confirm.hide();
                 takeAction(true);
             }
         }));
-        contents.getFlexCellFormatter().setHorizontalAlignment(1, 1, HasAlignment.ALIGN_RIGHT);
+        contents.getFlexCellFormatter().setHorizontalAlignment(1, 1, HasAlignment.ALIGN_CENTER);
         confirm.setWidget(contents);
         confirm.center();
     }
