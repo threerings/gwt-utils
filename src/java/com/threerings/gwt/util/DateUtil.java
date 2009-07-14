@@ -54,12 +54,16 @@ public class DateUtil
         } else if (useShorthand && getDayOfMonth(date) == getDayOfMonth(now)) {
             return _msgs.today();
 
-        // this will break for one hour on daylight savings time and we'll instead report the date
+        // these will break for one hour on daylight savings time and we'll instead report the date
         // in MMM dd format or we'll call two days ago yesterday for that witching hour; we don't
         // have excellent date services in the browser, so we're just going to be OK with that
         } else if (useShorthand && getDayOfMonth(date) ==
                    getDayOfMonth(new Date(now.getTime()-24*60*60*1000))) {
             return _msgs.yesterday();
+
+        } else if (useShorthand && getDayOfMonth(date) ==
+                   getDayOfMonth(new Date(now.getTime()+ONE_DAY))) {
+            return _msgs.tomorrow();
 
         } else {
             return _mfmt.format(date);
@@ -124,4 +128,6 @@ public class DateUtil
     protected static final DateTimeFormat _yfmt = DateTimeFormat.getFormat("MMM dd, yyyy");
 
     protected static final UtilMessages _msgs = GWT.create(UtilMessages.class);
+
+    protected static final long ONE_DAY = 24*60*60*1000;
 }
