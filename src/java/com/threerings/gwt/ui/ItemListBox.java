@@ -26,6 +26,7 @@ public class ItemListBox<T> extends ListBox
     public ItemListBox (Iterable<T> items)
     {
         for (T item : items) {
+            addItem(item);
         }
     }
 
