@@ -54,11 +54,9 @@ public class InfoPopup extends PopupPanel
     /**
      * Displays this info popup directly below the specified widget.
      */
-    public void showNear (Widget parent)
+    public void showNear (Widget target)
     {
-        setPopupPosition(parent.getAbsoluteLeft(),
-                         parent.getAbsoluteTop() + parent.getOffsetHeight() + NEAR_GAP);
-        show();
+        Popups.showNear(this, target);
     }
 
     /**
@@ -85,6 +83,4 @@ public class InfoPopup extends PopupPanel
     protected static final int MIN_AUTO_CLEAR_DELAY = 3000;
     protected static final int DEFAULT_AUTO_CLEAR_DELAY = 5000;
     protected static final int PER_CHAR_CLEAR_DELAY = 50;
-
-    protected static final int NEAR_GAP = 5;
 }

@@ -4,6 +4,7 @@
 package com.threerings.gwt.ui;
 
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -46,4 +47,16 @@ public class Popups
         }
         new InfoPopup(message).toError().showNear(source);
     }
+
+    /**
+     * Shows the supplied popup panel near the specified target.
+     */
+    public static void showNear (PopupPanel popup, Widget target)
+    {
+        popup.setPopupPosition(target.getAbsoluteLeft(),
+                               target.getAbsoluteTop() + target.getOffsetHeight() + NEAR_GAP);
+        popup.show();
+    }
+
+    protected static final int NEAR_GAP = 5;
 }
