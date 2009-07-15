@@ -28,8 +28,8 @@ public abstract class ChainedCallback<T, P> implements AsyncCallback<T>
      * Creates a chained callback that calls the supplied pre-operation before passing the result
      * on to the supplied target callback.
      */
-    public static <T> ChainedCallback<T, T> wrap (AsyncCallback<T> target,
-                                                  final Function<T, Void> preOp)
+    public static <T> ChainedCallback<T, T> before (AsyncCallback<T> target,
+                                                    final Function<T, Void> preOp)
     {
         return new ChainedCallback<T, T>(target) {
             public void onSuccess (T result) {
