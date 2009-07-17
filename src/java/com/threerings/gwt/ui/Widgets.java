@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -81,12 +82,22 @@ public class Widgets
     }
 
     /**
-     * Creates a row of widgets in a horizontal panel with a 5 pixel gap between them. The supplied
-     * style name is added to the container panel.
+     * Creates a row of widgets in a horizontal panel with a 5 pixel gap between them.
      */
     public static HorizontalPanel newRow (String styleName, Widget... contents)
     {
+        return newRow(HasAlignment.ALIGN_MIDDLE, null, contents);
+    }
+
+    /**
+     * Creates a row of widgets in a horizontal panel with a 5 pixel gap between them. The supplied
+     * style name is added to the container panel.
+     */
+    public static HorizontalPanel newRow (HasAlignment.VerticalAlignmentConstant valign,
+                                          String styleName, Widget... contents)
+    {
         HorizontalPanel row = new HorizontalPanel();
+        row.setVerticalAlignment(valign);
         if (styleName != null) {
             row.setStyleName(styleName);
         }
