@@ -15,7 +15,7 @@ public class NumberTextBox extends TextBox
     /**
      * Creates a text box that only accepts integers and has no max or visible character length.
      */
-    public NumberTextBox newIntBox ()
+    public static NumberTextBox newIntBox ()
     {
         return new NumberTextBox(false, 0, 0);
     }
@@ -24,7 +24,7 @@ public class NumberTextBox extends TextBox
      * Creates a text box that only accepts integers and uses the supplied length as its max and
      * visible character length.
      */
-    public NumberTextBox newIntBox (int length)
+    public static NumberTextBox newIntBox (int length)
     {
         return new NumberTextBox(false, length, length);
     }
@@ -33,7 +33,7 @@ public class NumberTextBox extends TextBox
      * Creates a text box that only accepts integers and has the specified max and visible
      * character length.
      */
-    public NumberTextBox newIntBox (int maxLength, int visibleLength)
+    public static NumberTextBox newIntBox (int maxLength, int visibleLength)
     {
         return new NumberTextBox(false, maxLength, visibleLength);
     }
@@ -42,7 +42,7 @@ public class NumberTextBox extends TextBox
      * Creates a text box that accepts floating point numbers and has no max or visible character
      * length.
      */
-    public NumberTextBox newFloatBox ()
+    public static NumberTextBox newFloatBox ()
     {
         return new NumberTextBox(false, 0, 0);
     }
@@ -51,7 +51,7 @@ public class NumberTextBox extends TextBox
      * Creates a text box that accepts floating point numbers and uses the supplied length as its
      * max and visible character length.
      */
-    public NumberTextBox newFloatBox (int length)
+    public static NumberTextBox newFloatBox (int length)
     {
         return new NumberTextBox(false, length, length);
     }
@@ -60,7 +60,7 @@ public class NumberTextBox extends TextBox
      * Creates a text box that accepts floating point numbers and has the specified max and visible
      * character length.
      */
-    public NumberTextBox newFloatBox (int maxLength, int visibleLength)
+    public static NumberTextBox newFloatBox (int maxLength, int visibleLength)
     {
         return new NumberTextBox(false, maxLength, visibleLength);
     }
