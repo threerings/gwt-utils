@@ -15,11 +15,24 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 public class DefaultTextListener
     implements FocusHandler, BlurHandler
 {
+    /**
+     * Configures the target text box to display the supplied default text when it does not have
+     * focus and to clear it out when the user selects it to enter text.
+     */
     public static void configure (TextBoxBase target, String defaultText)
     {
         DefaultTextListener listener = new DefaultTextListener(target, defaultText);
         target.addFocusHandler(listener);
         target.addBlurHandler(listener);
+    }
+
+    /**
+     * Returns the contents of the supplied text box, accounting for the supplied default text.
+     */
+    public static String getText (TextBoxBase target, String defaultText)
+    {
+        String text = target.getText().trim();
+        return text.equals(defaultText.trim()) ? "" : text;
     }
 
     // from interface FocusHandler
