@@ -86,7 +86,7 @@ public class Widgets
      */
     public static HorizontalPanel newRow (String styleName, Widget... contents)
     {
-        return newRow(HasAlignment.ALIGN_MIDDLE, null, contents);
+        return newRow(HasAlignment.ALIGN_MIDDLE, styleName, contents);
     }
 
     /**
