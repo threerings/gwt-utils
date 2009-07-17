@@ -12,17 +12,57 @@ import com.google.gwt.user.client.ui.TextBox;
  */
 public class NumberTextBox extends TextBox
 {
-    public NumberTextBox (boolean allowFloatingPoint)
+    /**
+     * Creates a text box that only accepts integers and has no max or visible character length.
+     */
+    public NumberTextBox newIntBox ()
     {
-        this(allowFloatingPoint, 0, 0);
+        return new NumberTextBox(false, 0, 0);
     }
 
     /**
-     * Constructor to set both the visible and maximum lengths to the given value.
+     * Creates a text box that only accepts integers and uses the supplied length as its max and
+     * visible character length.
      */
-    public NumberTextBox (boolean allowFloatingPoint, int length)
+    public NumberTextBox newIntBox (int length)
     {
-        this(allowFloatingPoint, length, length);
+        return new NumberTextBox(false, length, length);
+    }
+
+    /**
+     * Creates a text box that only accepts integers and has the specified max and visible
+     * character length.
+     */
+    public NumberTextBox newIntBox (int maxLength, int visibleLength)
+    {
+        return new NumberTextBox(false, maxLength, visibleLength);
+    }
+
+    /**
+     * Creates a text box that accepts floating point numbers and has no max or visible character
+     * length.
+     */
+    public NumberTextBox newFloatBox ()
+    {
+        return new NumberTextBox(false, 0, 0);
+    }
+
+    /**
+     * Creates a text box that accepts floating point numbers and uses the supplied length as its
+     * max and visible character length.
+     */
+    public NumberTextBox newFloatBox (int length)
+    {
+        return new NumberTextBox(false, length, length);
+    }
+
+    /**
+     * Creates a text box that accepts floating point numbers and has the specified max and visible
+     * character length.
+     */
+    public NumberTextBox newFloatBox (int maxLength, int visibleLength)
+    {
+        return new NumberTextBox(false, maxLength, visibleLength);
     }
 
     /**
@@ -54,10 +94,10 @@ public class NumberTextBox extends TextBox
             }
         });
 
-        if (maxLength != 0) {
+        if (maxLength > 0) {
             setMaxLength(maxLength);
         }
-        if (visibleLength != 0) {
+        if (visibleLength > 0) {
             setVisibleLength(visibleLength);
         }
     }
