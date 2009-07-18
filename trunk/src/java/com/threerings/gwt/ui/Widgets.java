@@ -5,6 +5,8 @@ package com.threerings.gwt.ui;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -13,6 +15,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -69,6 +72,25 @@ public class Widgets
         AbsolutePanel panel = new AbsolutePanel();
         if (styleName != null) {
             panel.addStyleName(styleName);
+        }
+        return panel;
+    }
+
+    /**
+     * Wraps the supplied contents in a scroll panel that will set the max-width to
+     * Window.getClientWidth()-xpad and the max-height to Window.getClientHeight()-ypad. If either
+     * xpad or ypad are less than zero, the max-size attribute on that axis will not be set.
+     */
+    public static ScrollPanel newScrollPanel (Widget contents, int xpad, int ypad)
+    {
+        ScrollPanel panel = new ScrollPanel(contents);
+        if (xpad >= 0) {
+            String maxWidth = (Window.getClientWidth() - xpad) + "px";
+            DOM.setStyleAttribute(panel.getElement(), "maxWidth", maxWidth);
+        }
+        if (ypad >= 0) {
+            String maxHeight = (Window.getClientHeight() - ypad) + "px";
+            DOM.setStyleAttribute(panel.getElement(), "maxHeight", maxHeight);
         }
         return panel;
     }
