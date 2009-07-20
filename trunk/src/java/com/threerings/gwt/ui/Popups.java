@@ -58,5 +58,27 @@ public class Popups
         popup.show();
     }
 
+    /**
+     * Creates and returns a new popup with the specified style name and contents.
+     */
+    public static PopupPanel newPopup (String styleName, Widget contents)
+    {
+        PopupPanel panel = new PopupPanel();
+        panel.setStyleName(styleName);
+        panel.setWidget(contents);
+        return panel;
+    }
+
+    /**
+     * Creates a new popup with the specified style name and contents and shows it near the
+     * specified target widget. Returns the newly created popup.
+     */
+    public static PopupPanel newPopupNear (String styleName, Widget contents, Widget target)
+    {
+        PopupPanel panel = newPopup(styleName, contents);
+        showNear(panel, target);
+        return panel;
+    }
+
     protected static final int NEAR_GAP = 5;
 }
