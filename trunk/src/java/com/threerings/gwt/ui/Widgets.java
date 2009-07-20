@@ -170,7 +170,15 @@ public class Widgets
      */
     public static Label newActionLabel (String text, String style, ClickHandler onClick)
     {
-        Label label = newLabel(text, style);
+        return makeActionLabel(newLabel(text, style), onClick);
+    }
+
+    /**
+     * Makes the supplied label into an action label. The label will be styled such that it
+     * configures the mouse pointer and adds underline to the text.
+     */
+    public static Label makeActionLabel (Label label, ClickHandler onClick)
+    {
         if (onClick != null) {
             label.addStyleName("actionLabel");
             label.addClickHandler(onClick);
