@@ -55,7 +55,9 @@ public class DefaultTextListener
     {
         _target = target;
         _defaultText = defaultText;
-        _target.setText(defaultText);
+        if (_target.getText().trim().equals("")) {
+            _target.setText(defaultText);
+        }
     }
 
     protected TextBoxBase _target;
