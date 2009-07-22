@@ -96,6 +96,26 @@ public class Widgets
     }
 
     /**
+     * Wraps the supplied contents in a scroll panel with the specified maximum width.
+     */
+    public static ScrollPanel newScrollPanelX (Widget contents, int maxWidth)
+    {
+        ScrollPanel panel = new ScrollPanel(contents);
+        DOM.setStyleAttribute(panel.getElement(), "maxWidth", maxWidth + "px");
+        return panel;
+    }
+
+    /**
+     * Wraps the supplied contents in a scroll panel with the specified maximum height.
+     */
+    public static ScrollPanel newScrollPanelY (Widget contents, int maxHeight)
+    {
+        ScrollPanel panel = new ScrollPanel(contents);
+        DOM.setStyleAttribute(panel.getElement(), "maxHeight", maxHeight + "px");
+        return panel;
+    }
+
+    /**
      * Creates a row of widgets in a horizontal panel with a 5 pixel gap between them.
      */
     public static HorizontalPanel newRow (Widget... contents)
