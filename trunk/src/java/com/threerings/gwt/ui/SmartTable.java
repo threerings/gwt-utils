@@ -33,42 +33,42 @@ public class SmartTable extends FlexTable
      *
      * @param text an object whose string value will be displayed.
      */
-    public void setText (int row, int column, Object text, int colSpan, String style)
+    public void setText (int row, int column, Object text, int colSpan, String... styles)
     {
         setText(row, column, String.valueOf(text));
         if (colSpan > 0) {
             getFlexCellFormatter().setColSpan(row, column, colSpan);
         }
-        if (style != null) {
-            getFlexCellFormatter().setStyleName(row, column, style);
+        for (String style : styles) {
+            getFlexCellFormatter().addStyleName(row, column, style);
         }
     }
 
     /**
      * Sets the HTML in the specified cell, with the specified style and column span.
      */
-    public void setHTML (int row, int column, String text, int colSpan, String style)
+    public void setHTML (int row, int column, String text, int colSpan, String... styles)
     {
         setHTML(row, column, text);
         if (colSpan > 0) {
             getFlexCellFormatter().setColSpan(row, column, colSpan);
         }
-        if (style != null) {
-            getFlexCellFormatter().setStyleName(row, column, style);
+        for (String style : styles) {
+            getFlexCellFormatter().addStyleName(row, column, style);
         }
     }
 
     /**
      * Sets the widget in the specified cell, with the specified style and column span.
      */
-    public void setWidget (int row, int column, Widget widget, int colSpan, String style)
+    public void setWidget (int row, int column, Widget widget, int colSpan, String... styles)
     {
         setWidget(row, column, widget);
         if (colSpan > 0) {
             getFlexCellFormatter().setColSpan(row, column, colSpan);
         }
-        if (style != null) {
-            getFlexCellFormatter().setStyleName(row, column, style);
+        for (String style : styles) {
+            getFlexCellFormatter().addStyleName(row, column, style);
         }
     }
 
@@ -80,10 +80,10 @@ public class SmartTable extends FlexTable
      *
      * @return the row to which the text was added.
      */
-    public int addText (Object text, int colSpan, String style)
+    public int addText (Object text, int colSpan, String... styles)
     {
         int row = getRowCount();
-        setText(row, 0, text, colSpan, style);
+        setText(row, 0, text, colSpan, styles);
         return row;
     }
 
@@ -93,10 +93,10 @@ public class SmartTable extends FlexTable
      *
      * @return the row to which the widget was added.
      */
-    public int addWidget (Widget widget, int colSpan, String style)
+    public int addWidget (Widget widget, int colSpan, String... styles)
     {
         int row = getRowCount();
-        setWidget(row, 0, widget, colSpan, style);
+        setWidget(row, 0, widget, colSpan, styles);
         return row;
     }
 }
