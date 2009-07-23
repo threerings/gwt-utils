@@ -29,7 +29,7 @@ public class Widgets
     /**
      * Creates a SimplePanel with the supplied style and widget
      */
-    public static SimplePanel newSimplePanel (Widget widget, String styleName)
+    public static SimplePanel newSimplePanel (String styleName, Widget widget)
     {
         SimplePanel panel = new SimplePanel();
         if (styleName != null) {
