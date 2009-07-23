@@ -17,7 +17,7 @@ public class Commands
      */
     public static ClickHandler onClick (final Command onClick)
     {
-        return new ClickHandler() {
+        return (onClick == null) ? null : new ClickHandler() {
             public void onClick (ClickEvent event) {
                 onClick.execute();
             }
