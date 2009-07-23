@@ -39,9 +39,7 @@ public class SmartTable extends FlexTable
         if (colSpan > 0) {
             getFlexCellFormatter().setColSpan(row, column, colSpan);
         }
-        for (String style : styles) {
-            getFlexCellFormatter().addStyleName(row, column, style);
-        }
+        setStyleNames(row, column, styles);
     }
 
     /**
@@ -53,9 +51,7 @@ public class SmartTable extends FlexTable
         if (colSpan > 0) {
             getFlexCellFormatter().setColSpan(row, column, colSpan);
         }
-        for (String style : styles) {
-            getFlexCellFormatter().addStyleName(row, column, style);
-        }
+        setStyleNames(row, column, styles);
     }
 
     /**
@@ -67,9 +63,7 @@ public class SmartTable extends FlexTable
         if (colSpan > 0) {
             getFlexCellFormatter().setColSpan(row, column, colSpan);
         }
-        for (String style : styles) {
-            getFlexCellFormatter().addStyleName(row, column, style);
-        }
+        setStyleNames(row, column, styles);
     }
 
     /**
@@ -98,5 +92,21 @@ public class SmartTable extends FlexTable
         int row = getRowCount();
         setWidget(row, 0, widget, colSpan, styles);
         return row;
+    }
+
+    /**
+     * Configures the specified style names on the specified row and column. The first style is set
+     * as the primary style and additional styles are added onto that.
+     */
+    public void setStyleNames (int row, int column, String... styles)
+    {
+        int idx = 0;
+        for (String style : styles) {
+            if (idx++ == 0) {
+                getFlexCellFormatter().setStyleName(row, column, style);
+            } else {
+                getFlexCellFormatter().addStyleName(row, column, style);
+            }
+        }
     }
 }
