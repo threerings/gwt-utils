@@ -74,7 +74,7 @@ public class StringUtil
      */
     public static boolean isBlank (String text)
     {
-        return (text == null) || (text.length() == 0);
+        return (text == null) || (text.trim().length() == 0);
     }
 
     /**
