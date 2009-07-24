@@ -33,13 +33,10 @@ public class Widgets
     public static SimplePanel newSimplePanel (String styleName, Widget widget)
     {
         SimplePanel panel = new SimplePanel();
-        if (styleName != null) {
-            panel.addStyleName(styleName);
-        }
         if (widget != null) {
             panel.setWidget(widget);
         }
-        return panel;
+        return setStyleNames(panel, styleName);
     }
 
     /**
@@ -56,13 +53,10 @@ public class Widgets
     public static FlowPanel newFlowPanel (String styleName, Widget... contents)
     {
         FlowPanel panel = new FlowPanel();
-        if (styleName != null) {
-            panel.addStyleName(styleName);
-        }
         for (Widget child : contents) {
             panel.add(child);
         }
-        return panel;
+        return setStyleNames(panel, styleName);
     }
 
     /**
@@ -70,11 +64,7 @@ public class Widgets
      */
     public static AbsolutePanel newAbsolutePanel (String styleName)
     {
-        AbsolutePanel panel = new AbsolutePanel();
-        if (styleName != null) {
-            panel.addStyleName(styleName);
-        }
-        return panel;
+        return setStyleNames(new AbsolutePanel(), styleName);
     }
 
     /**
@@ -158,11 +148,7 @@ public class Widgets
      */
     public static Label newLabel (String text, String... styles)
     {
-        Label label = new Label(text);
-        for (String style : styles) {
-            label.addStyleName(style);
-        }
-        return label;
+        return setStyleNames(new Label(text), styles);
     }
 
     /**
@@ -170,11 +156,7 @@ public class Widgets
      */
     public static InlineLabel newInlineLabel (String text, String... styles)
     {
-        InlineLabel label = new InlineLabel(text);
-        for (String style : styles) {
-            label.addStyleName(style);
-        }
-        return label;
+        return setStyleNames(new InlineLabel(text), styles);
     }
 
     /**
@@ -213,11 +195,7 @@ public class Widgets
      */
     public static HTML newHTML (String text, String... styles)
     {
-        HTML html = new HTML(text);
-        for (String style : styles) {
-            html.addStyleName(style);
-        }
-        return html;
+        return setStyleNames(new HTML(text), styles);
     }
 
     /**
@@ -225,11 +203,7 @@ public class Widgets
      */
     public static Image newImage (String path, String styleName)
     {
-        Image image = new Image(path);
-        if (styleName != null) {
-            image.addStyleName(styleName);
-        }
-        return image;
+        return setStyleNames(new Image(path), styleName);
     }
 
     /**
@@ -348,10 +322,8 @@ public class Widgets
     public static PushButton newImageButton (String style, ClickHandler onClick)
     {
         PushButton button = new PushButton();
-        button.setStyleName(style);
-        button.addStyleName("actionLabel");
         maybeAddClickHandler(button, onClick);
-        return button;
+        return setStyleNames(button, style, "actionLabel");
     }
 
     /**
@@ -364,6 +336,25 @@ public class Widgets
         shim.setWidth(width + "px");
         shim.setHeight(height + "px");
         return shim;
+    }
+
+    /**
+     * Configures the supplied styles on the supplied widget. Any existing styles will not be
+     * preserved. Returns the widget for easy chaining.
+     */
+    public static <T extends Widget> T setStyleNames (T widget, String... styles)
+    {
+        if (styles != null) {
+            int idx = 0;
+            for (String style : styles) {
+                if (idx++ == 0) {
+                    widget.setStyleName(style);
+                } else {
+                    widget.addStyleName(style);
+                }
+            }
+        }
+        return widget;
     }
 
     protected static void maybeAddClickHandler (HasClickHandlers target, ClickHandler onClick)
