@@ -339,19 +339,20 @@ public class Widgets
     }
 
     /**
-     * Configures the supplied styles on the supplied widget. Any existing styles will not be
-     * preserved. Returns the widget for easy chaining.
+     * Configures the supplied styles on the supplied widget. Existing styles will not be preserved
+     * unless you call this with no-non-null styles. Returns the widget for easy chaining.
      */
     public static <T extends Widget> T setStyleNames (T widget, String... styles)
     {
-        if (styles != null) {
-            int idx = 0;
-            for (String style : styles) {
-                if (idx++ == 0) {
-                    widget.setStyleName(style);
-                } else {
-                    widget.addStyleName(style);
-                }
+        int idx = 0;
+        for (String style : styles) {
+            if (style == null) {
+                continue;
+            }
+            if (idx++ == 0) {
+                widget.setStyleName(style);
+            } else {
+                widget.addStyleName(style);
             }
         }
         return widget;
