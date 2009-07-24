@@ -309,9 +309,10 @@ public class Widgets
      * Creates a PushButton with default(up), mouseover and mousedown states.
      */
     public static PushButton newPushButton (Image defaultImage, Image overImage,
-        Image downImage, ClickHandler onClick)
+                                            Image downImage, ClickHandler onClick)
     {
-        PushButton button = new PushButton(defaultImage, downImage, onClick);
+        PushButton button = new PushButton(defaultImage, downImage);
+        maybeAddClickHandler(button, onClick);
         button.getUpHoveringFace().setImage(overImage);
         return button;
     }
