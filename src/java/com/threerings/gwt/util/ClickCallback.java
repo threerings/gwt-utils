@@ -172,9 +172,9 @@ public abstract class ClickCallback<T>
         setEnabled(true);
     }
 
-    protected ButtonBase createButton (String text)
+    protected ButtonBase createButton (String text, ClickHandler onClick)
     {
-        return new PushButton(text);
+        return new PushButton(text, onClick);
     }
 
     protected void setEnabled (boolean enabled)
