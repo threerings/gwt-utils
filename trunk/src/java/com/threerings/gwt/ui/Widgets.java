@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -165,12 +166,14 @@ public class Widgets
     }
 
     /**
-     * Creates an inline label with optional additional styles.
+     * Creates an inline label with optional styles.
      */
-    public static Label newInlineLabel (String text, String... auxStyles)
+    public static InlineLabel newInlineLabel (String text, String... styles)
     {
-        Label label = newLabel(text, auxStyles);
-        label.addStyleName("inline");
+        InlineLabel label = new InlineLabel(text);
+        for (String style : styles) {
+            label.addStyleName(style);
+        }
         return label;
     }
 
@@ -208,14 +211,11 @@ public class Widgets
     /**
      * Creates a new HTML element with the specified contents and style.
      */
-    public static HTML newHTML (String text, String styleName, String... auxStyles)
+    public static HTML newHTML (String text, String... styles)
     {
         HTML html = new HTML(text);
-        if (styleName != null) {
-            html.setStyleName(styleName);
-        }
-        for (String auxStyle : auxStyles) {
-            html.addStyleName(auxStyle);
+        for (String style : styles) {
+            html.addStyleName(style);
         }
         return html;
     }
