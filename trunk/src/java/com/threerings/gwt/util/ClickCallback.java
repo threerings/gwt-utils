@@ -8,11 +8,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -143,14 +144,14 @@ public abstract class ClickCallback<T>
         } else {
             contents.setText(0, 0, _confirmMessage, 2, "Message");
         }
-        contents.setWidget(1, 0, new Button(_confirmChoices[1], new ClickHandler() {
+        contents.setWidget(1, 0, createButton(_confirmChoices[1], new ClickHandler() {
             public void onClick (ClickEvent event) {
                 confirm.hide(); // abort!
                 onAborted();
             }
         }));
         contents.getFlexCellFormatter().setHorizontalAlignment(1, 0, HasAlignment.ALIGN_CENTER);
-        contents.setWidget(1, 1, new Button(_confirmChoices[0], new ClickHandler() {
+        contents.setWidget(1, 1, createButton(_confirmChoices[0], new ClickHandler() {
             public void onClick (ClickEvent event) {
                 confirm.hide();
                 onConfirmed();
@@ -169,6 +170,11 @@ public abstract class ClickCallback<T>
     protected void onAborted ()
     {
         setEnabled(true);
+    }
+
+    protected ButtonBase createButton (String text)
+    {
+        return new PushButton(text);
     }
 
     protected void setEnabled (boolean enabled)
