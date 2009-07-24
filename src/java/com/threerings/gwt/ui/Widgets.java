@@ -155,14 +155,11 @@ public class Widgets
     /**
      * Creates a label with the supplied text and style and optional additional styles.
      */
-    public static Label newLabel (String text, String styleName, String... auxStyles)
+    public static Label newLabel (String text, String... styles)
     {
         Label label = new Label(text);
-        if (styleName != null) {
-            label.setStyleName(styleName);
-        }
-        for (String auxStyle : auxStyles) {
-            label.addStyleName(auxStyle);
+        for (String style : styles) {
+            label.addStyleName(style);
         }
         return label;
     }
@@ -172,7 +169,9 @@ public class Widgets
      */
     public static Label newInlineLabel (String text, String... auxStyles)
     {
-        return newLabel(text, "inline", auxStyles);
+        Label label = newLabel(text, auxStyles);
+        label.addStyleName("inline");
+        return label;
     }
 
     /**
