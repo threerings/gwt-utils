@@ -59,6 +59,15 @@ public class Popups
     }
 
     /**
+     * Shows the supplied popup panel over the specified target.
+     */
+    public static void showOver (PopupPanel popup, Widget target)
+    {
+        popup.setPopupPosition(target.getAbsoluteLeft(), target.getAbsoluteTop());
+        popup.show();
+    }
+
+    /**
      * Creates and returns a new popup with the specified style name and contents.
      */
     public static PopupPanel newPopup (String styleName, Widget contents)
