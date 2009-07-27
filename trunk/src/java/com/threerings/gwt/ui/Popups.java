@@ -3,6 +3,8 @@
 
 package com.threerings.gwt.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -87,6 +89,19 @@ public class Popups
         PopupPanel panel = newPopup(styleName, contents);
         showNear(panel, target);
         return panel;
+    }
+
+    /**
+     * Creates a click handler that hides the specified popup. Useful when creating popups that
+     * behave like menus.
+     */
+    public static ClickHandler createHider (final PopupPanel popup)
+    {
+        return new ClickHandler() {
+            public void onClick (ClickEvent event) {
+                popup.hide();
+            }
+        };
     }
 
     protected static final int NEAR_GAP = 5;
