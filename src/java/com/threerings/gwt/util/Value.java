@@ -21,6 +21,14 @@ public class Value<T>
     /**
      * Creates a new value with the specified initial value.
      */
+    public static <T> Value<T> create (T value)
+    {
+        return new Value<T>(value);
+    }
+
+    /**
+     * Creates a new value with the specified initial value.
+     */
     public Value (T init)
     {
         _value = init;
@@ -63,6 +71,38 @@ public class Value<T>
         for (Listener<T> listener : new ArrayList<Listener<T>>(_listeners)) {
             listener.valueChanged(value);
         }
+    }
+
+    /**
+     * Creates a value that maps this value via a function. Every time the target value is updated
+     * the mapped value will be updated, regardless of whether or not the mapped value differs. The
+     * returned value will be a view and reject attempts to call {@link #update}.
+     */
+    public <M> Value<M> map (Function<T, M> func)
+    {
+        return new MappedValue<T, M>(this, func);
+    }
+
+    /** Used by {@link #map}. */
+    protected static class MappedValue<A, B> extends Value<B> implements Listener<A>
+    {
+        public MappedValue (Value<A> value, Function<A, B> func) {
+            super(func.apply(value.get()));
+            _func = func;
+            value.addListener(this);
+        }
+
+        @Override // from Value<B>
+        public void update (B value) {
+            throw new UnsupportedOperationException();
+        }
+
+        // from interface Value.Listener<A>
+        public void valueChanged (A value) {
+            super.update(_func.apply(value));
+        }
+
+        protected Function<A, B> _func;
     }
 
     protected T _value;
