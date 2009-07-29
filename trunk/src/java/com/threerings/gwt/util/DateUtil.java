@@ -109,10 +109,15 @@ public class DateUtil
         return date.getMonth();
     }
 
+    /**
+     * Returns the year component of the supplied date. <em>Note:</em> this is <em>not</em> the
+     * year minus 1900 which the underlying {@link Date#getYear} method returns. It's the actual
+     * year. Returning years since 1900 is stupid.
+     */
     @SuppressWarnings("deprecation")
     public static int getYear (Date date)
     {
-        return date.getYear();
+        return date.getYear() + 1900;
     }
 
     @SuppressWarnings("deprecation")
