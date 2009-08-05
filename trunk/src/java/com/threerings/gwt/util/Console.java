@@ -41,7 +41,65 @@ public class Console
     }
 
     /**
+     * Prints out the stack trace of the caller. Note this will only work on Firebug.
+     * TODO: print via the {@link #log} method instead of using $wnd.console
+     * @see http://eriwen.com/javascript/js-stack-trace/
+     */
+    public static native void printStackTrace () /*-{
+        var callstack = [];
+        var isCallstackPopulated = false;
+        try {
+            i.dont.exist+=0; //doesn't exist- that's the point
+        } catch(e) {
+            if (e.stack) { //Firefox
+                var lines = e.stack.split("\n");
+                for (var i=0, len=lines.length; i<len; i++) {
+                    if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
+                        callstack.push(lines[i]);
+                    }
+                }
+
+                //Remove call to printStackTrace()
+                callstack.shift();
+                isCallstackPopulated = true;
+            }
+            else if ($wnd.opera && e.message) { //Opera
+                var lines = e.message.split("\n");
+                for (var i=0, len=lines.length; i<len; i++) {
+                    if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
+                        var entry = lines[i];
+                        //Append next line also since it has the file info
+                        if (lines[i+1]) {
+                            entry += " at " + lines[i+1];
+                            i++;
+                        }
+                        callstack.push(entry);
+                    }
+                }
+                //Remove call to printStackTrace()
+                callstack.shift();
+                isCallstackPopulated = true;
+            }
+        }
+        if (!isCallstackPopulated) { //IE and Safari
+            var currentFunction = arguments.callee.caller;
+            while (currentFunction) {
+                var fn = currentFunction.toString();
+                var fname = fn.substring(fn.indexOf("function") + 8, fn.indexOf("(")) || "anonymous";
+                callstack.push(fname);
+                currentFunction = currentFunction.caller;
+            }
+        }
+        for (var i = 0; i < callstack.length; ++i) {
+            if ($wnd.console) {
+                $wnd.console.info("   Frame " + i + ": " + callstack[i]);
+            }
+        }
+    }-*/;
+
+    /**
      * Records a log message to the JavaScript console via Firebug.
+     * TODO: make this work with other browsers.
      */
     protected static native void firebugLog (String message, Object error) /*-{
         if ($wnd.console) {
