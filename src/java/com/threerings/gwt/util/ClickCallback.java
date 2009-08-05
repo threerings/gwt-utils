@@ -119,6 +119,18 @@ public abstract class ClickCallback<T>
         return cause.getMessage();
     }
 
+    /**
+     * Displays a popup reporting the specified error, near the specified widget if it is non-null.
+     */
+    protected void showError (Throwable cause, Widget near)
+    {
+        if (near == null) {
+            Popups.error(formatError(cause));
+        } else {
+            Popups.errorNear(formatError(cause), near);
+        }
+    }
+
     protected void takeAction (boolean confirmed)
     {
         // if we have no confirmation message or are already confirmed, do the deed
@@ -216,11 +228,7 @@ public abstract class ClickCallback<T>
         if (_onEnter != null) {
             _onEnter.setFocus(true);
         }
-        if (near == null) {
-            Popups.error(formatError(cause));
-        } else {
-            Popups.errorNear(formatError(cause), near);
-        }
+        showError(cause, near);
     }
 
     protected ClickHandler _onClick = new ClickHandler() {
