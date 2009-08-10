@@ -212,7 +212,7 @@ public class Widgets
                 }
                 protected HandlerRegistration _regi;
             };
-            if (enabler != null) {
+            if (enabled != null) {
                 enabled.addListener(enabler);
             }
             enabler.valueChanged(enabled == null || enabled.get());
