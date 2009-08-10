@@ -204,6 +204,7 @@ public class Widgets
                 public void valueChanged (Boolean enabled) {
                     if (!enabled && _regi != null) {
                         _regi.removeHandler();
+                        _regi = null;
                         target.removeStyleName("actionLabel");
                     } else if (enabled && _regi == null) {
                         _regi = target.addClickHandler(onClick);
