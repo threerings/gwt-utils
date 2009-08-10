@@ -200,23 +200,24 @@ public class Widgets
         final T target, final ClickHandler onClick, Value<Boolean> enabled)
     {
         if (onClick != null) {
-            Value.Listener<Boolean> enabler = new Value.Listener<Boolean>() {
-                public void valueChanged (Boolean enabled) {
-                    if (!enabled && _regi != null) {
-                        _regi.removeHandler();
-                        _regi = null;
-                        target.removeStyleName("actionLabel");
-                    } else if (enabled && _regi == null) {
-                        _regi = target.addClickHandler(onClick);
-                        target.addStyleName("actionLabel");
-                    }
-                }
-                protected HandlerRegistration _regi;
-            };
             if (enabled != null) {
-                enabled.addListener(enabler);
+                enabled.addListenerAndTrigger(new Value.Listener<Boolean>() {
+                    public void valueChanged (Boolean enabled) {
+                        if (!enabled && _regi != null) {
+                            _regi.removeHandler();
+                            _regi = null;
+                            target.removeStyleName("actionLabel");
+                        } else if (enabled && _regi == null) {
+                            _regi = target.addClickHandler(onClick);
+                            target.addStyleName("actionLabel");
+                        }
+                    }
+                    protected HandlerRegistration _regi;
+                });
+            } else {
+                target.addClickHandler(onClick);
+                target.addStyleName("actionLabel");
             }
-            enabler.valueChanged(enabled == null || enabled.get());
         }
         return target;
     }
