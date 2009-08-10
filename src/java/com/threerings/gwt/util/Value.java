@@ -43,6 +43,15 @@ public class Value<T>
     }
 
     /**
+     * Adds a listener and immediately triggers it with our current value.
+     */
+    public void addListenerAndTrigger (Listener<T> listener)
+    {
+        addListener(listener);
+        listener.valueChanged(get());
+    }
+
+    /**
      * Removes a listener from this value.
      */
     public void removeListener (Listener<T> listener)
