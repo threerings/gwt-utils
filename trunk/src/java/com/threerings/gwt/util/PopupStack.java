@@ -17,34 +17,45 @@ import com.google.gwt.user.client.ui.PopupPanel;
  */
 public class PopupStack
 {
+    /** A value indicating whether or not a popup is currently showing. */
+    public final Value<Boolean> popupShowing;
+
+    public PopupStack ()
+    {
+        this.popupShowing = _showingPopup.map(new Function<PopupPanel, Boolean>() {
+            public Boolean apply (PopupPanel panel) {
+                return (panel != null);
+            }
+        });
+    }
+
     /**
      * Pushes any currently showing popup onto the stack and displays the supplied popup. The popup
      * will be made visible via a call to {@link PopupPanel#center}.
      */
     public void show (PopupPanel popup)
     {
-        if (_showingPopup != null) {
-            // clear out _showingPopup before hiding this popup to avoid triggering the close
-            // handler logic
-            PopupPanel toClose = _showingPopup;
-            _popups.add(_showingPopup);
-            _showingPopup = null;
-            toClose.hide();
+        PopupPanel showing = _showingPopup.get();
+        if (showing != null) {
+            // null _showingPopup before hiding to avoid triggering the close handler logic
+            _popups.add(showing);
+            _showingPopup.update(null);
+            showing.hide();
         }
         popup.addCloseHandler(new CloseHandler<PopupPanel>() {
             public void onClose (CloseEvent<PopupPanel> event) {
-                if (_showingPopup == event.getTarget()) {
+                if (_showingPopup.get() == event.getTarget()) {
                     if (_popups.size() > 0) {
-                        _showingPopup = _popups.remove(_popups.size()-1);
-                        _showingPopup.center();
+                        _showingPopup.update(_popups.remove(_popups.size()-1));
+                        _showingPopup.get().center();
                     } else {
-                        _showingPopup = null;
+                        _showingPopup.update(null);
                     }
                 }
             }
         });
-        _showingPopup = popup;
-        _showingPopup.center();
+        _showingPopup.update(popup);
+        popup.center(); // this will show the popup
     }
 
     /**
@@ -54,12 +65,12 @@ public class PopupStack
     public void clear ()
     {
         _popups.clear();
-        if (_showingPopup != null) {
-            _showingPopup.hide();
-            _showingPopup = null;
+        if (_showingPopup.get() != null) {
+            _showingPopup.get().hide();
+            _showingPopup.update(null);
         }
     }
 
-    protected PopupPanel _showingPopup;
+    protected Value<PopupPanel> _showingPopup = Value.create(null);
     protected List<PopupPanel> _popups = new ArrayList<PopupPanel>();
 }
