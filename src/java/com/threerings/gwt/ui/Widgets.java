@@ -5,6 +5,8 @@ package com.threerings.gwt.ui;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.threerings.gwt.util.Value;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -183,11 +185,39 @@ public class Widgets
      */
     public static Label makeActionLabel (Label label, ClickHandler onClick)
     {
+        return makeActionable(label, onClick, null);
+    }
+
+    /**
+     * Makes the supplied widget "actionable" which means adding the "actionLabel" style to it and
+     * binding the supplied click handler.
+     *
+     * @param enabler an optional value that governs the enabled state of the target. When the
+     * value becomes false, the target's click handler and "actionLabel" style will be removed,
+     * when it becomes true they will be reinstated.
+     */
+    public static <T extends Widget & HasClickHandlers> T makeActionable (
+        final T target, final ClickHandler onClick, Value<Boolean> enabled)
+    {
         if (onClick != null) {
-            label.addStyleName("actionLabel");
-            label.addClickHandler(onClick);
+            Value.Listener<Boolean> enabler = new Value.Listener<Boolean>() {
+                public void valueChanged (Boolean enabled) {
+                    if (!enabled && _regi != null) {
+                        _regi.removeHandler();
+                        target.removeStyleName("actionLabel");
+                    } else if (enabled && _regi == null) {
+                        _regi = target.addClickHandler(onClick);
+                        target.addStyleName("actionLabel");
+                    }
+                }
+                protected HandlerRegistration _regi;
+            };
+            if (enabler != null) {
+                enabled.addListener(enabler);
+            }
+            enabler.valueChanged(enabled == null || enabled.get());
         }
-        return label;
+        return target;
     }
 
     /**
@@ -201,9 +231,9 @@ public class Widgets
     /**
      * Creates an image with the supplied path and style.
      */
-    public static Image newImage (String path, String styleName)
+    public static Image newImage (String path, String... styles)
     {
-        return setStyleNames(new Image(path), styleName);
+        return setStyleNames(new Image(path), styles);
     }
 
     /**
@@ -227,14 +257,10 @@ public class Widgets
      */
     public static Image makeActionImage (Image image, String tip, ClickHandler onClick)
     {
-        if (onClick != null) {
-            image.addStyleName("actionLabel");
-            image.addClickHandler(onClick);
-        }
         if (tip != null) {
             image.setTitle(tip);
         }
-        return image;
+        return makeActionable(image, onClick, null);
     }
 
     /**
