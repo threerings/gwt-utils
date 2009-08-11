@@ -77,10 +77,19 @@ public class Popups
      */
     public static void centerOn (PopupPanel popup, Widget centerOn)
     {
+        centerOn(popup, centerOn.getAbsoluteTop() + centerOn.getOffsetHeight()/2);
+    }
+
+    /**
+     * Centers the supplied vertically on the supplied trigger widget. The popup will be shown if
+     * it is not already.
+     */
+    public static void centerOn (PopupPanel popup, int ypos)
+    {
         popup.setVisible(false);
         popup.show();
         int left = (Window.getClientWidth() - popup.getOffsetWidth()) >> 1;
-        int top = centerOn.getAbsoluteTop() - popup.getOffsetHeight()/2;
+        int top = ypos - popup.getOffsetHeight()/2;
         // bound the popup into the visible browser area if possible
         if (popup.getOffsetHeight() < Window.getClientHeight()) {
             top = Math.min(Math.max(0, top), Window.getClientHeight() - popup.getOffsetHeight());
