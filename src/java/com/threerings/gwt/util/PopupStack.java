@@ -9,6 +9,9 @@ import java.util.List;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+import com.threerings.gwt.ui.Popups;
 
 /**
  * Maintains a stack of {@link PopupPanel}s. When a new panel is pushed onto the stack, the
@@ -35,6 +38,15 @@ public class PopupStack
      */
     public void show (PopupPanel popup)
     {
+        show(popup, null);
+    }
+
+    /**
+     * Pushes any currently showing popup onto the stack and displays the supplied popup. The popup
+     * will centered horizontally in the page and centered vertically around the supplied widget.
+     */
+    public void show (PopupPanel popup, Widget onCenter)
+    {
         PopupPanel showing = _showingPopup.get();
         if (showing != null) {
             // null _showingPopup before hiding to avoid triggering the close handler logic
@@ -55,7 +67,12 @@ public class PopupStack
             }
         });
         _showingPopup.update(popup);
-        popup.center(); // this will show the popup
+
+        if (onCenter == null) {
+            popup.center(); // this will show the popup
+        } else {
+            Popups.centerOn(popup, onCenter);
+        }
     }
 
     /**
