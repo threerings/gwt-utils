@@ -47,6 +47,11 @@ public class PopupStack
      */
     public void show (PopupPanel popup, Widget onCenter)
     {
+        // determine the ypos of our onCenter target in case it's in the currently popped up popup,
+        // because after we hide that popup we won't be able to compute it
+        int ypos = (onCenter == null) ? 0 :
+            (onCenter.getAbsoluteTop() + onCenter.getOffsetHeight()/2);
+
         PopupPanel showing = _showingPopup.get();
         if (showing != null) {
             // null _showingPopup before hiding to avoid triggering the close handler logic
@@ -59,7 +64,7 @@ public class PopupStack
                 if (_showingPopup.get() == event.getTarget()) {
                     if (_popups.size() > 0) {
                         _showingPopup.update(_popups.remove(_popups.size()-1));
-                        _showingPopup.get().center();
+                        _showingPopup.get().show();
                     } else {
                         _showingPopup.update(null);
                     }
@@ -71,7 +76,7 @@ public class PopupStack
         if (onCenter == null) {
             popup.center(); // this will show the popup
         } else {
-            Popups.centerOn(popup, onCenter);
+            Popups.centerOn(popup, ypos);
         }
     }
 
