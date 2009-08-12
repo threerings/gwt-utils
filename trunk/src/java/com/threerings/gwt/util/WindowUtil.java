@@ -24,7 +24,7 @@ public class WindowUtil
         String[] bits = search.split("&");
         for (String bit : bits) {
             int eqidx = bit.indexOf("=");
-            if (eqidx > 0) {
+            if (eqidx >= 0) {
                 params.put(bit.substring(0, eqidx), bit.substring(eqidx+1));
             } else {
                 params.put(bit, "true");
