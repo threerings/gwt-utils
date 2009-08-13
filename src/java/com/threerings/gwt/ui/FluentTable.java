@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class FluentTable extends FlexTable
 {
     /** Used to format cells. Returned by all methods that configure cells. */
-    public static class Formatter
+    public static class Cell
     {
         /** The row we're formatting. */
         public final int row;
@@ -21,94 +21,136 @@ public class FluentTable extends FlexTable
         /** The column we're formatting. */
         public final int column;
 
+        /** Sets the text of this cell to the string value of the supplied object. */
+        public Cell setText (Object text) {
+            _table.setText(row, column, String.valueOf(text));
+            return this;
+        }
+
+        /** Sets the HTML in this cell to the supplied value. Be careful! */
+        public Cell setHTML (String text) {
+            _table.setHTML(row, column, String.valueOf(text));
+            return this;
+        }
+
+        /** Sets the contents of this cell to the specified widget. */
+        public Cell setWidget (Widget widget) {
+            _table.setWidget(row, column, widget);
+            return this;
+        }
+
+        /** Sets the contents of this cell to a FlowPanel that contains the specified widgets. */
+        public Cell setWidgets (Widget... widgets) {
+            _table.setWidget(row, column, Widgets.newFlowPanel(widgets));
+            return this;
+        }
+
         /** Makes the cell we're formatting align top. */
-        public Formatter alignTop () {
-            _formatter.setVerticalAlignment(row, column, HasAlignment.ALIGN_TOP);
+        public Cell alignTop () {
+            _table.getFlexCellFormatter().setVerticalAlignment(
+                row, column, HasAlignment.ALIGN_TOP);
             return this;
         }
 
         /** Makes the cell we're formatting align bottom. */
-        public Formatter alignBottom () {
-            _formatter.setVerticalAlignment(row, column, HasAlignment.ALIGN_BOTTOM);
+        public Cell alignBottom () {
+            _table.getFlexCellFormatter().setVerticalAlignment(
+                row, column, HasAlignment.ALIGN_BOTTOM);
             return this;
         }
 
         /** Makes the cell we're formatting align middle. */
-        public Formatter alignMiddle () {
-            _formatter.setVerticalAlignment(row, column, HasAlignment.ALIGN_MIDDLE);
+        public Cell alignMiddle () {
+            _table.getFlexCellFormatter().setVerticalAlignment(
+                row, column, HasAlignment.ALIGN_MIDDLE);
             return this;
         }
 
         /** Makes the cell we're formatting align left. */
-        public Formatter alignLeft () {
-            _formatter.setHorizontalAlignment(row, column, HasAlignment.ALIGN_LEFT);
+        public Cell alignLeft () {
+            _table.getFlexCellFormatter().setHorizontalAlignment(
+                row, column, HasAlignment.ALIGN_LEFT);
             return this;
         }
 
         /** Makes the cell we're formatting align right. */
-        public Formatter alignRight () {
-            _formatter.setHorizontalAlignment(row, column, HasAlignment.ALIGN_RIGHT);
+        public Cell alignRight () {
+            _table.getFlexCellFormatter().setHorizontalAlignment(
+                row, column, HasAlignment.ALIGN_RIGHT);
             return this;
         }
 
         /** Makes the cell we're formatting align center. */
-        public Formatter alignCenter () {
-            _formatter.setHorizontalAlignment(row, column, HasAlignment.ALIGN_CENTER);
+        public Cell alignCenter () {
+            _table.getFlexCellFormatter().setHorizontalAlignment(
+                row, column, HasAlignment.ALIGN_CENTER);
             return this;
         }
 
         /** Sets the rowspan of the cell we're formatting. */
-        public Formatter setRowSpan (int rowSpan) {
-            _formatter.setRowSpan(row, column, rowSpan);
+        public Cell setRowSpan (int rowSpan) {
+            _table.getFlexCellFormatter().setRowSpan(row, column, rowSpan);
             return this;
         }
 
         /** Sets the colspan of the cell we're formatting. */
-        public Formatter setColSpan (int colSpan) {
-            _formatter.setColSpan(row, column, colSpan);
+        public Cell setColSpan (int colSpan) {
+            _table.getFlexCellFormatter().setColSpan(row, column, colSpan);
             return this;
         }
 
         /** Configures the specified style names on our cell. The first style is set as the primary
          * style and additional styles are added onto that. */
-        public Formatter setStyles (String... styles)
+        public Cell setStyles (String... styles)
         {
             int idx = 0;
             for (String style : styles) {
                 if (idx++ == 0) {
-                    _formatter.setStyleName(row, column, style);
+                    _table.getFlexCellFormatter().setStyleName(row, column, style);
                 } else {
-                    _formatter.addStyleName(row, column, style);
+                    _table.getFlexCellFormatter().addStyleName(row, column, style);
                 }
             }
             return this;
         }
 
-        protected Formatter (FlexCellFormatter formatter, int row, int column)
+        protected Cell (FluentTable table, int row, int column)
         {
-            _formatter = formatter;
+            _table = table;
             this.row = row;
             this.column = column;
         }
 
-        protected FlexCellFormatter _formatter;
+        protected FluentTable _table;
     }
 
+    /**
+     * Creates an empty table with no styles and the default cell padding and spacing.
+     */
     public FluentTable ()
     {
     }
 
+    /**
+     * Creates a table with the specified styles and the default cell padding and spacing.
+     */
     public FluentTable (String... styles)
     {
         Widgets.setStyleNames(this, styles);
     }
 
+    /**
+     * Creates a table with the specified cell pading and spacing and no styles.
+     */
     public FluentTable (int cellPadding, int cellSpacing)
     {
         setCellPadding(cellPadding);
         setCellSpacing(cellSpacing);
     }
 
+    /**
+     * Creates a table with the specified styles and cell padding and spacing.
+     */
     public FluentTable (int cellPadding, int cellSpacing, String... styles)
     {
         this(styles);
@@ -117,59 +159,19 @@ public class FluentTable extends FlexTable
     }
 
     /**
-     * Sets the text in the specified cell, with the specified optional styles.
-     *
-     * @param text an object whose string value will be displayed.
+     * Returns the specified cell.
      */
-    public Formatter setText (int row, int column, Object text, String... styles)
+    public Cell at (int row, int column)
     {
-        setText(row, column, String.valueOf(text));
-        return new Formatter(getFlexCellFormatter(), row, column).setStyles(styles);
+        return new Cell(this, row, column);
     }
 
     /**
-     * Sets the HTML in the specified cell, with the specified optional styles.
+     * Returns a {@link Cell} at the current row count and column zero (effectively adding a row to
+     * the table).
      */
-    public Formatter setHTML (int row, int column, String text, String... styles)
+    public Cell add ()
     {
-        setHTML(row, column, text);
-        return new Formatter(getFlexCellFormatter(), row, column).setStyles(styles);
-    }
-
-    /**
-     * Sets the widget in the specified cell, with the specified optional styles.
-     */
-    public Formatter setWidget (int row, int column, Widget widget, String... styles)
-    {
-        setWidget(row, column, widget);
-        return new Formatter(getFlexCellFormatter(), row, column).setStyles(styles);
-    }
-
-    /**
-     * Adds text to the bottom row of this table in column zero, with the specified optional styles.
-     *
-     * @param text an object whose string value will be displayed.
-     */
-    public Formatter addText (Object text, String... styles)
-    {
-        return setText(getRowCount(), 0, text, styles);
-    }
-
-    /**
-     * Adds a widget to the bottom row of this table in column zero, with the specified optional
-     * styles and style.
-     */
-    public Formatter addWidget (Widget widget, String... styles)
-    {
-        return setWidget(getRowCount(), 0, widget, styles);
-    }
-
-    /**
-     * Wraps the supplied widgets into a FlowPanel and sticks them into the specified cell.
-     */
-    public Formatter setWidgets (int row, int column, Widget... widgets)
-    {
-        setWidget(row, column, Widgets.newFlowPanel(widgets));
-        return new Formatter(getFlexCellFormatter(), row, column);
+        return new Cell(this, getRowCount(), 0);
     }
 }
