@@ -22,21 +22,21 @@ public class FluentTable extends FlexTable
         public final int column;
 
         /** Sets the text of this cell to the string value of the supplied object. */
-        public Cell setText (Object text) {
+        public Cell setText (Object text, String... styles) {
             _table.setText(row, column, String.valueOf(text));
-            return this;
+            return setStyles(styles);
         }
 
         /** Sets the HTML in this cell to the supplied value. Be careful! */
-        public Cell setHTML (String text) {
+        public Cell setHTML (String text, String... styles) {
             _table.setHTML(row, column, String.valueOf(text));
-            return this;
+            return setStyles(styles);
         }
 
         /** Sets the contents of this cell to the specified widget. */
-        public Cell setWidget (Widget widget) {
+        public Cell setWidget (Widget widget, String... styles) {
             _table.setWidget(row, column, widget);
-            return this;
+            return setStyles(styles);
         }
 
         /** Sets the contents of this cell to a FlowPanel that contains the specified widgets. */
