@@ -101,8 +101,7 @@ public class FluentTable extends FlexTable
 
         /** Configures the specified style names on our cell. The first style is set as the primary
          * style and additional styles are added onto that. */
-        public Cell setStyles (String... styles)
-        {
+        public Cell setStyles (String... styles) {
             int idx = 0;
             for (String style : styles) {
                 if (idx++ == 0) {
@@ -112,6 +111,16 @@ public class FluentTable extends FlexTable
                 }
             }
             return this;
+        }
+
+        /** Returns the cell to the right of this cell, (row, column+1). */
+        public Cell right () {
+            return new Cell(_table, row, column+1);
+        }
+
+        /** Returns the cell below this cell, (row+1, column). */
+        public Cell down () {
+            return new Cell(_table, row, column+1);
         }
 
         protected Cell (FluentTable table, int row, int column)
