@@ -98,6 +98,11 @@ public class FluentTable extends FlexTable
     {
     }
 
+    public FluentTable (String... styles)
+    {
+        Widgets.setStyleNames(this, styles);
+    }
+
     public FluentTable (int cellPadding, int cellSpacing)
     {
         setCellPadding(cellPadding);
@@ -106,9 +111,9 @@ public class FluentTable extends FlexTable
 
     public FluentTable (int cellPadding, int cellSpacing, String... styles)
     {
+        this(styles);
         setCellPadding(cellPadding);
         setCellSpacing(cellSpacing);
-        Widgets.setStyleNames(this, styles);
     }
 
     /**
