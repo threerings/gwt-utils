@@ -9,23 +9,23 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 
 /**
- * Converts an enter keypress in a text field to a call to a click handler. NOTE: the handler will
+ * Converts an escape keypress in a text field to a call to a click handler. NOTE: the handler will
  * be passed a null event.
  */
-public class EnterClickAdapter implements KeyPressHandler
+public class EscapeClickAdapter implements KeyPressHandler
 {
-    public EnterClickAdapter (ClickHandler onEnter)
+    public EscapeClickAdapter (ClickHandler onEscape)
     {
-        _onEnter = onEnter;
+        _onEscape = onEscape;
     }
 
     // from interface KeyPressHandler
     public void onKeyPress (KeyPressEvent event)
     {
-        if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-            _onEnter.onClick(null);
+        if (event.getCharCode() == KeyCodes.KEY_ESCAPE) {
+            _onEscape.onClick(null);
         }
     }
 
-    protected ClickHandler _onEnter;
+    protected ClickHandler _onEscape;
 }
