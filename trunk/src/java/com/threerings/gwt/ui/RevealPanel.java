@@ -27,7 +27,7 @@ public class RevealPanel extends SimplePanel
      * Creates a panel that will reveal (and hide) the supplied target with a vertical wipe
      * animation that lasts the specified number of milliseconds.
      */
-    public RevealPanel (long animTime, Widget target)
+    public RevealPanel (int animTime, Widget target)
     {
         _animTime = animTime;
         add(target);
@@ -84,6 +84,7 @@ public class RevealPanel extends SimplePanel
         }
     };
 
-    protected long _animTime;
-    protected int _targetHeight;
+    protected int _animTime, _targetHeight;
+
+    protected static final int DEFAULT_ANIM_TIME = 500;
 }
