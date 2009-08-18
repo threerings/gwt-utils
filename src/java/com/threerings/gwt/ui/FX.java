@@ -15,7 +15,7 @@ public class FX
      * Creates an animation that reveals the supplied target panel (wiping it from height zero to
      * full height). The animation can be subsequently configured via its fluent methods.
      */
-    public WipeAnimation reveal (final SimplePanel target)
+    public static WipeAnimation reveal (final SimplePanel target)
     {
         return new WipeAnimation(target) {
             @Override protected void onStart () {
@@ -39,7 +39,7 @@ public class FX
      * Creates an animation that unreveals the supplied target panel (wiping it down to height
      * zero). The animation can be subsequently configured via its fluent methods.
      */
-    public WipeAnimation unreveal (SimplePanel target)
+    public static WipeAnimation unreveal (SimplePanel target)
     {
         return new WipeAnimation(target) {
             @Override protected int computeCurHeight (int targetHeight, double progress) {
