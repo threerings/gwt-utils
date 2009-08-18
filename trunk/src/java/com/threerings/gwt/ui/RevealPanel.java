@@ -4,6 +4,7 @@
 package com.threerings.gwt.ui;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -36,53 +37,60 @@ public class RevealPanel extends SimplePanel
     /**
      * Reveals the target widget with a vertical wipe. The panel will be height zero when the
      * animation starts and the full height of the target when it completes.
+     *
+     * @param onComplete an optional command to execute when the animation is completd.
      */
-    public void reveal ()
+    public void reveal (final Command onComplete)
     {
         DOM.setStyleAttribute(getElement(), "overflow", "hidden");
         DOM.setStyleAttribute(getElement(), "height", "0px");
-        _revealAnim.run(_animTime);
+        new Animation() {
+            @Override protected void onUpdate (double progress) {
+                // the target may not be fully laid out when we start so we update our target
+                // height every frame so that we eventually know how big we want to be; this can
+                // result in a little jitter at the start of the animation but usually isn't bad
+                _targetHeight = getWidget().getOffsetHeight();
+                int curHeight = (int) (progress * _targetHeight);
+                DOM.setStyleAttribute(RevealPanel.this.getElement(), "height", curHeight + "px");
+            }
+
+            @Override protected void onComplete () {
+                super.onComplete();
+                DOM.setStyleAttribute(RevealPanel.this.getElement(), "overflow", "auto");
+                DOM.setStyleAttribute(RevealPanel.this.getElement(), "height", "auto");
+                if (onComplete != null) {
+                    onComplete.execute();
+                }
+            }
+        }.run(_animTime);
     }
 
     /**
      * Hides the target widget with a vertical wipe and then removes it from its parent panel when
      * the animation completes.
+     *
+     * @param onComplete an optional command to execute when the animation is completd.
      */
-    public void hideAndRemove ()
+    public void hideAndRemove (final Command onComplete)
     {
         DOM.setStyleAttribute(getElement(), "overflow", "hidden");
         _targetHeight = getWidget().getOffsetHeight();
-        _hideAnim.run(_animTime);
+
+        new Animation() {
+            @Override protected void onUpdate (double progress) {
+                int curHeight = (int) ((1-progress) * _targetHeight);
+                DOM.setStyleAttribute(RevealPanel.this.getElement(), "height", curHeight + "px");
+            }
+
+            @Override protected void onComplete () {
+                super.onComplete();
+                ((Panel)RevealPanel.this.getParent()).remove(RevealPanel.this);
+                if (onComplete != null) {
+                    onComplete.execute();
+                }
+            }
+        }.run(_animTime);
     }
-
-    protected Animation _revealAnim = new Animation() {
-        @Override protected void onUpdate (double progress) {
-            // the target may not be fully laid out when we start our reveal so we update our
-            // target height every frame so that we eventually know how big we want to be; this can
-            // result in a little jitter at the start of the animation but usually isn't bad
-            _targetHeight = getWidget().getOffsetHeight();
-            int curHeight = (int) (progress * _targetHeight);
-            DOM.setStyleAttribute(RevealPanel.this.getElement(), "height", curHeight + "px");
-        }
-
-        @Override protected void onComplete () {
-            super.onComplete();
-            DOM.setStyleAttribute(RevealPanel.this.getElement(), "overflow", "auto");
-            DOM.setStyleAttribute(RevealPanel.this.getElement(), "height", "auto");
-        }
-    };
-
-    protected Animation _hideAnim = new Animation() {
-        @Override protected void onUpdate (double progress) {
-            int curHeight = (int) ((1-progress) * _targetHeight);
-            DOM.setStyleAttribute(RevealPanel.this.getElement(), "height", curHeight + "px");
-        }
-
-        @Override protected void onComplete () {
-            super.onComplete();
-            ((Panel)RevealPanel.this.getParent()).remove(RevealPanel.this);
-        }
-    };
 
     protected int _animTime, _targetHeight;
 
