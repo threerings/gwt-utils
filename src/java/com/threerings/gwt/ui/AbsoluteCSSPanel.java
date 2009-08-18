@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.gwt.ui;
 
 import com.google.gwt.user.client.DOM;
