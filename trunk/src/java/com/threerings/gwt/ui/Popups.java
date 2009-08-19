@@ -80,13 +80,21 @@ public class Popups
     }
 
     /**
-     * Centers the supplied vertically on the supplied trigger widget. The popup will be shown if
-     * it is not already.
+     * Centers the supplied vertically on the supplied trigger widget. The popup's showing state
+     * will be preserved.
+     *
+     * @return the supplied popup.
      */
-    public static void centerOn (PopupPanel popup, int ypos)
+    public static PopupPanel centerOn (PopupPanel popup, int ypos)
     {
-        popup.setVisible(false);
-        popup.show();
+        boolean wasHidden = !popup.isShowing();
+        boolean wasVisible = popup.isVisible();
+        if (wasVisible) {
+            popup.setVisible(false);
+        }
+        if (wasHidden) {
+            popup.show();
+        }
         int left = (Window.getClientWidth() - popup.getOffsetWidth()) >> 1;
         int top = ypos - popup.getOffsetHeight()/2;
         // bound the popup into the visible browser area if possible
@@ -94,7 +102,13 @@ public class Popups
             top = Math.min(Math.max(0, top), Window.getClientHeight() - popup.getOffsetHeight());
         }
         popup.setPopupPosition(left, top);
-        popup.setVisible(true);
+        if (wasHidden) {
+            popup.hide();
+        }
+        if (wasVisible) {
+            popup.setVisible(true);
+        }
+        return popup;
     }
 
     /**
