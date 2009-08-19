@@ -4,7 +4,11 @@
 package com.threerings.gwt.ui;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+
+import com.threerings.gwt.ui.fx.MoveAnimation;
+import com.threerings.gwt.ui.fx.WipeAnimation;
 
 /**
  * Creates animation effects.
@@ -44,6 +48,27 @@ public class FX
         return new WipeAnimation(target) {
             @Override protected int computeCurHeight (int targetHeight, double progress) {
                 return (int) ((1-progress) * targetHeight);
+            }
+        };
+    }
+
+    /**
+     * Creates an animation that will move the specified popup panel. If the popup is not showing
+     * or not visible, it will be shown and made visible immediately after moving it to the start
+     * position.
+     */
+    public static MoveAnimation move (final PopupPanel target)
+    {
+        return new MoveAnimation(target) {
+            @Override protected void updatePosition (int left, int top) {
+                target.setPopupPosition(left, top);
+            }
+            @Override protected void onStart () {
+                super.onStart();
+                if (!target.isShowing()) {
+                    target.show();
+                }
+                target.setVisible(true);
             }
         };
     }

@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.gwt.ui;
+package com.threerings.gwt.ui.fx;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.user.client.Command;
