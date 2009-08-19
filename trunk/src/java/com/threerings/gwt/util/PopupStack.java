@@ -76,7 +76,7 @@ public class PopupStack
         if (onCenter == null) {
             popup.center(); // this will show the popup
         } else {
-            Popups.centerOn(popup, ypos);
+            Popups.centerOn(popup, ypos).show();
         }
     }
 
