@@ -71,9 +71,10 @@
   <!-- builds our distribution jar files -->
   <target name="dist" depends="prepare,compile">
     <jar destfile="${deploy.dir}/${app.name}.jar">
-      <!-- include our build classfiles -->
-      <fileset dir="${deploy.dir}/classes" includes="**"/>
-      <!-- include the source for code to be compiled to JavaScript -->
+      <!-- we only include the OOO class files -->
+      <fileset dir="${deploy.dir}/classes" includes="com/threerings/**"/>
+      <!-- include the source for code to be compiled to JavaScript, here we -->
+      <!-- include our sneaky duplicates of Google Collections stuff -->
       <fileset dir="src/java">
         <include name="com/threerings/gwt/**"/>
         <exclude name="com/threerings/gwt/rebind/**"/>

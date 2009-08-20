@@ -3,6 +3,7 @@
 
 package com.threerings.gwt.util;
 
+import com.google.common.base.Function;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**

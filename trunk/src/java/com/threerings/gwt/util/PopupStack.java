@@ -6,6 +6,7 @@ package com.threerings.gwt.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Function;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
