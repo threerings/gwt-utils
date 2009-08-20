@@ -73,12 +73,14 @@
     <jar destfile="${deploy.dir}/${app.name}.jar">
       <!-- we only include the OOO class files -->
       <fileset dir="${deploy.dir}/classes" includes="com/threerings/**"/>
-      <!-- include the source for code to be compiled to JavaScript, here we -->
-      <!-- include our sneaky duplicates of Google Collections stuff -->
+      <!-- include the source for code to be compiled to JavaScript -->
       <fileset dir="src/java">
         <include name="com/threerings/gwt/**"/>
         <exclude name="com/threerings/gwt/rebind/**"/>
         <exclude name="com/threerings/gwt/tools/**"/>
+        <!-- include our sneaky duplicates of Google Collections stuff -->
+        <include name="javax/**"/>
+        <include name="com/google/**"/>
       </fileset>
     </jar>
   </target>
