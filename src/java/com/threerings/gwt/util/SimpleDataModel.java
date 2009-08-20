@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Predicate;
+//import com.google.common.base.Predicates;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -36,9 +37,9 @@ public class SimpleDataModel<T>
      */
     public SimpleDataModel<T> filter (Predicate<T> pred)
     {
-        if (pred instanceof Predicates.TRUE) {
-            return this; // optimization
-        }
+//        if (Predicates.alwaysTrue().equals(pred)) {
+//            return this; // optimization
+//        }
         List<T> items = new ArrayList<T>();
         for (T item : _items) {
             if (pred.apply(item)) {
