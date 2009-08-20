@@ -6,6 +6,8 @@ package com.threerings.gwt.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Function;
+
 /**
  * Contains a changing value and provides a mechanism for listeners to react to changes to the
  * value.

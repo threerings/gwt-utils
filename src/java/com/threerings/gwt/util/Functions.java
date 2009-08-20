@@ -3,6 +3,8 @@
 
 package com.threerings.gwt.util;
 
+import com.google.common.base.Function;
+
 /**
  * A collection of general purpose functions.
  */

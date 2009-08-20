@@ -6,6 +6,7 @@ package com.threerings.gwt.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Predicate;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -35,7 +36,7 @@ public class SimpleDataModel<T>
      */
     public SimpleDataModel<T> filter (Predicate<T> pred)
     {
-        if (pred instanceof Predicate.TRUE) {
+        if (pred instanceof Predicates.TRUE) {
             return this; // optimization
         }
         List<T> items = new ArrayList<T>();
