@@ -133,6 +133,8 @@ public abstract class ClickCallback<T>
 
     protected void takeAction (boolean confirmed)
     {
+        updateConfirmMessage();
+
         // if we have no confirmation message or are already confirmed, do the deed
         if (confirmed || _confirmMessage == null) {
             if (callService()) {
@@ -144,6 +146,16 @@ public abstract class ClickCallback<T>
         // otherwise display a confirmation panel
         setEnabled(false);
         displayConfirmPopup();
+    }
+
+    /**
+     * Updates the confirmation message just before taking action. This allows subclasses to set
+     * the confirmation message based on the state of the other form fields without explicitly
+     * updating it each time. By default does nothing so that the previously configured
+     * confirmation message is used. 
+     */
+    protected void updateConfirmMessage ()
+    {
     }
 
     protected void displayConfirmPopup ()
