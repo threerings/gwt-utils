@@ -4,8 +4,10 @@
 package com.threerings.gwt.ui;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import com.threerings.gwt.ui.fx.MoveAnimation;
 import com.threerings.gwt.ui.fx.WipeAnimation;
@@ -69,6 +71,18 @@ public class FX
                     target.show();
                 }
                 target.setVisible(true);
+            }
+        };
+    }
+
+    /**
+     * Creates an animation that will move the specified child of the specified absolute panel.
+     */
+    public static MoveAnimation move (final AbsolutePanel parent, final Widget target)
+    {
+        return new MoveAnimation(target) {
+            @Override protected void updatePosition (int left, int top) {
+                parent.setWidgetPosition(target, left, top);
             }
         };
     }
