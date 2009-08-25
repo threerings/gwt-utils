@@ -21,9 +21,8 @@ public class FX
      * Creates an animation that reveals the supplied target panel (wiping it from height zero to
      * full height). The animation can be subsequently configured via its fluent methods. The
      * returned animation is configured fluently, for example:
-     * <code>
-     * FX.reveal(target).fromTop().onComplete(action).run(250);
-     * </code>
+     *
+     * <code>FX.reveal(target).fromTop().onComplete(action).run(250);</code>
      */
     public static WipeAnimation reveal (final SimplePanel target)
     {
@@ -49,9 +48,8 @@ public class FX
      * Creates an animation that unreveals the supplied target panel (wiping it down to height
      * zero). The animation can be subsequently configured via its fluent methods. The returned
      * animation is configured fluently, for example:
-     * <code>
-     * FX.unreveal(target).fromBottom().onComplete(action).run(250);
-     * </code>
+     *
+     * <code>FX.unreveal(target).fromBottom().onComplete(action).run(250);</code>
      */
     public static WipeAnimation unreveal (SimplePanel target)
     {
@@ -66,9 +64,8 @@ public class FX
      * Creates an animation that will move the specified popup panel. If the popup is not showing
      * or not visible, it will be shown and made visible immediately after moving it to the start
      * position. The returned animation is configured fluently, for example:
-     * <code>
-     * FX.move(target).from(x, y).to(dx, dy).onComplete(action).run(500);
-     * </code>
+     *
+     * <code>FX.move(target).from(x, y).to(dx, dy).onComplete(action).run(500);</code>
      */
     public static MoveAnimation move (final PopupPanel target)
     {
@@ -89,9 +86,8 @@ public class FX
     /**
      * Creates an animation that will move the specified child of the specified absolute panel. The
      * returned animation is configured fluently, for example:
-     * <code>
-     * FX.move(panel, target).from(x, y).to(dx, dy).onComplete(action).run(500);
-     * </code>
+     *
+     * <code>FX.move(panel, target).from(x, y).to(dx, dy).onComplete(action).run(500);</code>
      */
     public static MoveAnimation move (final AbsolutePanel parent, final Widget target)
     {
