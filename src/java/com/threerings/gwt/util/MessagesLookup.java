@@ -17,10 +17,8 @@ public abstract class MessagesLookup
     }
 
     /**
-     * Translate a compound key/params string. The compoundKey is compatible with MessageBundle,
-     * with the exception that qualified keys are not supported.
-     *
-     * @see com.samskivert.text.MessageBundle
+     * Translate a compound key/params string. The compoundKey is compatible with Narya's
+     * MessageBundle, with the exception that qualified keys are not supported.
      */
     public String xlate (String compoundKey)
     {
