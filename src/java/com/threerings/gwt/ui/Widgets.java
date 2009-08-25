@@ -56,7 +56,9 @@ public class Widgets
     {
         FlowPanel panel = new FlowPanel();
         for (Widget child : contents) {
-            panel.add(child);
+            if (child != null) {
+                panel.add(child);
+            }
         }
         return setStyleNames(panel, styleName);
     }
@@ -137,10 +139,12 @@ public class Widgets
             row.setStyleName(styleName);
         }
         for (Widget widget : contents) {
-            if (row.getWidgetCount() > 0) {
-                row.add(newShim(5, 5));
+            if (widget != null) {
+                if (row.getWidgetCount() > 0) {
+                    row.add(newShim(5, 5));
+                }
+                row.add(widget);
             }
-            row.add(widget);
         }
         return row;
     }
