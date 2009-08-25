@@ -43,7 +43,7 @@ public class Console
     /**
      * Prints out the stack trace of the caller. Note this will only work on Firebug.
      * TODO: print via the {@link #log} method instead of using $wnd.console
-     * @see http://eriwen.com/javascript/js-stack-trace/
+     * See http://eriwen.com/javascript/js-stack-trace/
      */
     public static native void printStackTrace () /*-{
         var callstack = [];
@@ -85,7 +85,8 @@ public class Console
             var currentFunction = arguments.callee.caller;
             while (currentFunction) {
                 var fn = currentFunction.toString();
-                var fname = fn.substring(fn.indexOf("function") + 8, fn.indexOf("(")) || "anonymous";
+                var fname = fn.substring(fn.indexOf("function") + 8,
+                                         fn.indexOf("(")) || "anonymous";
                 callstack.push(fname);
                 currentFunction = currentFunction.caller;
             }
