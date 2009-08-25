@@ -192,7 +192,7 @@ public class Widgets
      * Makes the supplied widget "actionable" which means adding the "actionLabel" style to it and
      * binding the supplied click handler.
      *
-     * @param enabler an optional value that governs the enabled state of the target. When the
+     * @param enabled an optional value that governs the enabled state of the target. When the
      * value becomes false, the target's click handler and "actionLabel" style will be removed,
      * when it becomes true they will be reinstated.
      */

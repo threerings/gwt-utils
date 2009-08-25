@@ -90,8 +90,8 @@
     <javadoc sourcepath="src/java" packagenames="com.threerings.*"
              destdir="${javadoc.home}" additionalparam="-breakiterator">
       <classpath refid="classpath"/>
-      <link href="http://java.sun.com/j2se/1.5/docs/api/"/>
-      <link href="http://samskivert.com/code/samskivert/samskivert/docs/api"/>
+      <link href="http://samskivert.com/code/samskivert/docs"/>
+      <link href="http://java.sun.com/javase/6/docs/api/"/>
     </javadoc>
   </target>
 </project>

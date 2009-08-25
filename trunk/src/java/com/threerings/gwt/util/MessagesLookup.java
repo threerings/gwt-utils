@@ -20,7 +20,7 @@ public abstract class MessagesLookup
      * Translate a compound key/params string. The compoundKey is compatible with MessageBundle,
      * with the exception that qualified keys are not supported.
      *
-     * @see com.threerings.util.MessageBundle
+     * @see com.samskivert.text.MessageBundle
      */
     public String xlate (String compoundKey)
     {
