@@ -54,6 +54,9 @@ public class SimpleDataModel<T>
      */
     public void addItem (int index, T item)
     {
+        if (_items == null) {
+            return;
+        }
         _items.add(index, item);
     }
 
@@ -62,6 +65,9 @@ public class SimpleDataModel<T>
      */
     public void updateItem (T item)
     {
+        if (_items == null) {
+            return;
+        }
         int idx = _items.indexOf(item);
         if (idx == -1) {
             _items.add(0, item);
@@ -90,7 +96,7 @@ public class SimpleDataModel<T>
     // from DataModel
     public int getItemCount ()
     {
-        return _items.size();
+        return (_items != null) ? _items.size() : 0;
     }
 
     // from DataModel
@@ -107,7 +113,9 @@ public class SimpleDataModel<T>
     // from DataModel
     public void removeItem (T item)
     {
-        _items.remove(item);
+        if (_items != null) {
+            _items.remove(item);
+        }
     }
 
     /**
