@@ -16,7 +16,9 @@ public interface DataModel<T>
 {
     /**
      * Returns the total number of items in this model. It is OK if this returns zero until after
-     * the first call to {@link #doFetchRows} is called back.
+     * the first call to {@link #doFetchRows} is called back. You may also return -1 to indicate
+     * that this model does not supply a row count, and the pager should continue offering pages
+     * for as long as the underlying service is able to satisfy the requests.
      */
     int getItemCount ();
 

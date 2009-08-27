@@ -126,7 +126,7 @@ public abstract class PagedWidget<T> extends FlowPanel
      * Displays the specified page. Does nothing if we are already displaying
      * that page unless forceRefresh is true.
      */
-    public void displayPage (int page, boolean forceRefresh)
+    public void displayPage (final int page, boolean forceRefresh)
     {
         if (_page == page && !forceRefresh) {
             return; // NOOP!
@@ -137,10 +137,25 @@ public abstract class PagedWidget<T> extends FlowPanel
 
         _page = Math.max(page, 0);
 
+        final boolean overQuery = (_model.getItemCount() < 0);
         final int count = _resultsPerPage;
         final int start = _resultsPerPage * page;
-        _model.doFetchRows(start, count, new AsyncCallback<List<T>>() {
+        _model.doFetchRows(start, overQuery ? (count + 1) : count, new AsyncCallback<List<T>>() {
             public void onSuccess (List<T> result) {
+                if (overQuery) {
+                    // if we requested 1 item too many, see if we got it
+                    if (result.size() < (count + 1)) {
+                        // no: this is the last batch of items, woohoo
+                        _lastItem = start + result.size();
+                    } else {
+                        // yes: strip it before anybody else gets to see it
+                        result.remove(count);
+                        _lastItem = -1;
+                    }
+                } else {
+                    // a valid item count should be available at this point
+                    _lastItem = _model.getItemCount();
+                }
                 displayResults(start, count, result);
             }
             public void onFailure (Throwable caught) {
@@ -186,8 +201,14 @@ public abstract class PagedWidget<T> extends FlowPanel
         panel.add(new Label("Page:")); // TODO: i18n
 
         // determine which pages we want to show
-        int pages = total/_resultsPerPage + (total%_resultsPerPage == 0 ? 0 : 1);
         int page = 1+start/_resultsPerPage;
+
+        int pages;
+        if (total < 0) {
+            pages = page + 1;
+        } else {
+            pages = total/_resultsPerPage + (total%_resultsPerPage == 0 ? 0 : 1);
+        }
 
         List<Integer> shown = new ArrayList<Integer>();
         shown.add(1);
@@ -223,7 +244,7 @@ public abstract class PagedWidget<T> extends FlowPanel
      */
     protected boolean displayNavi (int items)
     {
-        return (items > 0);
+        return (items != 0);
     }
 
     protected Label createPageLinkLabel (final int page)
@@ -251,13 +272,13 @@ public abstract class PagedWidget<T> extends FlowPanel
     {
         clear();
 
-        if (_navLoc != NAV_ON_BOTTOM && displayNavi(_model.getItemCount())) {
+        if (_navLoc != NAV_ON_BOTTOM && displayNavi(_lastItem)) {
             add(_controls);
         }
 
         add((list.size() == 0) ? createEmptyContents() : createContents(start, count, list));
 
-        if (_navLoc != NAV_ON_TOP && displayNavi(_model.getItemCount())) {
+        if (_navLoc != NAV_ON_TOP && displayNavi(_lastItem)) {
             add(_controls);
         } else {
             Widget cap = new Label("");
@@ -266,10 +287,10 @@ public abstract class PagedWidget<T> extends FlowPanel
         }
 
         _prev.setEnabled(start > 0);
-        _next.setEnabled(start + list.size() < _model.getItemCount());
-        if (_model.getItemCount() > 0) {
+        _next.setEnabled(_lastItem < 0 || start + list.size() < _lastItem);
+        if (_lastItem != 0) {
             int shown = Math.min(list.size(), count);
-            configureNavi(_controls, 0, _infoCol, start, shown, _model.getItemCount());
+            configureNavi(_controls, 0, _infoCol, start, shown, _lastItem);
         } else {
             _controls.setHTML(0, _infoCol, "&nbsp;");
         }
@@ -314,6 +335,7 @@ public abstract class PagedWidget<T> extends FlowPanel
     protected Button _next, _prev;
 
     protected DataModel<T> _model;
+    protected int _lastItem;
     protected int _page;
     protected int _resultsPerPage;
 }
