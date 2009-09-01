@@ -60,6 +60,15 @@ public class PopupStack
             _showingPopup.update(null);
             showing.hide();
         }
+
+        if (onCenter == null) {
+            popup.center(); // this will show the popup
+        } else {
+            Popups.centerOn(popup, ypos).show();
+        }
+
+        // now that we've centered and shown our popup (which may have involved showing, hiding and
+        // showing it again), we can add a close handler and listen for it to actually close
         popup.addCloseHandler(new CloseHandler<PopupPanel>() {
             public void onClose (CloseEvent<PopupPanel> event) {
                 if (_showingPopup.get() == event.getTarget()) {
@@ -73,12 +82,6 @@ public class PopupStack
             }
         });
         _showingPopup.update(popup);
-
-        if (onCenter == null) {
-            popup.center(); // this will show the popup
-        } else {
-            Popups.centerOn(popup, ypos).show();
-        }
     }
 
     /**
