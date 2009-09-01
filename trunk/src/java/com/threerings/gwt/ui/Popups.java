@@ -32,6 +32,15 @@ public class Popups
     }
 
     /**
+     * Displays an info message centered horizontally on the page and centered vertically on the
+     * specified target widget.
+     */
+    public static void infoOver (String message, Widget target)
+    {
+        showOver(new InfoPopup(message), target);
+    }
+
+    /**
      * Displays error feedback to the user in a non-offensive way.
      */
     public static void error (String message)
