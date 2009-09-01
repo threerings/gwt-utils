@@ -233,7 +233,9 @@ public abstract class PagedWidget<T> extends FlowPanel
             }
             ppage = cpage;
         }
-
+        if (total < 0) {
+            panel.add(createPageLabel("...", null));
+        }
         controls.setWidget(row, col, panel);
         controls.getFlexCellFormatter().setHorizontalAlignment(row, col, HasAlignment.ALIGN_CENTER);
     }
