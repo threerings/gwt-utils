@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.threerings.gwt.ui.EnterClickAdapter;
 import com.threerings.gwt.ui.Popups;
 import com.threerings.gwt.ui.SmartTable;
+import com.threerings.gwt.util.Console;
 
 /**
  * Allows one to wire up a button and a service call into one concisely specified little chunk of
@@ -183,7 +184,12 @@ public abstract class ClickCallback<T>
         }));
         contents.getFlexCellFormatter().setHorizontalAlignment(1, 1, HasAlignment.ALIGN_CENTER);
         confirm.setWidget(contents);
-        confirm.center();
+        Widget near = getPopupNear();
+        if (near == null) {
+            confirm.center(); // this shows the popup
+        } else {
+            Popups.centerOn(confirm, near).show();
+        }
     }
 
     protected void onConfirmed ()
@@ -233,14 +239,19 @@ public abstract class ClickCallback<T>
 
     protected void reportFailure (Throwable cause)
     {
+        if (_onEnter != null) {
+            _onEnter.setFocus(true);
+        }
+        showError(cause, getPopupNear());
+    }
+
+    protected Widget getPopupNear ()
+    {
         Widget near = _onEnter;
         if (near == null && _trigger instanceof Widget) {
             near = (Widget)_trigger;
         }
-        if (_onEnter != null) {
-            _onEnter.setFocus(true);
-        }
-        showError(cause, near);
+        return near;
     }
 
     protected ClickHandler _onClick = new ClickHandler() {
