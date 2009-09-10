@@ -80,12 +80,12 @@ public class Popups
     }
 
     /**
-     * Centers the supplied vertically on the supplied trigger widget. The popup will be shown if
-     * it is not already.
+     * Centers the supplied vertically on the supplied trigger widget. The popup's showing state
+     * will be preserved.
      */
-    public static void centerOn (PopupPanel popup, Widget centerOn)
+    public static PopupPanel centerOn (PopupPanel popup, Widget centerOn)
     {
-        centerOn(popup, centerOn.getAbsoluteTop() + centerOn.getOffsetHeight()/2);
+        return centerOn(popup, centerOn.getAbsoluteTop() + centerOn.getOffsetHeight()/2);
     }
 
     /**
