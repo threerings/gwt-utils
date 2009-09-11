@@ -102,11 +102,12 @@ public class FX
 
     /**
      * Returns a command that, when executed itself, will execute the supplied command after the
-     * specified millisecond delay.
+     * specified millisecond delay. For convenience purposes, if a null command is supplied, null
+     * is returned.
      */
     public static Command delay (final Command command, final int delay)
     {
-        return new Command() {
+        return (command == null) ? null : new Command() {
             public void execute () {
                 new Timer() {
                     public void run () {
