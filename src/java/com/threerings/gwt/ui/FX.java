@@ -3,7 +3,9 @@
 
 package com.threerings.gwt.ui;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -94,6 +96,23 @@ public class FX
         return new MoveAnimation(target) {
             @Override protected void updatePosition (int left, int top) {
                 parent.setWidgetPosition(target, left, top);
+            }
+        };
+    }
+
+    /**
+     * Returns a command that, when executed itself, will execute the supplied command after the
+     * specified millisecond delay.
+     */
+    public static Command delay (final Command command, final int delay)
+    {
+        return new Command() {
+            public void execute () {
+                new Timer() {
+                    public void run () {
+                        command.execute();
+                    }
+                }.schedule(delay);
             }
         };
     }
