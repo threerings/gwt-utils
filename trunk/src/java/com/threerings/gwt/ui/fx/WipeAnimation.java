@@ -44,7 +44,7 @@ public abstract class WipeAnimation extends Animation
 
     protected WipeAnimation (SimplePanel target)
     {
-        _target = target;;
+        _target = target;
     }
 
     protected abstract int computeCurHeight (int targetHeight, double progress);
