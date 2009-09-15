@@ -65,7 +65,7 @@ public class StyledTextPanel extends Widget
                 paragraphs[ii] = paragraphs[ii].trim();
                 // find the number of stars prepending this line
                 for (depth = 0; paragraphs[ii].startsWith("*"); 
-                     paragraphs[ii] = paragraphs[ii].substring(1), depth++);
+                     paragraphs[ii] = paragraphs[ii].substring(1), depth++) { /* loop! */ }
 
                 // make sure the current list stack contains the right number of lists
                 if (depth < lists.size()) {
