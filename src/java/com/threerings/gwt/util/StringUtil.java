@@ -120,6 +120,33 @@ public class StringUtil
         return str.length() > limit ? str.substring(0, limit) : str;
     }
 
+    /**
+     * Joins the given sequence of strings with a command and space between each consecutive pair.
+     */
+    public static String join (Iterable<String> items)
+    {
+        return join(items, ", ");
+    }
+
+    /**
+     * Joins the given sequence of strings, which the given separator string between each
+     * consecutive pair.
+     */
+    public static String join (Iterable<String> items, String sep)
+    {
+        StringBuilder bldr = new StringBuilder();
+        boolean first = true;
+        for (String item : items) {
+            if (first) {
+                first = false;
+            } else {
+                bldr.append(sep);
+            }
+            bldr.append(item);
+        }
+        return bldr.toString();
+    }
+
     /** Map of strings that must be replaced inside html attributes and their replacements. (They
      * need to be applied in order so amps are not double escaped.) */
     protected static final String[][] ATTR_ESCAPES = {
