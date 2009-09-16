@@ -3,6 +3,8 @@
 
 package com.threerings.gwt.util;
 
+import java.util.Iterator;
+
 /** 
  * Useful string utilities, brought over to GWT land from {@link com.samskivert.util.StringUtil}. 
  */
