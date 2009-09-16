@@ -123,7 +123,7 @@ public class StringUtil
     /**
      * Joins the given sequence of strings with a command and space between each consecutive pair.
      */
-    public static String join (Iterable<String> items)
+    public static String join (Iterable<?> items)
     {
         return join(items, ", ");
     }
@@ -132,19 +132,17 @@ public class StringUtil
      * Joins the given sequence of strings, which the given separator string between each
      * consecutive pair.
      */
-    public static String join (Iterable<String> items, String sep)
+    public static String join (Iterable<?> items, String sep)
     {
-        StringBuilder bldr = new StringBuilder();
-        boolean first = true;
-        for (String item : items) {
-            if (first) {
-                first = false;
-            } else {
-                bldr.append(sep);
-            }
-            bldr.append(item);
+        Iterator<?> i = items.iterator();
+        if (!i.hasNext()) {
+            return "";
         }
-        return bldr.toString();
+        StringBuilder buf = new StringBuilder(String.valueOf(i.next()));
+        while (i.hasNext()) {
+            buf.append(sep).append(i.next());
+        }
+        return buf.toString();
     }
 
     /** Map of strings that must be replaced inside html attributes and their replacements. (They
