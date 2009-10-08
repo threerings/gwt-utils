@@ -20,6 +20,73 @@ public class WidgetUtil
     public static String FLASH_VERSION = "9,0,0,0";
 
     /**
+     * Parameters for embedding a flash movie in an html page.
+     */
+    public static class FlashObject
+    {
+        /** The id and/or name of the embed tag. */
+        public String ident;
+
+        /** The url of the movie file to embed. */
+        public String movie;
+
+        /** The value of the "width" embed parameter for the movie. */
+        public String width;
+
+        /** The value of the "height" embed parameter for the movie. */
+        public String height;
+
+        /** The pre-URLEncoded flash variables to pass to the movie. Defaults to null. */
+        public String flashVars;
+
+        /** The value of the "bgcolor" embed parameter for the movie, normally a hash-prefixed hex
+         * RGB tuple. Defaults to black. */
+        public String bgcolor = "#000000";
+
+        /** Whether the embedded movie should be marked as transparent. Defaults to false. */
+        public boolean transparent;
+
+        /**
+         * Creates a new flash object definition with the given members using pixel css width and
+         * height and other members set to default values.
+         */
+        public FlashObject (String ident, String movie, int width, int height)
+        {
+            this(ident, movie, width, height, null);
+        }
+
+        /**
+         * Creates a new flash object definition with the given members using pixel css width and
+         * height and other members set to default values.
+         */
+        public FlashObject (String ident, String movie, int width, int height, String flashVars)
+        {
+            this(ident, movie, ""+width, ""+height, flashVars);
+        }
+
+        /**
+         * Creates a new flash object definition with the given members and other members default.
+         */
+        public FlashObject (String ident, String movie, String width, String height)
+        {
+            this(ident, movie, width, height, null);
+        }
+
+        /**
+         * Creates a new flash object definition with the given members and other members default.
+         */
+        public FlashObject (String ident, String movie, String width, String height,
+                            String flashVars)
+        {
+            this.ident = ident;
+            this.movie = movie;
+            this.width = width;
+            this.height = height;
+            this.flashVars = flashVars;
+        }
+    }
+
+    /**
      * Creates the HTML to display a transparent Flash movie for the browser on which we're running.
      *
      * @param flashVars a pre-URLEncoded string containing flash variables, or null.
@@ -28,7 +95,9 @@ public class WidgetUtil
     public static HTML createTransparentFlashContainer (
         String ident, String movie, int width, int height, String flashVars)
     {
-        return createTransparentFlashContainer(ident, movie, ""+width, ""+height, flashVars);
+        FlashObject obj = new FlashObject(ident, movie, width, height, flashVars);
+        obj.transparent = true;
+        return createContainer(obj);
     }
 
     /**
@@ -40,7 +109,9 @@ public class WidgetUtil
     public static HTML createTransparentFlashContainer (String ident, String movie, String width,
                                              String height, String flashVars)
     {
-        return _impl.createFlashContainer(ident, movie, width, height, flashVars, true);
+        FlashObject obj = new FlashObject(ident, movie, width, height, flashVars);
+        obj.transparent = true;
+        return createContainer(obj);
     }
 
     /**
@@ -52,7 +123,7 @@ public class WidgetUtil
     public static HTML createFlashContainer (
         String ident, String movie, int width, int height, String flashVars)
     {
-        return createFlashContainer(ident, movie, ""+width, ""+height, flashVars);
+        return createContainer(new FlashObject(ident, movie, width, height, flashVars));
     }
 
     /**
@@ -64,7 +135,18 @@ public class WidgetUtil
     public static HTML createFlashContainer (String ident, String movie, String width,
                                              String height, String flashVars)
     {
-        return _impl.createFlashContainer(ident, movie, width, height, flashVars, false);
+        return createContainer(new FlashObject(ident, movie, width, height, flashVars));
+    }
+
+    /**
+     * Creates the HTML to display a transparent Flash movie for the browser on which we're running.
+     *
+     * @param flashVars a pre-URLEncoded string containing flash variables, or null.
+     *        http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_16417
+     */
+    public static HTML createContainer (FlashObject obj)
+    {
+        return _impl.createContainer(obj);
     }
 
     /**
@@ -77,7 +159,7 @@ public class WidgetUtil
     public static String createFlashObjectDefinition (
         String ident, String movie, int width, int height, String flashVars)
     {
-        return createFlashObjectDefinition(ident, movie, ""+width, ""+height, flashVars);
+        return createDefinition(new FlashObject(ident, movie, width, height, flashVars));
     }
 
     /**
@@ -90,7 +172,12 @@ public class WidgetUtil
     public static String createFlashObjectDefinition (
         String ident, String movie, String width, String height, String flashVars)
     {
-        return _impl.createFlashObjectDefinition(ident, movie, width, height, flashVars, false);
+        return createDefinition(new FlashObject(ident, movie, width, height, flashVars));
+    }
+
+    public static String createDefinition (FlashObject obj)
+    {
+        return _impl.createDefinition(obj);
     }
 
     /**
