@@ -11,23 +11,23 @@ import com.google.gwt.user.client.ui.HTML;
 public class WidgetUtilImplIE6 extends WidgetUtilImpl
 {
     @Override // from WidgetUtilImpl
-    public String createFlashObjectDefinition (String ident, String movie, String width,
-                                               String height, String flashVars, boolean transparent)
+    public String createDefinition (WidgetUtil.FlashObject obj)
     {
-        String params = "<param name=\"movie\" value=\"" + movie + "\">" +
+        String transparent = obj.transparent ? "transparent" : "opaque";
+        String params = "<param name=\"movie\" value=\"" + obj.movie + "\">" +
             "<param name=\"allowFullScreen\" value=\"true\">" +
-            "<param name=\"wmode\" value=\"" + (transparent ? "transparent" : "opaque") + "\">" +
-            "<param name=\"bgcolor\" value=\"#000000\">";
-        if (flashVars != null) {
-            params += "<param name=\"FlashVars\" value=\"" + flashVars + "\">";
+            "<param name=\"wmode\" value=\"" + transparent + "\">" +
+            "<param name=\"bgcolor\" value=\"" + obj.bgcolor + "\">";
+        if (obj.flashVars != null) {
+            params += "<param name=\"FlashVars\" value=\"" + obj.flashVars + "\">";
         }
 
-        String tag = "<object id=\"" + ident + "\"";
-        if (width.length() > 0) {
-            tag += " width=\"" + width + "\"";
+        String tag = "<object id=\"" + obj.ident + "\"";
+        if (obj.width.length() > 0) {
+            tag += " width=\"" + obj.width + "\"";
         }
-        if (height.length() > 0) {
-            tag += " height=\"" + height + "\"";
+        if (obj.height.length() > 0) {
+            tag += " height=\"" + obj.height + "\"";
         }
         tag += " classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\"" +
             " codebase=\"http://active.macromedia.com/flash7/cabs/" +

@@ -9,26 +9,25 @@ package com.threerings.gwt.ui;
 public class WidgetUtilImplMozilla extends WidgetUtilImpl
 {
     @Override // from WidgetUtilImpl
-    public String createFlashObjectDefinition (String ident, String movie, String width,
-                                               String height, String flashVars, boolean transparent)
+    public String createDefinition (WidgetUtil.FlashObject obj)
     {
         String params = "";
-        if (flashVars != null) {
-            params += "FlashVars=\"" + flashVars + "\" "; // trailing space
+        if (obj.flashVars != null) {
+            params += "FlashVars=\"" + obj.flashVars + "\" "; // trailing space
         }
-        params += "bgcolor=\"#000000\" ";
+        params += "bgcolor=\"" + obj.bgcolor + "\" ";
 
-        String tag = "<embed id=\"" + ident + "\" name=\"" + ident + "\" " +
+        String tag = "<embed id=\"" + obj.ident + "\" name=\"" + obj.ident + "\" " +
             "type=\"application/x-shockwave-flash\" " +
             "pluginspage=\"http://www.macromedia.com/go/getflashplayer\" " +
-            "wmode=\"" + (transparent ? "transparent" : "opaque") + "\"";
-        if (width.length() > 0) {
-            tag += " width=\"" + width + "\"";
+            "wmode=\"" + (obj.transparent ? "transparent" : "opaque") + "\"";
+        if (obj.width.length() > 0) {
+            tag += " width=\"" + obj.width + "\"";
         }
-        if (height.length() > 0) {
-            tag += " height=\"" + height + "\"";
+        if (obj.height.length() > 0) {
+            tag += " height=\"" + obj.height + "\"";
         }
-        tag += " src=\"" + movie + "\" allowScriptAccess=\"sameDomain\"" +
+        tag += " src=\"" + obj.movie + "\" allowScriptAccess=\"sameDomain\"" +
             " allowFullScreen=\"true\" " + params + "/>";
         return tag;
     }
