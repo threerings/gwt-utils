@@ -110,7 +110,7 @@ public class FX
         return (command == null) ? null : new Command() {
             public void execute () {
                 new Timer() {
-                    public void run () {
+                    @Override public void run () {
                         command.execute();
                     }
                 }.schedule(delay);

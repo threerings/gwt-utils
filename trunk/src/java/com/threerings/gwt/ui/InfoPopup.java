@@ -67,11 +67,12 @@ public class InfoPopup extends PopupPanel
         center(); // this will show us
     }
 
+    @Override
     protected void onAttach ()
     {
         super.onAttach();
         new Timer() {
-            public void run () {
+            @Override public void run () {
                 hide();
             }
         }.schedule(_autoClearTimeout);
