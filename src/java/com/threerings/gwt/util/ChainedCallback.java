@@ -19,7 +19,7 @@ public abstract class ChainedCallback<T, P> implements AsyncCallback<T>
     public static <T, P> ChainedCallback<T, P> map (AsyncCallback<P> target, final Function<T, P> f)
     {
         return new ChainedCallback<T, P>(target) {
-            public void onSuccess (T result) {
+            @Override public void onSuccess (T result) {
                 forwardSuccess(f.apply(result));
             }
         };
@@ -33,7 +33,7 @@ public abstract class ChainedCallback<T, P> implements AsyncCallback<T>
                                                     final Function<T, Void> preOp)
     {
         return new ChainedCallback<T, T>(target) {
-            public void onSuccess (T result) {
+            @Override public void onSuccess (T result) {
                 preOp.apply(result);
                 forwardSuccess(result);
             }
