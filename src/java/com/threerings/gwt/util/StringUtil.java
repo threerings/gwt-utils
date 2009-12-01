@@ -111,15 +111,24 @@ public class StringUtil
     }
 
     /**
-     * Truncates the string so it has length less than the given limit. Returns null if the input
-     * is null.
+     * Truncates the string so it has length less than or equal to the given limit. Returns null
+     * if the input is null.
      */
     public static String truncate (String str, int limit)
     {
-        if (str == null) {
-            return null;
+        return truncate(str, limit, "");
+    }
+
+    /**
+     * Truncates the string so it has length less than or equal to the given limit. If truncation
+     * occurs, the result will end with the given appendage. Returns null if the input is null.
+     */
+    public static String truncate (String str, int limit, String appendage)
+    {
+        if (str == null || str.length() <= limit) {
+            return str;
         }
-        return str.length() > limit ? str.substring(0, limit) : str;
+        return str.substring(0, limit - appendage.length()) + appendage;
     }
 
     /**
