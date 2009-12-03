@@ -65,6 +65,15 @@ public class SmartTable extends FlexTable
         }
 
         /**
+         * Clears the widget or text from the cell. Does not affect styles.
+         */
+        public CellMutator clear ()
+        {
+            clearCell(_row, _col);
+            return this;
+        }
+
+        /**
          * Sets the vertical alignment for the cell to "top".
          */
         public CellMutator alignTop ()
