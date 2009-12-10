@@ -58,7 +58,7 @@ public class PopupStack
             // null _showingPopup before hiding to avoid triggering the close handler logic
             _popups.add(showing);
             _showingPopup.update(null);
-            showing.hide();
+            showing.hide(true);
         }
 
         if (onCenter == null) {
@@ -92,7 +92,7 @@ public class PopupStack
     {
         _popups.clear();
         if (_showingPopup.get() != null) {
-            _showingPopup.get().hide();
+            _showingPopup.get().hide(true);
             _showingPopup.update(null);
         }
     }
