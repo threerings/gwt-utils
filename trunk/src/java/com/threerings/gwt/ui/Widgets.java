@@ -294,13 +294,22 @@ public class Widgets
      * This text will be shown when the field is blank and unfocused.
      *
      * Note: To safely read the text from this TextBox on all browsers, use
-     * StringUtil.getUnless(box.getText().trim(), placeholder). This is because on legacy
-     * browsers that don't support HTML5 form awesomeness, the text will actually be set in
-     * the field when it is unfocused.
+     * getText(TextBoxBase, placeholder). This is because on legacy browsers that don't support
+     * HTML5 form awesomeness, the text will actually be set in the field when it is unfocused.
      */
     public static <B extends TextBoxBase> B setPlaceholderText (B box, String placeholder)
     {
         return _formSupport.setPlaceholderText(box, placeholder);
+    }
+
+    /**
+     * Retrieve the text from the TextBox, unless it is the specified default, in which case
+     * we return "".
+     */
+    public static String getText (TextBoxBase box, String defaultAsBlank)
+    {
+        String s = box.getText().trim();
+        return s.equals(defaultAsBlank) ? "" : s;
     }
 
     /**
