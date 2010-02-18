@@ -24,6 +24,18 @@
     </any>
   </replace-with>
 
+  <replace-with class="com.threerings.gwt.ui.FormSupportLegacy">
+    <when-type-is class="com.threerings.gwt.ui.FormSupport"/>
+    <!-- Presently, only safari and chrome (both webkit) support placeholder text. -->
+    <none>
+      <any>
+        <when-property-is name="user.agent" value="safari"/>
+        <!-- "chrome" is not actually used, it's same target as "safari", but it doesn't hurt. -->
+        <when-property-is name="user.agent" value="chrome"/>
+      </any>
+    </none>
+  </replace-with>
+
   <generate-with class="com.threerings.gwt.rebind.MessagesLookupGenerator">
     <when-type-assignable class="com.threerings.gwt.util.MessagesLookup" />
   </generate-with>

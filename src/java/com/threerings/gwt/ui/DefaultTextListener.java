@@ -18,7 +18,9 @@ public class DefaultTextListener
     /**
      * Configures the target text box to display the supplied default text when it does not have
      * focus and to clear it out when the user selects it to enter text.
+     * @deprecated use Widgets.setPlaceholderText(TextBoxBase, String)
      */
+    @Deprecated
     public static void configure (TextBoxBase target, String defaultText)
     {
         DefaultTextListener listener = new DefaultTextListener(target, defaultText);

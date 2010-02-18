@@ -3,6 +3,7 @@
 
 package com.threerings.gwt.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -22,6 +23,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -288,6 +290,15 @@ public class Widgets
     }
 
     /**
+     * Set the placeholder text to use on the specified form field.
+     * This text will be shown when the field is blank and unfocused.
+     */
+    public static <B extends TextBoxBase> B setPlaceholderText (B box, String placeholder)
+    {
+        return _formSupport.setPlaceholderText(box, placeholder);
+    }
+
+    /**
      * Configures a text box with all of the configuration that you're bound to want to do. This is
      * useful for configuring a PasswordTextBox.
      */
@@ -397,4 +408,6 @@ public class Widgets
             target.addClickHandler(onClick);
         }
     }
+
+    protected static FormSupport _formSupport = GWT.create(FormSupport.class);
 }
