@@ -31,7 +31,7 @@ public class DefaultTextListener
 
     /**
      * Returns the contents of the supplied text box, accounting for the supplied default text.
-     * @deprecated use StringUtil.getUnless(target.getText().trim(), defaultText)
+     * @deprecated use Widgets.getText(TextBoxBase, String)
      */
     @Deprecated
     public static String getText (TextBoxBase target, String defaultText)
