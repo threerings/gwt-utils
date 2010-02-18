@@ -88,6 +88,14 @@ public class StringUtil
     }
 
     /**
+     * Returns the string unless it is equal to the unlessVal, in which case we return "".
+     */
+    public static String getUnless (String value, String unlessVal)
+    {
+        return ((value == null) ? (unlessVal == null) : value.equals(unlessVal)) ? "" : value;
+    }
+
+    /**
      * Escapes user or deployment values that we need to put into an html attribute.
      */
     public static String escapeAttribute (String value)
