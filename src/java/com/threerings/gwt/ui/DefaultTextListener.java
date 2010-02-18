@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 /**
  * Displays default text in a text box or area and clears that text out when the box is focused.
  */
+@Deprecated
 public class DefaultTextListener
     implements FocusHandler, BlurHandler
 {
@@ -30,7 +31,9 @@ public class DefaultTextListener
 
     /**
      * Returns the contents of the supplied text box, accounting for the supplied default text.
+     * @deprecated use StringUtil.getUnless(target.getText().trim(), defaultText)
      */
+    @Deprecated
     public static String getText (TextBoxBase target, String defaultText)
     {
         String text = target.getText().trim();

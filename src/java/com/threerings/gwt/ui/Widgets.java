@@ -292,6 +292,11 @@ public class Widgets
     /**
      * Set the placeholder text to use on the specified form field.
      * This text will be shown when the field is blank and unfocused.
+     *
+     * Note: To safely read the text from this TextBox on all browsers, use
+     * StringUtil.getUnless(box.getText().trim(), placeholder). This is because on legacy
+     * browsers that don't support HTML5 form awesomeness, the text will actually be set in
+     * the field when it is unfocused.
      */
     public static <B extends TextBoxBase> B setPlaceholderText (B box, String placeholder)
     {
