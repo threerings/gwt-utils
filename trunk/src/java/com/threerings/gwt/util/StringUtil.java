@@ -72,7 +72,7 @@ public class StringUtil
     }
 
     /**
-     * Returns true if the supplied string is null or zero length.
+     * Returns true if the supplied string is null, zero length, or contains only whitespace.
      */
     public static boolean isBlank (String text)
     {
