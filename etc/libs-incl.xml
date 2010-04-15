@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<!-- declares the libraries needed to build threerings -->
+<!-- declares the libraries needed to build gwt-utils-->
 <project name="library-dependencies">
   <fileset dir="${libs.dir}" id="gwt-utils.libs">
     <include name="ant.jar"/>
     <include name="guava.jar"/>
-    <include name="gwt-dev-linux.jar"/>
+    <include name="gwt-dev.jar"/>
     <include name="gwt-user.jar"/>
     <include name="samskivert.jar"/>
   </fileset>
