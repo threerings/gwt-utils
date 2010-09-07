@@ -4,6 +4,7 @@
 
   <!-- configuration properties -->
   <property name="app.name"    value="gwt-utils"/>
+  <property name="src.dir"     value="src/main/java"/>
   <property name="deploy.dir"  value="dist"/>
   <property name="gwtjar.dir"  value="${deploy.dir}/gwt-jar"/>
   <property name="javadoc.home" value="${deploy.dir}/docs"/>
@@ -39,12 +40,12 @@
   <!-- wipes the entire build directory clean -->
   <target name="distclean">
     <delete dir="${deploy.dir}"/>
-    <delete><fileset dir="src/java" includes="**/*Messages.java"/></delete>
+    <delete><fileset dir="${src.dir}" includes="**/*Messages.java"/></delete>
   </target>
 
   <!-- regenerates our i18n messages classes -->
   <target name="gmsgs">
-    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" deprecation="on" source="1.5" target="1.5">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
@@ -53,14 +54,14 @@
     </javac>
     <taskdef name="i18nsync" classname="com.threerings.gwt.tools.I18nSyncTask"
              classpathref="classpath"/>
-    <i18nsync srcdir="src/java">
-      <fileset dir="src/java" includes="**/*Messages.properties"/>
+    <i18nsync srcdir="${src.dir}">
+      <fileset dir="${src.dir}" includes="**/*Messages.properties"/>
     </i18nsync>
   </target>
 
   <!-- build the java class files -->
   <target name="compile" depends="prepare,gmsgs">
-    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" deprecation="on" source="1.5" target="1.5">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
@@ -74,7 +75,7 @@
       <!-- we only include the OOO class files -->
       <fileset dir="${deploy.dir}/classes" includes="**"/>
       <!-- include the source for code to be compiled to JavaScript -->
-      <fileset dir="src/java">
+      <fileset dir="${src.dir}">
         <include name="com/threerings/gwt/**"/>
         <exclude name="com/threerings/gwt/rebind/**"/>
         <exclude name="com/threerings/gwt/tools/**"/>
@@ -87,7 +88,7 @@
 
   <!-- builds the javadoc documentation -->
   <target name="javadoc" depends="prepare">
-    <javadoc sourcepath="src/java" packagenames="com.threerings.*"
+    <javadoc sourcepath="${src.dir}" packagenames="com.threerings.*"
              destdir="${javadoc.home}" additionalparam="-breakiterator">
       <classpath refid="classpath"/>
       <link href="http://samskivert.com/code/samskivert/docs"/>
