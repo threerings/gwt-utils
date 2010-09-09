@@ -86,7 +86,7 @@
     <!-- we include the source files in our main jar for use by GWT -->
     <resources>
       <resource>
-        <directory>${basedir}/src/main/java</directory>
+        <directory>${basedir}/${project.build.sourceDirectory}</directory>
         <excludes>
           <exclude>com/threerings/gwt/rebind/**</exclude>
           <exclude>com/threerings/gwt/tools/**</exclude>
@@ -107,8 +107,8 @@
               <tasks>
                 <taskdef name="i18nsync" classpathref="maven.compile.classpath"
                          classname="com.threerings.gwt.tools.I18nSyncTask"/>
-                <i18nsync srcdir="src/main/java">
-                  <fileset dir="src/main/java" includes="**/*Messages.properties"/>
+                <i18nsync srcdir="${project.build.sourceDirectory}">
+                  <fileset dir="${project.build.sourceDirectory}" includes="**/*Messages.properties"/>
                 </i18nsync>
               </tasks>
             </configuration>
@@ -124,7 +124,7 @@
         <configuration>
           <filesets>
             <fileset>
-              <directory>src/main/java</directory>
+              <directory>${project.build.sourceDirectory}</directory>
               <includes>
                 <include>**/*Messages.java</include>
               </includes>
