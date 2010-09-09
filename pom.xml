@@ -72,6 +72,15 @@
       <version>1.7.1</version>
       <scope>provided</scope>
     </dependency>
+    <!-- a pre-built copy of i18nsync that we can use during our build, when
+         i18nsync hasn't yet been built -->
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>gwt-i18nsync</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/i18nsync.jar</systemPath>
+    </dependency>
   </dependencies>
   <build>
     <!-- we include the source files in our main jar for use by GWT -->
@@ -88,6 +97,41 @@
       </resource>
     </resources>
     <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>RELEASE</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <configuration>
+              <tasks>
+                <taskdef name="i18nsync" classpathref="maven.compile.classpath"
+                         classname="com.threerings.gwt.tools.I18nSyncTask"/>
+                <i18nsync srcdir="src/main/java">
+                  <fileset dir="src/main/java" includes="**/*Messages.properties"/>
+                </i18nsync>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>RELEASE</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/main/java</directory>
+              <includes>
+                <include>**/*Messages.java</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
