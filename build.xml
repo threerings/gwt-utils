@@ -27,6 +27,7 @@
     <copy todir="${deploy.dir}/lib" flatten="true">
       <fileset refid="${app.name}.libs"/>
     </copy>
+    <copy todir="${deploy.dir}/classes"><fileset dir="src/main/resources" includes="**"/></copy>
   </target>
 
   <!-- cleans out the intermediate build files -->
