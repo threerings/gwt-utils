@@ -132,17 +132,14 @@ public class WidgetUtil
      * @param flashVars a pre-URLEncoded string containing flash variables, or null.
      *        http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_16417
      */
-    public static HTML createFlashContainer (String ident, String movie, String width,
-                                             String height, String flashVars)
+    public static HTML createFlashContainer (
+        String ident, String movie, String width, String height, String flashVars)
     {
         return createContainer(new FlashObject(ident, movie, width, height, flashVars));
     }
 
     /**
-     * Creates the HTML to display a transparent Flash movie for the browser on which we're running.
-     *
-     * @param flashVars a pre-URLEncoded string containing flash variables, or null.
-     *        http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_16417
+     * Creates the HTML to display a Flash movie for the browser on which we're running.
      */
     public static HTML createContainer (FlashObject obj)
     {
