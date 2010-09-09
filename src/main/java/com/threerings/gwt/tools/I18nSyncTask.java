@@ -7,14 +7,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-
-import com.google.common.collect.Lists;
-
-import com.samskivert.util.FileUtil;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -72,7 +69,11 @@ public class I18nSyncTask extends Task
             return;
         }
 
-        File javaFile = new File(FileUtil.resuffix(propsFile, ".properties", ".java"));
+        String root = propsFile.getName();
+        if (root.endsWith(".properties")) {
+            root = root.substring(0, root.length()-".properties".length());
+        }
+        File javaFile = new File(propsFile.getParent(), root + ".java");
         if (propsFile.lastModified() <= javaFile.lastModified()) {
             return;
         }
@@ -143,5 +144,5 @@ public class I18nSyncTask extends Task
     protected String _sourcePath;
 
     /** A list of filesets that contain tile images. */
-    protected List<FileSet> _filesets = Lists.newArrayList();
+    protected List<FileSet> _filesets = new ArrayList<FileSet>();
 }
