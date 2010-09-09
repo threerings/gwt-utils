@@ -113,7 +113,7 @@ public class I18nSyncTask extends Task
                 if (idx > 0) {
                     buf.append(", ");
                 }
-                // TODO: make {N:integer} into an int argument, {N:percent" into a float, etc.
+                // TODO: make {N:integer} into an int argument, {N:percent} into a float, etc.
                 buf.append("String arg").append(idx);
                 idx++;
             }
