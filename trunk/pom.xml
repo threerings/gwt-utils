@@ -86,7 +86,7 @@
     <!-- we include the source files in our main jar for use by GWT -->
     <resources>
       <resource>
-        <directory>${basedir}/${project.build.sourceDirectory}</directory>
+        <directory>${project.build.sourceDirectory}</directory>
         <excludes>
           <exclude>com/threerings/gwt/rebind/**</exclude>
           <exclude>com/threerings/gwt/tools/**</exclude>
