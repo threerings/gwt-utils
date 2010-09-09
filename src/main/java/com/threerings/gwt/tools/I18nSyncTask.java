@@ -22,7 +22,15 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Does something extraordinary.
+ * An Ant task to automatically generate <code>FooMessages.java</code> classes from
+ * <code>FooMessages.properties</code> classes for GWT's i18n. Configure the Ant task thusly:
+ * <pre>{@code
+ * <taskdef name="i18nsync" classname="com.threerings.gwt.tools.I18nSyncTask" classpathref="cp"/>
+ * <i18nsync srcdir="${src.dir}">}
+ *   &lt;fileset dir="${src.dir}" includes="**&#47;*Messages.properties"/&gt;
+ * {@code <i18nsync>}</pre>
+ * The classpath referenced as <code>cp</code> must reference a classpath that contains both
+ * <code>gwt-utils.jar</code> and <code>gwt-user.jar</code>.
  */
 public class I18nSyncTask extends Task
 {
