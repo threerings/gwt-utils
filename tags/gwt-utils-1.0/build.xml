@@ -1,0 +1,98 @@
+<?xml version="1.0" standalone="yes"?>
+<!-- build configuration -->
+<project name="gwt-utils" default="compile" basedir=".">
+
+  <!-- configuration properties -->
+  <property name="app.name"    value="gwt-utils"/>
+  <property name="src.dir"     value="src/main/java"/>
+  <property name="deploy.dir"  value="dist"/>
+  <property name="gwtjar.dir"  value="${deploy.dir}/gwt-jar"/>
+  <property name="javadoc.home" value="${deploy.dir}/docs"/>
+
+  <!-- import some targets to enumerate library dependencies -->
+  <property name="libs.dir" value="lib"/>
+  <import file="etc/libs-incl.xml"/>
+
+  <!-- declare our classpath -->
+  <path id="classpath">
+    <pathelement location="${deploy.dir}/classes"/>
+    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+  </path>
+
+  <!-- prepares the application directories -->
+  <target name="prepare">
+    <mkdir dir="${deploy.dir}"/>
+    <mkdir dir="${deploy.dir}/classes"/>
+    <mkdir dir="${deploy.dir}/lib"/>
+    <copy todir="${deploy.dir}/lib" flatten="true">
+      <fileset refid="${app.name}.libs"/>
+    </copy>
+  </target>
+
+  <!-- cleans out the intermediate build files -->
+  <target name="clean">
+    <delete dir="${deploy.dir}/classes"/>
+    <delete dir="${deploy.dir}/docs"/>
+    <delete dir="${gwtjar.dir}"/>
+    <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.jar"/></delete>
+  </target>
+
+  <!-- wipes the entire build directory clean -->
+  <target name="distclean">
+    <delete dir="${deploy.dir}"/>
+    <delete><fileset dir="${src.dir}" includes="**/*Messages.java"/></delete>
+  </target>
+
+  <!-- regenerates our i18n messages classes -->
+  <target name="gmsgs">
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+           debug="on" deprecation="on" source="1.5" target="1.5">
+      <classpath refid="classpath"/>
+      <compilerarg value="-Xlint"/>
+      <compilerarg value="-Xlint:-serial"/>
+      <include name="**/I18nSyncTask.java"/>
+    </javac>
+    <taskdef name="i18nsync" classname="com.threerings.gwt.tools.I18nSyncTask"
+             classpathref="classpath"/>
+    <i18nsync srcdir="${src.dir}">
+      <fileset dir="${src.dir}" includes="**/*Messages.properties"/>
+    </i18nsync>
+  </target>
+
+  <!-- build the java class files -->
+  <target name="compile" depends="prepare,gmsgs">
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+           debug="on" deprecation="on" source="1.5" target="1.5">
+      <classpath refid="classpath"/>
+      <compilerarg value="-Xlint"/>
+      <compilerarg value="-Xlint:-serial"/>
+    </javac>
+  </target>
+
+  <!-- builds our distribution jar files -->
+  <target name="dist" depends="prepare,compile">
+    <jar destfile="${deploy.dir}/${app.name}.jar">
+      <!-- we only include the OOO class files -->
+      <fileset dir="${deploy.dir}/classes" includes="**"/>
+      <!-- include the source for code to be compiled to JavaScript -->
+      <fileset dir="${src.dir}">
+        <include name="com/threerings/gwt/**"/>
+        <exclude name="com/threerings/gwt/rebind/**"/>
+        <exclude name="com/threerings/gwt/tools/**"/>
+        <!-- include our sneaky duplicates of Google Collections stuff -->
+        <include name="javax/**"/>
+        <include name="com/google/**"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <!-- builds the javadoc documentation -->
+  <target name="javadoc" depends="prepare">
+    <javadoc sourcepath="${src.dir}" packagenames="com.threerings.*"
+             destdir="${javadoc.home}" additionalparam="-breakiterator">
+      <classpath refid="classpath"/>
+      <link href="http://samskivert.com/code/samskivert/docs"/>
+      <link href="http://java.sun.com/javase/6/docs/api/"/>
+    </javadoc>
+  </target>
+</project>
