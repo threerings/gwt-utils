@@ -123,6 +123,18 @@ public class FluentTable extends FlexTable
             return new Cell(_table, row, column+1);
         }
 
+        /** Returns the cell below this cell at column 0, (row+1, 0). */
+        public Cell add () {
+            return new Cell(_table, row+1, 0);
+        }
+
+        /** Returns the table associated with this cell. Useful for chaining the construction and
+         * configuration of a table into a single expression:
+         * <code>new FluentTable().add().setText("Foo").right().setText("Bar").table()</code> */
+        public FluentTable table () {
+            return _table;
+        }
+
         protected Cell (FluentTable table, int row, int column)
         {
             _table = table;
