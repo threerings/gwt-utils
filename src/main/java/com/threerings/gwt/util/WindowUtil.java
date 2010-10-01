@@ -6,6 +6,9 @@ package com.threerings.gwt.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Widget;
+
 /**
  * Utility methods related to the JavaScript "window".
  */
@@ -36,4 +39,13 @@ public class WindowUtil
     protected static native String getSearchString () /*-{
         return $wnd.location.search;
     }-*/;
+
+    /**
+     * Scrolls the window to place the specified target widget at the top (or as close as possible
+     * given the height of the browser).
+     */
+    public static void scrollTo (Widget target)
+    {
+        Window.scrollTo(Window.getScrollLeft(), target.getElement().getAbsoluteTop());
+    }
 }
