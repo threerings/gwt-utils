@@ -26,7 +26,7 @@ public class Functions
      * Returns a function which performs a map lookup with a default value. The function created by
      * this method returns defaultValue for all inputs that do not belong to the map's key set.
      */
-    public static <K, V> Function<K, V> forMap (final Map<? super K, ? extends V> map,
+    public static <K, V> Function<K, V> forMap (final Map<K, ? extends V> map,
                                                 final V defaultValue) {
         return new Function<K, V>() {
             public V apply (K key) {
