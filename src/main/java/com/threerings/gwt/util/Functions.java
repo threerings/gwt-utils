@@ -7,9 +7,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 
 /**
- * A collection of general purpose functions.
+ * A collection of general purpose functions. To be replaced by Google Collections when same is
+ * usable via GWT.
  */
 public class Functions
 {
@@ -20,20 +22,28 @@ public class Functions
         }
     };
 
-    /** Views the supplied map as a function from keys to values. */
-    public static <K, V> Function<K, V> asFunc (final Map<K, V> map) {
+    /** 
+     * Returns a function which performs a map lookup with a default value. The function created by
+     * this method returns defaultValue for all inputs that do not belong to the map's key set.
+     */
+    public static <K, V> Function<K, V> forMap (final Map<? super K, ? extends V> map,
+                                                final V defaultValue) {
         return new Function<K, V>() {
             public V apply (K key) {
-                return map.get(key);
+                V value = map.get(key);
+                return (value != null || map.containsKey(key)) ? value : defaultValue;
             }
         };
     }
 
-    /** Views the supplied set as a function from elements to booleans. */
-    public static <T> Function<T, Boolean> asFunc (final Set<T> set) {
+    /**
+     * Returns a function that returns the same boolean output as the given predicate for all
+     * inputs.
+     */
+    public static <T> Function<T, Boolean> forPredicate (final Predicate<T> predicate) {
         return new Function<T, Boolean>() {
-            public Boolean apply (T key) {
-                return set.contains(key);
+            public Boolean apply (T arg) {
+                return predicate.apply(arg);
             }
         };
     }
