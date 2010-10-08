@@ -46,7 +46,7 @@ public class WindowUtil
      */
     public static void scrollTo (Widget target)
     {
-        Window.scrollTo(Window.getScrollLeft(), target.getElement().getAbsoluteTop());
+        Window.scrollTo(Window.getScrollLeft(), target.getAbsoluteTop());
     }
 
     /**
@@ -56,8 +56,7 @@ public class WindowUtil
     public static int getScrollIntoView (Widget target)
     {
         int top = Window.getScrollTop(), height = Window.getClientHeight();
-        int ttop = target.getElement().getAbsoluteTop();
-        int theight = target.getElement().getClientHeight();
+        int ttop = target.getAbsoluteTop(), theight = target.getOffsetHeight();
         // if the target widget is taller than the browser window, or is above the current scroll
         // position of the browser window, scroll the top of the widget to the top of the window
         if (theight > height || ttop < top) {
@@ -85,8 +84,8 @@ public class WindowUtil
      */
     public static int getScrollToMiddle (Widget target)
     {
-        int wheight = Window.getClientHeight(), theight = target.getElement().getClientHeight();
-        int ttop = target.getElement().getAbsoluteTop();
+        int wheight = Window.getClientHeight(), theight = target.getOffsetHeight();
+        int ttop = target.getAbsoluteTop();
         return Math.max(ttop, ttop + (wheight - theight));
     }
 
@@ -97,5 +96,40 @@ public class WindowUtil
     public static void scrollToMiddle (Widget target)
     {
         Window.scrollTo(Window.getScrollLeft(), getScrollToMiddle(target));
+    }
+
+    /**
+     * Returns true if the target widget is at least partially scrolled into view. At least 10
+     * pixels of the widget must be visible.
+     */
+    public static boolean isScrolledIntoView (Widget target)
+    {
+        return isScrolledIntoView(target, 10);
+    }
+
+    /**
+     * Returns true if the target widget is vertically scrolled into view.
+     *
+     * @param minPixels the minimum number of pixels that must be visible to count as "in view".
+     */
+    public static boolean isScrolledIntoView (Widget target, int minPixels)
+    {
+        int wtop = Window.getScrollTop(), wheight = Window.getClientHeight();
+        int ttop = target.getAbsoluteTop();
+        if (ttop > wtop) {
+            return (wtop + wheight - ttop > minPixels);
+        } else {
+            return (ttop + target.getOffsetHeight() - wtop > minPixels);
+        }
+    }
+
+    /**
+     * Returns true if the target widget is fully vertically visible. This will always return false
+     * if the widget is taller than the window viewport, so don't call this in a feedback loop in a
+     * misdirected attempt to scroll the widget into view.
+     */
+    public static boolean isFullyScrolledIntoView (Widget target)
+    {
+        return isScrolledIntoView(target, target.getOffsetHeight());
     }
 }
