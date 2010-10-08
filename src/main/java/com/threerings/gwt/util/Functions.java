@@ -29,7 +29,7 @@ public class Functions
         };
     }
 
-    /** Views the supplied map as a function from keys to values. */
+    /** Views the supplied set as a function from elements to booleans. */
     public static <T> Function<K, Boolean> asFunc (final Set<T> set) {
         return new Function<T, Boolean>() {
             public Boolean apply (T key) {
