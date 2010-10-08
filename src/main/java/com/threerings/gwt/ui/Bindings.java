@@ -25,6 +25,9 @@ public class Bindings
                 }
             }
         });
+        for (FocusWidget target : targets) {
+            target.setEnabled(value.get());
+        }
     }
 
     /**
@@ -39,5 +42,8 @@ public class Bindings
                 }
             }
         });
+        for (Widget target : targets) {
+            target.setVisible(value.get());
+        }
     }
 }
