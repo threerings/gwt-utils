@@ -4,6 +4,7 @@
 package com.threerings.gwt.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -235,6 +236,14 @@ public class Widgets
     public static HTML newHTML (String text, String... styles)
     {
         return setStyleNames(new HTML(text), styles);
+    }
+
+    /**
+     * Creates an image with the supplied resource and style.
+     */
+    public static Image newImage (ImageResource image, String... styles)
+    {
+        return setStyleNames(new Image(image), styles);
     }
 
     /**
