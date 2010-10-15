@@ -3,6 +3,8 @@
 
 package com.threerings.gwt.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -45,5 +47,17 @@ public class Bindings
         for (Widget target : targets) {
             target.setVisible(value.get());
         }
+    }
+
+    /**
+     * Returns a click handler that toggles the supplied boolean value when clicked.
+     */
+    public static ClickHandler makeToggler (final Value<Boolean> value)
+    {
+        return new ClickHandler() {
+            public void onClick (ClickEvent event) {
+                value.update(!value.get());
+            }
+        };
     }
 }
