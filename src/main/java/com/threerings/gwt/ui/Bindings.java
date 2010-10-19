@@ -24,6 +24,7 @@ package com.threerings.gwt.ui;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import com.threerings.gwt.util.Value;
@@ -65,6 +66,25 @@ public class Bindings
         for (Widget target : targets) {
             target.setVisible(value.get());
         }
+    }
+
+    /**
+     * Binds the specified toggle button to the supplied boolean value. The binding will work both
+     * ways: interactive changes to the toggle button will update the value and changes to the
+     * value will update the state of the toggle button.
+     */
+    public static void bindDown (final ToggleButton toggle, final Value<Boolean> value)
+    {
+        toggle.addClickHandler(new ClickHandler() {
+            public void onClick (ClickEvent event) {
+                value.update(toggle.isDown());
+            }
+        });
+        value.addListenerAndTrigger(new Value.Listener<Boolean>() {
+            public void valueChanged (Boolean value) {
+                toggle.setDown(value);
+            }
+        });
     }
 
     /**
