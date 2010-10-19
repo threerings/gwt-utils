@@ -73,7 +73,7 @@ public class Bindings
      * ways: interactive changes to the toggle button will update the value and changes to the
      * value will update the state of the toggle button.
      */
-    public static void bindDown (final ToggleButton toggle, final Value<Boolean> value)
+    public static void bindDown (final Value<Boolean> value, final ToggleButton toggle)
     {
         toggle.addClickHandler(new ClickHandler() {
             public void onClick (ClickEvent event) {
