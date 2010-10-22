@@ -1,5 +1,8 @@
+com.google.common.annotations
+com.google.common.base
 com.threerings.gwt.rebind
 com.threerings.gwt.tools
 com.threerings.gwt.ui
 com.threerings.gwt.ui.fx
 com.threerings.gwt.util
+javax.annotation
