@@ -153,6 +153,7 @@
         <configuration>
           <quiet>true</quiet>
           <show>public</show>
+          <excludePackageNames>javax.annotation:com.google.*</excludePackageNames>
           <links>
             <link>http://samskivert.googlecode.com/svn/apidocs/</link>
             <link>http://guava-libraries.googlecode.com/svn/trunk/javadoc/</link>
