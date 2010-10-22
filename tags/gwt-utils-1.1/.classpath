@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/samskivert"/>
+	<classpathentry kind="var" path="EXT_LIBS_DIR/guava.jar"/>
+	<classpathentry kind="var" path="EXT_LIBS_DIR/gwt-user.jar"/>
+	<classpathentry kind="var" path="EXT_LIBS_DIR/gwt-dev.jar" sourcepath="/JETTY_SOURCE"/>
+	<classpathentry kind="output" path="dist/eclasses"/>
+</classpath>
