@@ -65,15 +65,6 @@
       <version>1.7.1</version>
       <scope>provided</scope>
     </dependency>
-    <!-- a pre-built copy of i18nsync that we can use during our build, when
-         i18nsync hasn't yet been built -->
-    <dependency>
-      <groupId>com.threerings</groupId>
-      <artifactId>gwt-i18nsync</artifactId>
-      <version>1.0</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/i18nsync.jar</systemPath>
-    </dependency>
   </dependencies>
   <build>
     <!-- we include the source files in our main jar for use by GWT -->
@@ -97,12 +88,14 @@
           <execution>
             <phase>generate-sources</phase>
             <configuration>
-              <tasks>
-                <taskdef name="i18nsync" classpathref="maven.compile.classpath" classname="com.threerings.gwt.tools.I18nSyncTask" />
+              <target>
+                <taskdef name="i18nsync" classpath="${basedir}/lib/i18nsync.jar"
+                         classname="com.threerings.gwt.tools.I18nSyncTask" />
                 <i18nsync srcdir="${project.build.sourceDirectory}">
-                  <fileset dir="${project.build.sourceDirectory}" includes="**/*Messages.properties" />
+                  <fileset dir="${project.build.sourceDirectory}"
+                           includes="**/*Messages.properties" />
                 </i18nsync>
-              </tasks>
+              </target>
             </configuration>
             <goals>
               <goal>run</goal>
