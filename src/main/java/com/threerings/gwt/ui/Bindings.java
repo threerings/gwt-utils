@@ -21,9 +21,14 @@
 
 package com.threerings.gwt.ui;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -83,6 +88,33 @@ public class Bindings
         value.addListenerAndTrigger(new Value.Listener<Boolean>() {
             public void valueChanged (Boolean value) {
                 toggle.setDown(value);
+            }
+        });
+    }
+
+    /**
+     * Binds the contents of the supplied text box to the supplied string value. The binding is
+     * multidirectional, i.e. changes to the value will update the text box and changes to the text
+     * box will update the value. The value is updated on key up as well as on change so that both
+     * keyboard initiated changes and non-keyboard initiated changes (paste) are handled.
+     * <em>Note:</em> the text from the text box will be {@link String#trim}med before being
+     * written to the target value.
+     */
+    public static void bindText (final Value<String> value, final TextBoxBase text)
+    {
+        text.addKeyUpHandler(new KeyUpHandler() {
+            public void onKeyUp (KeyUpEvent event) {
+                value.update(((TextBoxBase)event.getSource()).getText().trim());
+            }
+        });
+        text.addChangeHandler(new ChangeHandler() {
+            public void onChange (ChangeEvent event) {
+                value.update(((TextBoxBase)event.getSource()).getText().trim());
+            }
+        });
+        value.addListenerAndTrigger(new Value.Listener<String>() {
+            public void valueChanged (String value) {
+                text.setText(value);
             }
         });
     }
