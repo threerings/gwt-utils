@@ -97,19 +97,17 @@ public class Bindings
      * multidirectional, i.e. changes to the value will update the text box and changes to the text
      * box will update the value. The value is updated on key up as well as on change so that both
      * keyboard initiated changes and non-keyboard initiated changes (paste) are handled.
-     * <em>Note:</em> the text from the text box will be {@link String#trim}med before being
-     * written to the target value.
      */
     public static void bindText (final Value<String> value, final TextBoxBase text)
     {
         text.addKeyUpHandler(new KeyUpHandler() {
             public void onKeyUp (KeyUpEvent event) {
-                value.update(((TextBoxBase)event.getSource()).getText().trim());
+                value.update(((TextBoxBase)event.getSource()).getText());
             }
         });
         text.addChangeHandler(new ChangeHandler() {
             public void onChange (ChangeEvent event) {
-                value.update(((TextBoxBase)event.getSource()).getText().trim());
+                value.update(((TextBoxBase)event.getSource()).getText());
             }
         });
         value.addListenerAndTrigger(new Value.Listener<String>() {
