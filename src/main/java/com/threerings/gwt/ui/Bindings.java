@@ -82,7 +82,7 @@ public class Bindings
     {
         toggle.addClickHandler(new ClickHandler() {
             public void onClick (ClickEvent event) {
-                value.update(toggle.isDown());
+                value.updateIf(toggle.isDown());
             }
         });
         value.addListenerAndTrigger(new Value.Listener<Boolean>() {
@@ -102,12 +102,12 @@ public class Bindings
     {
         text.addKeyUpHandler(new KeyUpHandler() {
             public void onKeyUp (KeyUpEvent event) {
-                value.update(((TextBoxBase)event.getSource()).getText());
+                value.updateIf(((TextBoxBase)event.getSource()).getText());
             }
         });
         text.addChangeHandler(new ChangeHandler() {
             public void onChange (ChangeEvent event) {
-                value.update(((TextBoxBase)event.getSource()).getText());
+                value.updateIf(((TextBoxBase)event.getSource()).getText());
             }
         });
         value.addListenerAndTrigger(new Value.Listener<String>() {
