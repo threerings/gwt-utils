@@ -91,20 +91,22 @@ public class Values
     // my kingdom for a higher order
     protected static boolean computeAnd (Iterable<Value<Boolean>> values)
     {
-        boolean result = true;
         for (Value<Boolean> value : values) {
-            result = result && value.get();
+            if (!value.get()) {
+                return false;
+            }
         }
-        return result;
+        return true;
     }
 
     protected static boolean computeOr (Iterable<Value<Boolean>> values)
     {
-        boolean result = false;
         for (Value<Boolean> value : values) {
-            result = result || value.get();
+            if (value.get()) {
+                return true;
+            }
         }
-        return result;
+        return false;
     }
 
     /** Used by {@link #map}. */
