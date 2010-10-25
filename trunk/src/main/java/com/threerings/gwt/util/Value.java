@@ -88,7 +88,8 @@ public class Value<T>
     }
 
     /**
-     * Updates this value and notifies all listeners.
+     * Updates this value and notifies all listeners. This will notify the listeners regardless of
+     * whether the supplied value differs from the current value.
      */
     public void update (T value)
     {
@@ -99,6 +100,17 @@ public class Value<T>
         // listeners add or remove themselves while we're dispatching this notification
         for (Listener<T> listener : new ArrayList<Listener<T>>(_listeners)) {
             listener.valueChanged(value);
+        }
+    }
+
+    /**
+     * Updates this value and notifies all listeners if the supplied value differs from the current
+     * value (via the {@link Object#equals} contract).
+     */
+    public void updateIf (T value)
+    {
+        if (value == null || !value.equals(_value)) {
+            update(value);
         }
     }
 
