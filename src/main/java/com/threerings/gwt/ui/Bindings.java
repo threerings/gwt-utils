@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -93,6 +94,20 @@ public class Bindings
     }
 
     /**
+     * Binds the specified string value to the supplied text-having widget. The binding is one-way,
+     * in that only changes to the value will be reflected in the text-having widget. It is
+     * expected that no other changes will be made to the widget.
+     */
+    public static void bindLabel (final Value<String> value, final HasText text)
+    {
+        value.addListenerAndTrigger(new Value.Listener<String>() {
+            public void valueChanged (String value) {
+                text.setText(value);
+            }
+        });
+    }
+
+    /**
      * Binds the contents of the supplied text box to the supplied string value. The binding is
      * multidirectional, i.e. changes to the value will update the text box and changes to the text
      * box will update the value. The value is updated on key up as well as on change so that both
@@ -110,11 +125,7 @@ public class Bindings
                 value.updateIf(((TextBoxBase)event.getSource()).getText());
             }
         });
-        value.addListenerAndTrigger(new Value.Listener<String>() {
-            public void valueChanged (String value) {
-                text.setText(value);
-            }
-        });
+        bindLabel(value, text);
     }
 
     /**
