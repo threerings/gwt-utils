@@ -700,41 +700,54 @@ public class WikiParser
         }
         else {
             sb.append("&lt;&lt;&lt;Macro:");
-            sb.append(escapeHTML(unescapeHTML(text)));
+            appendText(text);
             sb.append("&gt;&gt;&gt;");
         }
     }
 
-    protected void appendLink(String text) {
-        String[] link=split(text, '|');
+    protected void appendLink (String text) {
+        String[] link = split(text, '|');
         String uri = link[0].trim();
+        String name = (link.length >= 2 && !isEmpty(link[1].trim())) ? link[1] : uri;
         if (isAbsoluteURI(uri)) {
-            sb.append("<a href=\""+escapeHTML(uri)+"\" rel=\"nofollow\">");
-            sb.append(escapeHTML(unescapeHTML(link.length>=2 && !isEmpty(link[1].trim()) ?
-                                              link[1] : uri)));
-            sb.append("</a>");
-        }
-        else {
-            sb.append("<a href=\"#\" title=\"Internal link\">");
-            sb.append(escapeHTML(unescapeHTML(link.length>=2 && !isEmpty(link[1].trim()) ?
-                                              link[1] : uri)));
-            sb.append("</a>");
+            appendExternalLink(uri, name);
+        } else {
+            appendInternalLink(uri, name);
         }
     }
 
-    protected void appendImage(String text) {
-        String[] link=split(text, '|');
+    protected void appendExternalLink (String uri, String text) {
+        sb.append("<a href=\""+escapeHTML(uri)+"\" rel=\"nofollow\">");
+        appendText(text);
+        sb.append("</a>");
+    }
+
+    protected void appendInternalLink (String uri, String text) {
+        sb.append("<a href=\"#\" title=\"Internal link\">");
+        appendText(text);
+        sb.append("</a>");
+    }
+
+    protected void appendImage (String text) {
+        String[] link = split(text, '|');
         String uri = link[0].trim();
+        String name = (link.length >= 2 && !isEmpty(link[1].trim())) ? link[1] : uri;
         if (isAbsoluteURI(uri)) {
-            String alt=escapeHTML(unescapeHTML(link.length>=2 && !isEmpty(link[1].trim()) ?
-                                               link[1] : uri));
-            sb.append("<img src=\""+escapeHTML(uri)+"\" alt=\""+alt+"\" title=\""+alt+"\" />");
+            appendExternalImage(uri, name);
+        } else {
+            appendInternalImage(uri, name);
         }
-        else {
-            sb.append("&lt;&lt;&lt;Internal image(?): ");
-            sb.append(escapeHTML(unescapeHTML(text)));
-            sb.append("&gt;&gt;&gt;");
-        }
+    }
+
+    protected void appendExternalImage (String uri, String text) {
+        String alt = escapeHTML(unescapeHTML(text));
+        sb.append("<img src=\""+escapeHTML(uri)+"\" alt=\""+alt+"\" title=\""+alt+"\" />");
+    }
+
+    protected void appendInternalImage (String uri, String text) {
+        sb.append("&lt;&lt;&lt;Internal image(?): ");
+        appendText(uri + " " + text);
+        sb.append("&gt;&gt;&gt;");
     }
 
     protected void appendText(String text) {
