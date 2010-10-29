@@ -585,6 +585,17 @@ public class WikiParser
                         }
                     }
                 }
+                else if (c=='`') {
+                    int endCode=wikiText.indexOf("`", p+1); // `inline code`
+                    if (endCode>=0 && endCode<end) {
+                        appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
+                        sb.append("<code>");
+                        sb.append(escapeHTML(wikiText.substring(p+1, endCode)));
+                        sb.append("</code>");
+                        p=endCode+1;
+                        continue;
+                    }
+                }
                 else if (c=='\\') {
                     if (p+1<end && wikiChars[p+1]=='\\') { // \\ = <br/>
                         appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
