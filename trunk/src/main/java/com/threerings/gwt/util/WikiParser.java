@@ -26,9 +26,8 @@ import java.util.HashSet;
 import static com.threerings.gwt.util.WikiUtils.*;
 
 /**
- * Renders Creole wiki text into XHTML. Adapted for GWT from Java parser.
- *
- * <p>{@link #renderXHTML} takes wiki-text and returns XHTML.</p>
+ * Renders Creole wiki text into XHTML. Adapted for GWT from Java parser. {@link #render} takes
+ * wiki text and returns XHTML.
  *
  * <p>WikiParser's behavior can be customized by overriding appendXxx() methods, which should make
  * integration of this class into any wiki/blog/forum software easy and painless.</p>
@@ -39,75 +38,149 @@ import static com.threerings.gwt.util.WikiUtils.*;
  */
 public class WikiParser
 {
-    private int wikiLength;
-    private char wikiChars[];
-    protected StringBuilder sb=new StringBuilder();
-    protected StringBuilder toc=new StringBuilder();
-    protected int tocLevel=0;
-    private HashSet<String> tocAnchorIds=new HashSet<String>();
-    private String wikiText;
-    private int pos=0;
-    private int listLevel=-1;
-    private static final int MAX_LIST_LEVELS=100;
-    private char listLevels[]=new char[MAX_LIST_LEVELS+1]; // max number of levels allowed
-    private boolean blockquoteBR=false;
-    private boolean inTable=false;
-    private int mediawikiTableLevel=0;
-
-    protected int HEADING_LEVEL_SHIFT=1; // make =h2, ==h3, ...
-    protected String HEADING_ID_PREFIX=null;
-
-    private static enum ContextType {PARAGRAPH, LIST_ITEM, TABLE_CELL, HEADER, NOWIKI_BLOCK};
-
-    private static final String[] ESCAPED_INLINE_SEQUENCES= {
-        "{{{", "{{", "}}}", "**", "//", "__", "##", "\\\\", "[[", "<<<", "~", "--", "|"};
-
-    private static final String LIST_CHARS="*-#>:!";
-    private static final String[] LIST_OPEN= {
-        "<ul><li>", "<ul><li>", "<ol><li>", "<blockquote>", "<div class='indent'>",
-        "<div class='center'>"};
-    private static final String[] LIST_CLOSE= {
-        "</li></ul>\n", "</li></ul>\n", "</li></ol>\n", "</blockquote>\n", "</div>\n", "</div>\n"};
-
-    private static final String FORMAT_CHARS="*/_#";
-    private static final String[] FORMAT_DELIM= {"**", "//", "__", "##"};
-    private static final String[] FORMAT_TAG_OPEN= {
-        "<strong>", "<em>", "<span class=\"underline\">", "<tt>"};
-    private static final String[] FORMAT_TAG_CLOSE= {"</strong>", "</em>", "</span>", "</tt>"};
-
-
-    public static String renderXHTML(String wikiText) {
-        return new WikiParser(wikiText).toString();
+    /**
+     * Renders the supplied wiki text to XHTML.
+     */
+    public static String render (String wikiText) {
+        return new WikiParser().doRender(wikiText);
     }
 
-    protected void parse(String wikiText) {
-        wikiText=preprocessWikiText(wikiText);
+    /**
+     * Renders the supplied wiki text snippet to XHTML. This method differs from {@link #render} in
+     * that it expects a single line of text which may contain inline formatting, but contains no
+     * block formatting.
+     */
+    public static String renderSnippet (String wikiText) {
+        return new WikiParser().doRenderSnippet(wikiText);
+    }
 
-        this.wikiText=wikiText;
-        wikiLength=this.wikiText.length();
+    protected String doRender (String text) {
+        wikiText=preprocessWikiText(text);
+        wikiLength=wikiText.length();
         wikiChars=new char[wikiLength];
-        this.wikiText.getChars(0, wikiLength, wikiChars, 0);
+        wikiText.getChars(0, wikiLength, wikiChars, 0);
 
         while (parseBlock());
-
         closeListsAndTables();
-
-        while (mediawikiTableLevel-->0) sb.append("</td></tr></table>\n");
-
+        while (mediawikiTableLevel-- > 0) sb.append("</td></tr></table>\n");
         completeTOC();
-    }
 
-    protected WikiParser() {
-        // for use by subclasses only
-        // subclasses should call parse() to complete construction
-    }
-
-    protected WikiParser(String wikiText) {
-        parse(wikiText);
-    }
-
-    public String toString() {
         return sb.toString();
+    }
+
+    protected String doRenderSnippet (String text) {
+        wikiText=preprocessWikiText(text);
+        wikiLength=wikiText.length();
+        wikiChars=new char[wikiLength];
+        wikiText.getChars(0, wikiLength, wikiChars, 0);
+        parseItem(pos, null, ContextType.PARAGRAPH);
+        return sb.toString();
+    }
+
+    protected void appendMacro(String text) {
+        if ("TOC".equals(text)) {
+            sb.append("<<<TOC>>>"); // put TOC placeholder for replacing it later with real TOC
+        }
+        else {
+            sb.append("&lt;&lt;&lt;Macro:");
+            appendText(text);
+            sb.append("&gt;&gt;&gt;");
+        }
+    }
+
+    protected void appendLink (String text) {
+        String[] link = split(text, '|');
+        String uri = link[0].trim();
+        String name = (link.length >= 2 && !isEmpty(link[1].trim())) ? link[1] : uri;
+        if (isAbsoluteURI(uri)) {
+            appendExternalLink(uri, name);
+        } else {
+            appendInternalLink(uri, name);
+        }
+    }
+
+    protected void appendExternalLink (String uri, String text) {
+        sb.append("<a href=\""+escapeHTML(uri)+"\" rel=\"nofollow\">");
+        appendText(text);
+        sb.append("</a>");
+    }
+
+    protected void appendInternalLink (String uri, String text) {
+        sb.append("<a href=\"#\" title=\"Internal link\">");
+        appendText(text);
+        sb.append("</a>");
+    }
+
+    protected void appendImage (String text) {
+        String[] link = split(text, '|');
+        String uri = link[0].trim();
+        String name = (link.length >= 2 && !isEmpty(link[1].trim())) ? link[1] : uri;
+        if (isAbsoluteURI(uri)) {
+            appendExternalImage(uri, name);
+        } else {
+            appendInternalImage(uri, name);
+        }
+    }
+
+    protected void appendExternalImage (String uri, String text) {
+        String alt = escapeHTML(unescapeHTML(text));
+        sb.append("<img src=\""+escapeHTML(uri)+"\" alt=\""+alt+"\" title=\""+alt+"\" />");
+    }
+
+    protected void appendInternalImage (String uri, String text) {
+        sb.append("&lt;&lt;&lt;Internal image(?): ");
+        appendText(uri + " " + text);
+        sb.append("&gt;&gt;&gt;");
+    }
+
+    protected void appendText(String text) {
+        sb.append(escapeHTML(unescapeHTML(text)));
+    }
+
+    protected String generateTOCAnchorId(int hLevel, String text) {
+        int i=0;
+        String id=(HEADING_ID_PREFIX!=null ? HEADING_ID_PREFIX :
+                   "H"+hLevel+"_")+translit(text.replaceAll("<.+?>", "")).trim().replaceAll(
+                       "\\s+", "_").replaceAll("[^a-zA-Z0-9_-]", "");
+        while (tocAnchorIds.contains(id)) { // avoid duplicates
+            i++;
+            id=text+"_"+i;
+        }
+        tocAnchorIds.add(id);
+        return id;
+    }
+
+    protected void appendTOCItem(int level, String anchorId, String text) {
+        if (level>tocLevel) {
+            while (level>tocLevel) {
+                toc.append("<ul><li>");
+                tocLevel++;
+            }
+        }
+        else {
+            while (level<tocLevel) {
+                toc.append("</li></ul>");
+                tocLevel--;
+            }
+            toc.append("</li>\n<li>");
+        }
+        toc.append("<a href='#"+anchorId+"'>"+text+"</a>");
+    }
+
+    protected void completeTOC() {
+        while (0<tocLevel) {
+            toc.append("</li></ul>");
+            tocLevel--;
+        }
+        int idx;
+        String tocDiv="<div class='toc'>"+toc.toString()+"</div>";
+        while ((idx=sb.indexOf("<<<TOC>>>"))>=0) {
+            sb.replace(idx, idx+9, tocDiv);
+        }
+    }
+
+    protected void appendNowiki(String text) {
+        sb.append(escapeHTML(replaceString(replaceString(text, "~{{{", "{{{"), "~}}}", "}}}")));
     }
 
     private void closeListsAndTables() {
@@ -705,112 +778,6 @@ public class WikiParser
     }
 
 
-    protected void appendMacro(String text) {
-        if ("TOC".equals(text)) {
-            sb.append("<<<TOC>>>"); // put TOC placeholder for replacing it later with real TOC
-        }
-        else {
-            sb.append("&lt;&lt;&lt;Macro:");
-            appendText(text);
-            sb.append("&gt;&gt;&gt;");
-        }
-    }
-
-    protected void appendLink (String text) {
-        String[] link = split(text, '|');
-        String uri = link[0].trim();
-        String name = (link.length >= 2 && !isEmpty(link[1].trim())) ? link[1] : uri;
-        if (isAbsoluteURI(uri)) {
-            appendExternalLink(uri, name);
-        } else {
-            appendInternalLink(uri, name);
-        }
-    }
-
-    protected void appendExternalLink (String uri, String text) {
-        sb.append("<a href=\""+escapeHTML(uri)+"\" rel=\"nofollow\">");
-        appendText(text);
-        sb.append("</a>");
-    }
-
-    protected void appendInternalLink (String uri, String text) {
-        sb.append("<a href=\"#\" title=\"Internal link\">");
-        appendText(text);
-        sb.append("</a>");
-    }
-
-    protected void appendImage (String text) {
-        String[] link = split(text, '|');
-        String uri = link[0].trim();
-        String name = (link.length >= 2 && !isEmpty(link[1].trim())) ? link[1] : uri;
-        if (isAbsoluteURI(uri)) {
-            appendExternalImage(uri, name);
-        } else {
-            appendInternalImage(uri, name);
-        }
-    }
-
-    protected void appendExternalImage (String uri, String text) {
-        String alt = escapeHTML(unescapeHTML(text));
-        sb.append("<img src=\""+escapeHTML(uri)+"\" alt=\""+alt+"\" title=\""+alt+"\" />");
-    }
-
-    protected void appendInternalImage (String uri, String text) {
-        sb.append("&lt;&lt;&lt;Internal image(?): ");
-        appendText(uri + " " + text);
-        sb.append("&gt;&gt;&gt;");
-    }
-
-    protected void appendText(String text) {
-        sb.append(escapeHTML(unescapeHTML(text)));
-    }
-
-    protected String generateTOCAnchorId(int hLevel, String text) {
-        int i=0;
-        String id=(HEADING_ID_PREFIX!=null ? HEADING_ID_PREFIX :
-                   "H"+hLevel+"_")+translit(text.replaceAll("<.+?>", "")).trim().replaceAll(
-                       "\\s+", "_").replaceAll("[^a-zA-Z0-9_-]", "");
-        while (tocAnchorIds.contains(id)) { // avoid duplicates
-            i++;
-            id=text+"_"+i;
-        }
-        tocAnchorIds.add(id);
-        return id;
-    }
-
-    protected void appendTOCItem(int level, String anchorId, String text) {
-        if (level>tocLevel) {
-            while (level>tocLevel) {
-                toc.append("<ul><li>");
-                tocLevel++;
-            }
-        }
-        else {
-            while (level<tocLevel) {
-                toc.append("</li></ul>");
-                tocLevel--;
-            }
-            toc.append("</li>\n<li>");
-        }
-        toc.append("<a href='#"+anchorId+"'>"+text+"</a>");
-    }
-
-    protected void completeTOC() {
-        while (0<tocLevel) {
-            toc.append("</li></ul>");
-            tocLevel--;
-        }
-        int idx;
-        String tocDiv="<div class='toc'>"+toc.toString()+"</div>";
-        while ((idx=sb.indexOf("<<<TOC>>>"))>=0) {
-            sb.replace(idx, idx+9, tocDiv);
-        }
-    }
-
-    protected void appendNowiki(String text) {
-        sb.append(escapeHTML(replaceString(replaceString(text, "~{{{", "{{{"), "~}}}", "}}}")));
-    }
-
     private static class EndOfContextException extends Exception {
         private static final long serialVersionUID=1L;
         int position;
@@ -826,4 +793,40 @@ public class WikiParser
             super(position);
         }
     }
+
+    private int wikiLength;
+    private char wikiChars[];
+    protected StringBuilder sb=new StringBuilder();
+    protected StringBuilder toc=new StringBuilder();
+    protected int tocLevel=0;
+    private HashSet<String> tocAnchorIds=new HashSet<String>();
+    private String wikiText;
+    private int pos=0;
+    private int listLevel=-1;
+    private static final int MAX_LIST_LEVELS=100;
+    private char listLevels[]=new char[MAX_LIST_LEVELS+1]; // max number of levels allowed
+    private boolean blockquoteBR=false;
+    private boolean inTable=false;
+    private int mediawikiTableLevel=0;
+
+    protected int HEADING_LEVEL_SHIFT=1; // make =h2, ==h3, ...
+    protected String HEADING_ID_PREFIX=null;
+
+    private static enum ContextType {PARAGRAPH, LIST_ITEM, TABLE_CELL, HEADER, NOWIKI_BLOCK};
+
+    private static final String[] ESCAPED_INLINE_SEQUENCES= {
+        "{{{", "{{", "}}}", "**", "//", "__", "##", "\\\\", "[[", "<<<", "~", "--", "|"};
+
+    private static final String LIST_CHARS="*-#>:!";
+    private static final String[] LIST_OPEN= {
+        "<ul><li>", "<ul><li>", "<ol><li>", "<blockquote>", "<div class='indent'>",
+        "<div class='center'>"};
+    private static final String[] LIST_CLOSE= {
+        "</li></ul>\n", "</li></ul>\n", "</li></ol>\n", "</blockquote>\n", "</div>\n", "</div>\n"};
+
+    private static final String FORMAT_CHARS="*/_#";
+    private static final String[] FORMAT_DELIM= {"**", "//", "__", "##"};
+    private static final String[] FORMAT_TAG_OPEN= {
+        "<strong>", "<em>", "<span class=\"underline\">", "<tt>"};
+    private static final String[] FORMAT_TAG_CLOSE= {"</strong>", "</em>", "</span>", "</tt>"};
 }
