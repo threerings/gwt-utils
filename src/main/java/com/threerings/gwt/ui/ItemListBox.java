@@ -53,7 +53,7 @@ public class ItemListBox<T> extends ListBox
      */
     public void addItem (T item)
     {
-        super.addItem(toLabel(item));
+        addItem(toLabel(item));
         _items.add(item);
     }
 
@@ -62,7 +62,7 @@ public class ItemListBox<T> extends ListBox
      */
     public void insertItem (T item, int index)
     {
-        super.insertItem(toLabel(item), index);
+        insertItem(toLabel(item), index);
         _items.add(index, item);
     }
 
@@ -75,29 +75,37 @@ public class ItemListBox<T> extends ListBox
         return (selidx >= 0) ? _items.get(selidx) : null;
     }
 
-    @Override // from ListBox
-    public void addItem (String item)
+    /**
+     * Selects the specified item.
+     */
+    public void setSelectedItem (T value)
     {
-        throw new UnsupportedOperationException();
+        setSelectedIndex(_items.indexOf(value));
     }
 
-    @Override // from ListBox
-    public void addItem (String item, String value)
-    {
-        throw new UnsupportedOperationException();
-    }
+    // @Override // from ListBox
+    // public void addItem (String item)
+    // {
+    //     throw new UnsupportedOperationException();
+    // }
 
-    @Override // from ListBox
-    public void insertItem (String item, int index)
-    {
-        throw new UnsupportedOperationException();
-    }
+    // @Override // from ListBox
+    // public void addItem (String item, String value)
+    // {
+    //     throw new UnsupportedOperationException();
+    // }
 
-    @Override // from ListBox
-    public void insertItem (String item, String value, int index)
-    {
-        throw new UnsupportedOperationException();
-    }
+    // @Override // from ListBox
+    // public void insertItem (String item, int index)
+    // {
+    //     throw new UnsupportedOperationException();
+    // }
+
+    // @Override // from ListBox
+    // public void insertItem (String item, String value, int index)
+    // {
+    //     throw new UnsupportedOperationException();
+    // }
 
     /**
      * Returns the label text to display for the specified item. Defaults to calling {@link
