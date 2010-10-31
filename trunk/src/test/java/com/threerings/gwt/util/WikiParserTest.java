@@ -39,6 +39,14 @@ public class WikiParserTest
                      WikiParser.render("This is `some ** code **`."));
     }
 
+    @Test public void testStrikeThrough ()
+    {
+        assertEquals("<p>This is <strike>struck out</strike>.</p>\n",
+                     WikiParser.render("This is --struck out--."));
+        // make sure we didn't break <hr>s
+        assertEquals("\n<hr/>\n", WikiParser.render("----"));
+    }
+
     @Test public void testRenderSnippet ()
     {
         assertEquals("This is <code>some code</code>.",
