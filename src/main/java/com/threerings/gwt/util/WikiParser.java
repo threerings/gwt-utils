@@ -824,9 +824,10 @@ public class WikiParser
     private static final String[] LIST_CLOSE= {
         "</li></ul>\n", "</li></ul>\n", "</li></ol>\n", "</blockquote>\n", "</div>\n", "</div>\n"};
 
-    private static final String FORMAT_CHARS="*/_#";
-    private static final String[] FORMAT_DELIM= {"**", "//", "__", "##"};
+    private static final String FORMAT_CHARS="*/_#-";
+    private static final String[] FORMAT_DELIM= {"**", "//", "__", "##", "--"};
     private static final String[] FORMAT_TAG_OPEN= {
-        "<strong>", "<em>", "<span class=\"underline\">", "<tt>"};
-    private static final String[] FORMAT_TAG_CLOSE= {"</strong>", "</em>", "</span>", "</tt>"};
+        "<strong>", "<em>", "<span class=\"underline\">", "<tt>", "<strike>"};
+    private static final String[] FORMAT_TAG_CLOSE= {
+        "</strong>", "</em>", "</span>", "</tt>", "</strike>"};
 }
