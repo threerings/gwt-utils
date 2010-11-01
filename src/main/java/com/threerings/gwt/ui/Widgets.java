@@ -418,7 +418,7 @@ public class Widgets
      */
     public static Widget newShim (int width, int height)
     {
-        Label shim = new Label("");
+        Image shim = new Image(_rsrc.blank());
         shim.setWidth(width + "px");
         shim.setHeight(height + "px");
         return shim;
@@ -452,4 +452,5 @@ public class Widgets
     }
 
     protected static FormSupport _formSupport = GWT.create(FormSupport.class);
+    protected static UIResources _rsrc = GWT.create(UIResources.class);
 }
