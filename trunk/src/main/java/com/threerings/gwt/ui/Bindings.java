@@ -25,8 +25,14 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasMouseOutHandlers;
+import com.google.gwt.event.dom.client.HasMouseOverHandlers;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextBoxBase;
@@ -71,6 +77,21 @@ public class Bindings
         });
         for (Widget target : targets) {
             target.setVisible(value.get());
+        }
+    }
+
+    /**
+     * Binds the hovered state of the supplied target widgets to the supplied boolean value. The
+     * supplied value will be toggled to true when the mouse is hovering over any of the supplied
+     * targets and false otherwise.
+     */
+    public static <T extends HasMouseOverHandlers & HasMouseOutHandlers> void bindHovered (
+        final Value<Boolean> value, T... targets)
+    {
+        HoverHandler handler = new HoverHandler(value);
+        for (T target : targets) {
+            target.addMouseOverHandler(handler);
+            target.addMouseOutHandler(handler);
         }
     }
 
@@ -138,5 +159,25 @@ public class Bindings
                 value.update(!value.get());
             }
         };
+    }
+
+    protected static class HoverHandler implements MouseOverHandler, MouseOutHandler
+    {
+        public HoverHandler (Value<Boolean> value) {
+            _value = value;
+        }
+
+        // we use _hovered to cope with mouse over/out coming in arbitrary orders
+        public void onMouseOver (MouseOverEvent event) {
+            ++_hovered;
+            _value.update(true);
+        }
+        public void onMouseOut (MouseOutEvent event) {
+            --_hovered;
+            _value.update(_hovered == 0);
+        }
+
+        protected Value<Boolean> _value;
+        protected int _hovered;
     }
 }
