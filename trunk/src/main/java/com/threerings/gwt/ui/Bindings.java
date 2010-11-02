@@ -21,6 +21,7 @@
 
 package com.threerings.gwt.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -161,6 +162,38 @@ public class Bindings
         };
     }
 
+    /**
+     * Configures either `onStyle` or `offStyle` on the supplied target widgets depending on the
+     * state of the supplied boolean `value`.
+     *
+     * @param onStyle the style name to be applied when the value is true, or null.
+     * @param onStyle the style name to be applied when the value is false, or null.
+     */
+    public static void bindStateStyle (Value<Boolean> value, final String onStyle,
+                                       final String offStyle, final Widget... targets)
+    {
+        value.addListenerAndTrigger(new Value.Listener<Boolean>() {
+            public void valueChanged (Boolean value) {
+                String add, remove;
+                if (value) {
+                    remove = offStyle;
+                    add = onStyle;
+                } else {
+                    remove = onStyle;
+                    add = offStyle;
+                }
+                for (Widget target : targets) {
+                    if (remove != null) {
+                        target.removeStyleName(remove);
+                    }
+                    if (add != null) {
+                        target.addStyleName(add);
+                    }
+                }
+            }
+        });
+    }
+
     protected static class HoverHandler implements MouseOverHandler, MouseOutHandler
     {
         public HoverHandler (Value<Boolean> value) {
@@ -174,7 +207,7 @@ public class Bindings
         }
         public void onMouseOut (MouseOutEvent event) {
             --_hovered;
-            _value.update(_hovered == 0);
+            _value.update(_hovered != 0);
         }
 
         protected Value<Boolean> _value;
