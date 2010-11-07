@@ -21,26 +21,38 @@
 
 package com.threerings.gwt.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Converts an enter keypress in a text field to a call to a click handler. NOTE: the handler will
+ * Converts an enter keydown in a text field to a call to a click handler. NOTE: the handler will
  * be passed a null event.
  */
-public class EnterClickAdapter implements KeyPressHandler
+public class EnterClickAdapter implements KeyDownHandler
 {
+    /**
+     * Binds a listener to the supplied target text box that triggers the supplied click handler
+     * when enter is pressed on the text box.
+     */
+    public static HandlerRegistration bind (HasKeyDownHandlers target, ClickHandler onEnter)
+    {
+        return target.addKeyDownHandler(new EnterClickAdapter(onEnter));
+    }
+
     public EnterClickAdapter (ClickHandler onEnter)
     {
         _onEnter = onEnter;
     }
 
-    // from interface KeyPressHandler
-    public void onKeyPress (KeyPressEvent event)
+    // from interface KeyDownHandler
+    public void onKeyDown (KeyDownEvent event)
     {
-        if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             _onEnter.onClick(null);
         }
     }
