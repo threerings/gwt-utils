@@ -250,7 +250,7 @@ public abstract class ClickCallback<T>
         if (enabled) {
             _clickreg = _trigger.addClickHandler(_onClick);
             if (_onEnter != null) {
-                _enterreg = _onEnter.addKeyPressHandler(new EnterClickAdapter(_onClick));
+                _enterreg = EnterClickAdapter.bind(_onEnter, _onClick);
             }
         }
     }
