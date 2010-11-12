@@ -89,6 +89,7 @@ public class Bindings
      */
     public static void bindVisible (final Value<Boolean> value, final Thunk thunk)
     {
+        notNull(thunk, "thunk");
         value.addListenerAndTrigger(new Value.Listener<Boolean>() {
             public void valueChanged (Boolean visible) {
                 if (visible) {
@@ -173,6 +174,7 @@ public class Bindings
      */
     public static ClickHandler makeToggler (final Value<Boolean> value)
     {
+        notNull(value, "value");
         return new ClickHandler() {
             public void onClick (ClickEvent event) {
                 value.update(!value.get());
@@ -215,10 +217,7 @@ public class Bindings
     protected static class HoverHandler implements MouseOverHandler, MouseOutHandler
     {
         public HoverHandler (Value<Boolean> value) {
-            if (value == null) {
-                throw new NullPointerException("Must supply non-null 'value'.");
-            }
-            _value = value;
+            _value = notNull(value, "value");
         }
 
         // we use _hovered to cope with mouse over/out coming in arbitrary orders
@@ -233,5 +232,13 @@ public class Bindings
 
         protected Value<Boolean> _value;
         protected int _hovered;
+    }
+
+    protected static <T> T notNull (T value, String param)
+    {
+        if (value == null) {
+            throw new NullPointerException("Must supply non-null '" + param + "'.");
+        }
+        return value;
     }
 }
