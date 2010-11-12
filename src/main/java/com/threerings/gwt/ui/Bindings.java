@@ -47,21 +47,24 @@ import com.threerings.gwt.util.Value;
  */
 public class Bindings
 {
+    /** Used to defer the creation of a widget. */
+    public interface Thunk {
+        /** Creates a deferred widget, adds it to the appropriate parent, and returns it. */
+        Widget createWidget ();
+    }
+
     /**
      * Binds the enabledness state of the target widget to the supplied boolean value.
      */
     public static void bindEnabled (Value<Boolean> value, final FocusWidget... targets)
     {
-        value.addListener(new Value.Listener<Boolean>() {
+        value.addListenerAndTrigger(new Value.Listener<Boolean>() {
             public void valueChanged (Boolean enabled) {
                 for (FocusWidget target : targets) {
                     target.setEnabled(enabled);
                 }
             }
         });
-        for (FocusWidget target : targets) {
-            target.setEnabled(value.get());
-        }
     }
 
     /**
@@ -69,16 +72,31 @@ public class Bindings
      */
     public static void bindVisible (Value<Boolean> value, final Widget... targets)
     {
-        value.addListener(new Value.Listener<Boolean>() {
+        value.addListenerAndTrigger(new Value.Listener<Boolean>() {
             public void valueChanged (Boolean visible) {
                 for (Widget target : targets) {
                     target.setVisible(visible);
                 }
             }
         });
-        for (Widget target : targets) {
-            target.setVisible(value.get());
-        }
+    }
+
+    /**
+     * Binds the visible state of a to-be-created widget to the supplied boolean value. The
+     * supplied thunk will be called to create the widget (and add it to the appropriate parent)
+     * the first time the value transitions to true, at which point the visiblity of the created
+     * widget will be bound to subsequent changes of the value.
+     */
+    public static void bindVisible (final Value<Boolean> value, final Thunk thunk)
+    {
+        value.addListenerAndTrigger(new Value.Listener<Boolean>() {
+            public void valueChanged (Boolean visible) {
+                if (visible) {
+                    value.removeListener(this);
+                    bindVisible(value, thunk.createWidget());
+                }
+            }
+        });
     }
 
     /**
@@ -197,6 +215,9 @@ public class Bindings
     protected static class HoverHandler implements MouseOverHandler, MouseOutHandler
     {
         public HoverHandler (Value<Boolean> value) {
+            if (value == null) {
+                throw new NullPointerException("Must supply non-null 'value'.");
+            }
             _value = value;
         }
 
