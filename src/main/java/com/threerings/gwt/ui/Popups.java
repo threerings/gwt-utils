@@ -83,9 +83,14 @@ public class Popups
      */
     public static void showNear (PopupPanel popup, Widget target)
     {
-        popup.setPopupPosition(target.getAbsoluteLeft(),
-                               target.getAbsoluteTop() + target.getOffsetHeight() + NEAR_GAP);
+        popup.setVisible(false);
         popup.show();
+        int left = target.getAbsoluteLeft();
+        if (left + popup.getOffsetWidth() > Window.getClientWidth()) {
+            left = Math.max(0, Window.getClientWidth() - popup.getOffsetWidth());
+        }
+        popup.setPopupPosition(left, target.getAbsoluteTop() + target.getOffsetHeight() + NEAR_GAP);
+        popup.setVisible(true);
     }
 
     /**
