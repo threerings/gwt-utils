@@ -43,6 +43,10 @@ public class WikiParserTest
     {
         assertEquals("<p>This is <strike>struck out</strike>.</p>\n",
                      WikiParser.render("This is --struck out--."));
+        assertEquals("<strike>nothing but struck out</strike>",
+                     WikiParser.renderSnippet("--nothing but struck out--"));
+        assertEquals("--oops, forgot the closing delimiter",
+                     WikiParser.renderSnippet("--oops, forgot the closing delimiter"));
         // make sure we didn't break <hr>s
         assertEquals("\n<hr/>\n", WikiParser.render("----"));
     }
@@ -63,5 +67,14 @@ public class WikiParserTest
                      WikiParser.render("<<< left floating text"));
         assertEquals("<div style=\"float: right\">right floating text</div>",
                      WikiParser.render(">>> right floating text"));
+    }
+
+    @Test public void testEmdash ()
+    {
+        // make sure we don't erroneously identify an mdash as a strikethrough
+        assertEquals("This is some code with an &mdash; in it.",
+                     WikiParser.renderSnippet("This is some code with an -- in it."));
+        assertEquals("<p>This is some code with an &mdash; in it.</p>\n",
+                     WikiParser.render("This is some code with an -- in it."));
     }
 }
