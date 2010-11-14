@@ -56,4 +56,12 @@ public class WikiParserTest
         assertEquals("This is <em>italic text</em>. And some <code>monkeys</code>.",
                      WikiParser.renderSnippet("This is //italic text//. And some `monkeys`."));
     }
+
+    @Test public void testFloat ()
+    {
+        assertEquals("<div style=\"float: left\">left floating text</div>",
+                     WikiParser.render("<<< left floating text"));
+        assertEquals("<div style=\"float: right\">right floating text</div>",
+                     WikiParser.render(">>> right floating text"));
+    }
 }

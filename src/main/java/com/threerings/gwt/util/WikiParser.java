@@ -77,16 +77,16 @@ public class WikiParser
         return sb.toString();
     }
 
-    protected void appendMacro(String text) {
-        if ("TOC".equals(text)) {
-            sb.append("<<<TOC>>>"); // put TOC placeholder for replacing it later with real TOC
-        }
-        else {
-            sb.append("&lt;&lt;&lt;Macro:");
-            appendText(text);
-            sb.append("&gt;&gt;&gt;");
-        }
-    }
+    // protected void appendMacro(String text) {
+    //     if ("TOC".equals(text)) {
+    //         sb.append("<<<TOC>>>"); // put TOC placeholder for replacing it later with real TOC
+    //     }
+    //     else {
+    //         sb.append("&lt;&lt;&lt;Macro:");
+    //         appendText(text);
+    //         sb.append("&gt;&gt;&gt;");
+    //     }
+    // }
 
     protected void appendLink (String text) {
         String[] link = split(text, '|');
@@ -133,11 +133,11 @@ public class WikiParser
         sb.append("&gt;&gt;&gt;");
     }
 
-    protected void appendText(String text) {
+    protected void appendText (String text) {
         sb.append(escapeHTML(unescapeHTML(text)));
     }
 
-    protected String generateTOCAnchorId(int hLevel, String text) {
+    protected String generateTOCAnchorId (int hLevel, String text) {
         int i=0;
         String id=(HEADING_ID_PREFIX!=null ? HEADING_ID_PREFIX :
                    "H"+hLevel+"_")+translit(text.replaceAll("<.+?>", "")).trim().replaceAll(
@@ -150,7 +150,7 @@ public class WikiParser
         return id;
     }
 
-    protected void appendTOCItem(int level, String anchorId, String text) {
+    protected void appendTOCItem (int level, String anchorId, String text) {
         if (level>tocLevel) {
             while (level>tocLevel) {
                 toc.append("<ul><li>");
@@ -167,7 +167,7 @@ public class WikiParser
         toc.append("<a href='#"+anchorId+"'>"+text+"</a>");
     }
 
-    protected void completeTOC() {
+    protected void completeTOC () {
         while (0<tocLevel) {
             toc.append("</li></ul>");
             tocLevel--;
@@ -179,11 +179,11 @@ public class WikiParser
         }
     }
 
-    protected void appendNowiki(String text) {
+    protected void appendNowiki (String text) {
         sb.append(escapeHTML(replaceString(replaceString(text, "~{{{", "{{{"), "~}}}", "}}}")));
     }
 
-    private void closeListsAndTables() {
+    private void closeListsAndTables () {
         // close unclosed lists
         while (listLevel>=0) {
             sb.append(LIST_CLOSE[LIST_CHARS.indexOf(listLevels[listLevel--])]);
@@ -194,8 +194,8 @@ public class WikiParser
         }
     }
 
-    private boolean parseBlock() {
-        for (; pos<wikiLength && wikiChars[pos]<=' ' && wikiChars[pos]!='\n'; pos++) ; // skip whitespace
+    private boolean parseBlock () {
+        pos = skipSpacesToNewline(pos, wikiLength);
         if (pos>=wikiLength) return false;
 
         char c=wikiChars[pos];
@@ -219,8 +219,7 @@ public class WikiParser
                         endTable=true;
                         pp++;
                     }
-                    // skip spaces
-                    for (; pp<wikiLength && (wikiChars[pp]==' ' || wikiChars[pp]=='\t'); pp++) ;
+                    pp = skipSpacesTabs(pp, wikiLength); // skip spaces
                     // nothing else on the line => it's mediawiki-table markup
                     if (pp==wikiLength || wikiChars[pp]=='\n') {
                         closeListsAndTables(); // close lists if any
@@ -289,8 +288,7 @@ public class WikiParser
             // count heading level
             for (hc=1; hc<6 && pos+hc<wikiLength && wikiChars[pos+hc]=='='; hc++) ;
             if (pos+hc>=wikiLength) return false;
-            int p;
-            for (p=pos+hc; p<wikiLength && (wikiChars[p]==' ' || wikiChars[p]=='\t'); p++) ; // skip spaces
+            int p = skipSpacesTabs(pos+hc, wikiLength); // skip spaces
             String tagName="h"+(hc+HEADING_LEVEL_SHIFT);
             sb.append("<"+tagName+" id=''>"); // real id to be inserted after parsing this item
             int hStart=sb.length();
@@ -301,6 +299,16 @@ public class WikiParser
             sb.insert(hStart-2, anchorId);
             appendTOCItem(hc, anchorId, hText);
             return true;
+        }
+        else if (c=='<' || c =='>') { // <<< is float left, >>> is float right
+            if (pos+2 < wikiLength && wikiChars[pos+1] == c && wikiChars[pos+2] == c) {
+                pos = skipSpacesTabs(pos+3, wikiLength); // skip whitespace
+                String side = (c == '<') ? "left" : "right";
+                sb.append("<div style=\"float: " + side + "\">");
+                pos = parseItem(pos, null, ContextType.HEADER);
+                sb.append("</div>");
+                return true;
+            }
         }
         else if (c=='{') { // nowiki-block?
             if (pos+2<wikiLength && wikiChars[pos+1]=='{' && wikiChars[pos+2]=='{') {
@@ -319,8 +327,7 @@ public class WikiParser
                 // else inline <nowiki> - proceed to regular paragraph handling
             }
             else if (pos+1<wikiLength && wikiChars[pos+1]=='|') { // mediawiki-table?
-                int pp;
-                for (pp=pos+2; pp<wikiLength && (wikiChars[pp]==' ' || wikiChars[pp]=='\t'); pp++) ; // skip spaces
+                int pp = skipSpacesTabs(pos+2, wikiLength); // skip spaces
                 if (pp==wikiLength || wikiChars[pp]=='\n') { // yes, it's start of a table
                     sb.append("<table border=\"1\"><tr><td>");
                     mediawikiTableLevel++;
@@ -330,9 +337,7 @@ public class WikiParser
             }
         }
         else if (c=='-' && wikiText.startsWith("----", pos)) {
-            int p;
-            // skip spaces
-            for (p=pos+4; p<wikiLength && (wikiChars[p]==' ' || wikiChars[p]=='\t'); p++) ;
+            int p = skipSpacesTabs(pos+4, wikiLength); // skip spaces
             if (p==wikiLength || wikiChars[p]=='\n') {
                 sb.append("\n<hr/>\n");
                 pos=p;
@@ -374,6 +379,18 @@ public class WikiParser
         }
     }
 
+    private int skipSpacesTabs (int start, int end) {
+        int pos = start;
+        while (pos < end && (wikiChars[pos] == ' ' || wikiChars[pos] == '\t')) pos++;
+        return pos;
+    }
+
+    private int skipSpacesToNewline (int start, int end) {
+        int pos = start;
+        while (pos < end && wikiChars[pos] <= ' ' && wikiChars[pos] != '\n') pos++;
+        return pos;
+    }
+
     /**
      * Finds first closing '}}}' for nowiki block or span.
      * Skips escaped sequences: '~}}}'.
@@ -381,7 +398,7 @@ public class WikiParser
      * @param startBlock points to first char after '{{{'
      * @return position of first '}' in closing '}}}'
      */
-    private int findEndOfNowiki(int startBlock) {
+    private int findEndOfNowiki (int startBlock) {
         // NOTE: this method could step back one char from startBlock position
         int endBlock=startBlock-3;
         do {
@@ -402,7 +419,7 @@ public class WikiParser
      * @return position of first '}' in closing '}}}'
      */
     @SuppressWarnings("unused")
-    private int findEndOfNowikiGreedy(int startBlock) {
+    private int findEndOfNowikiGreedy (int startBlock) {
         // NOTE: this method could step back one char from startBlock position
         int nextBlock=startBlock-3;
         do {
@@ -420,7 +437,7 @@ public class WikiParser
      * @param start points to first char after pipe '|'
      * @return
      */
-    private int parseTableRow(int start) {
+    private int parseTableRow (int start) {
         if (start>=wikiLength) return wikiLength;
 
         sb.append("<tr>");
@@ -469,9 +486,8 @@ public class WikiParser
      *
      * @param start
      */
-    private int parseListItem(int start) {
-        // skip spaces
-        while (start<wikiLength && wikiChars[start]<=' ' && wikiChars[start]!='\n') start++;
+    private int parseListItem (int start) {
+        start = skipSpacesToNewline(start, wikiLength); // skip spaces
         int end=parseItem(start, null, ContextType.LIST_ITEM);
         if ((listLevels[listLevel]=='>' || listLevels[listLevel]==':') &&
             wikiText.substring(start, end).trim().length()==0) { // empty line within blockquote/div
@@ -493,7 +509,7 @@ public class WikiParser
      *
      * @return array of two integer offsets [begin_uri, end_uri] if matched, null otherwise
      */
-    private int[] checkURI(int p, int start, int end) {
+    private int[] checkURI (int p, int start, int end) {
         if (p>start && wikiChars[p-1]==':') { // "://" found
             int pb=p-1;
             while (pb>start && isLatinLetterOrDigit(wikiChars[pb-1])) pb--;
@@ -517,16 +533,15 @@ public class WikiParser
         return null;
     }
 
-    private int parseItem(int start, String delimiter, ContextType context) {
+    private int parseItem (int start, String delimiter, ContextType context) {
         try {
             return parseItemThrow(start, delimiter, context);
-        }
-        catch (EndOfContextException e) {
+        } catch (EndOfContextException e) {
             return e.position;
         }
     }
 
-    private int parseItemThrow(int start, String delimiter, ContextType context)
+    private int parseItemThrow (int start, String delimiter, ContextType context)
         throws EndOfContextException {
         StringBuilder tb=new StringBuilder();
 
@@ -535,7 +550,8 @@ public class WikiParser
         int end=wikiLength;
 
         try {
-          nextChar: while(true) {
+          nextChar:
+            while(true) {
                 if (p>=end) throw new EndOfContextException(end); //break;
 
                 if (delimiter!=null && wikiText.startsWith(delimiter, p)) {
@@ -559,17 +575,14 @@ public class WikiParser
                              // can close all lists
                         throw new EndOfContextException(p);
                     }
-                    // skip whitespace
-                    for (p++; p<end && wikiChars[p]<=' ' && wikiChars[p]!='\n'; p++) ;
+                    p = skipSpacesToNewline(p+1, end); // skip whitespace
                     if (p>=end) throw new EndOfContextException(p); // end of text reached
 
                     c=wikiChars[p];
                     atLineStart=true;
 
                     if (c=='-' && wikiText.startsWith("----", p)) { // check for ---- <hr>
-                        int pp;
-                        // skip spaces
-                        for (pp=p+4; pp<end && (wikiChars[pp]==' ' || wikiChars[pp]=='\t'); pp++) ;
+                        int pp = skipSpacesTabs(p+4, end); // skip spaces
                         // yes, it's <hr>
                         if (pp==end || wikiChars[pp]=='\n') throw new EndOfContextException(p);
                     }
@@ -593,9 +606,7 @@ public class WikiParser
                     }
                     else if (c=='{') { // mediawiki-table?
                         if (p+1<end && wikiChars[p+1]=='|') {
-                            int pp;
-                            for (pp=p+2; pp<end && (wikiChars[pp]==' ' ||
-                                                    wikiChars[pp]=='\t'); pp++) ; // skip spaces
+                            int pp = skipSpacesTabs(p+2, end); // skip spaces
                             if (pp==end || wikiChars[pp]=='\n') // yes, it's start of a table
                                 throw new EndOfContextException(p);
                         }
@@ -677,19 +688,19 @@ public class WikiParser
                         continue;
                     }
                 }
-                else if (c=='<') {
-                    if (p+1<end && wikiChars[p+1]=='<') {
-                        if (p+2<end && wikiChars[p+2]=='<') { // <<<macro>>>
-                            int endMacro=wikiText.indexOf(">>>", p+3);
-                            if (endMacro>=0 && endMacro<end) {
-                                appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
-                                appendMacro(wikiText.substring(p+3, endMacro));
-                                p=endMacro+3;
-                                continue;
-                            }
-                        }
-                    }
-                }
+                // else if (c=='<') {
+                //     if (p+1<end && wikiChars[p+1]=='<') {
+                //         if (p+2<end && wikiChars[p+2]=='<') { // <<<macro>>>
+                //             int endMacro=wikiText.indexOf(">>>", p+3);
+                //             if (endMacro>=0 && endMacro<end) {
+                //                 appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
+                //                 appendMacro(wikiText.substring(p+3, endMacro));
+                //                 p=endMacro+3;
+                //                 continue;
+                //             }
+                //         }
+                //     }
+                // }
                 else if ((formatType=FORMAT_CHARS.indexOf(c))>=0) {
                     if (p+1<end && wikiChars[p+1]==c) {
                         appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
@@ -771,8 +782,7 @@ public class WikiParser
                 tb.append(c);
                 p++;
             }
-        }
-        finally {
+        } finally {
             appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
         }
     }
@@ -781,7 +791,7 @@ public class WikiParser
     private static class EndOfContextException extends Exception {
         private static final long serialVersionUID=1L;
         int position;
-        public EndOfContextException(int position) {
+        public EndOfContextException (int position) {
             super();
             this.position=position;
         }
@@ -789,16 +799,20 @@ public class WikiParser
 
     private static class EndOfSubContextException extends EndOfContextException {
         private static final long serialVersionUID=1L;
-        public EndOfSubContextException(int position) {
+        public EndOfSubContextException (int position) {
             super(position);
         }
     }
 
-    private int wikiLength;
-    private char wikiChars[];
     protected StringBuilder sb=new StringBuilder();
     protected StringBuilder toc=new StringBuilder();
     protected int tocLevel=0;
+
+    protected int HEADING_LEVEL_SHIFT=1; // make =h2, ==h3, ...
+    protected String HEADING_ID_PREFIX=null;
+
+    private int wikiLength;
+    private char wikiChars[];
     private HashSet<String> tocAnchorIds=new HashSet<String>();
     private String wikiText;
     private int pos=0;
@@ -808,9 +822,6 @@ public class WikiParser
     private boolean blockquoteBR=false;
     private boolean inTable=false;
     private int mediawikiTableLevel=0;
-
-    protected int HEADING_LEVEL_SHIFT=1; // make =h2, ==h3, ...
-    protected String HEADING_ID_PREFIX=null;
 
     private static enum ContextType {PARAGRAPH, LIST_ITEM, TABLE_CELL, HEADER, NOWIKI_BLOCK};
 
