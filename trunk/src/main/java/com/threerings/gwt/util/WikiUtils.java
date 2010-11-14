@@ -23,6 +23,7 @@ package com.threerings.gwt.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Used by {@link WikiParser}.
@@ -111,68 +112,26 @@ public class WikiUtils
         return sb.toString();
     }
 
-    public static String escapeHTML(String s) {
-        if (s==null) return "";
-        StringBuffer sb=new StringBuffer(s.length()+100);
-        int length=s.length();
-
-        for (int i=0; i<length; i++) {
-            char ch=s.charAt(i);
-
-            if ('<'==ch) {
-                sb.append("&lt;");
-            }
-            else if ('>'==ch) {
-                sb.append("&gt;");
-            }
-            else if ('&'==ch) {
-                sb.append("&amp;");
-            }
-            else if ('\''==ch) {
-                sb.append("&#39;");
-            }
-            else if ('"'==ch) {
-                sb.append("&quot;");
-            }
-            else {
+    public static String escapeHTML (String s) {
+        if (s == null) return "";
+        StringBuffer sb = new StringBuffer(s.length()+100);
+        Map<Character,String> unent = getHtmlUnEntities();
+        for (int ii = 0, ll = s.length(); ii < ll; ii++) {
+            char ch = s.charAt(ii);
+            String ent = unent.get(ch);
+            if (ent != null) {
+                sb.append("&").append(ent).append(";");
+            } else {
                 sb.append(ch);
             }
         }
         return sb.toString();
     }
 
-    private static HashMap<String,Character> entities=null;
-
-    private static synchronized HashMap<String,Character> getHtmlEntities() {
-        if (entities==null) {
-            entities=new HashMap<String, Character>();
-            entities.put("lt", '<');
-            entities.put("gt", '>');
-            entities.put("amp", '&');
-            entities.put("quot", '"');
-            entities.put("apos", '\'');
-            entities.put("nbsp", '\u00A0');
-            entities.put("shy", '\u00AD');
-            entities.put("copy", '\u00A9');
-            entities.put("reg", '\u00AE');
-            entities.put("trade", '\u2122');
-            entities.put("mdash", '\u2014');
-            entities.put("ndash", '\u2013');
-            entities.put("ldquo", '\u201C');
-            entities.put("rdquo", '\u201D');
-            entities.put("euro", '\u20AC');
-            entities.put("middot", '\u00B7');
-            entities.put("bull", '\u2022');
-            entities.put("laquo", '\u00AB');
-            entities.put("raquo", '\u00BB');
-        }
-        return entities;
-    }
-
     public static String unescapeHTML(String value) {
         if (value==null) return null;
         if (value.indexOf('&')<0) return value;
-        HashMap<String,Character> ent=getHtmlEntities();
+        Map<String,Character> ent = getHtmlEntities();
         StringBuffer sb=new StringBuffer();
         final int length=value.length();
         for (int i=0; i<length; i++) {
@@ -254,14 +213,6 @@ public class WikiUtils
         return parts.toArray(a);
     }
 
-    private static final String translitTable =
-        "\ufffda\ufffdb\ufffdv\ufffdg\ufffdd\ufffde\ufffde\ufffdzh\ufffdz\ufffdi\ufffdy\ufffdk" +
-        "\ufffdl\ufffdm\ufffdn\ufffdo\ufffdp\ufffdr\ufffds\ufffdt\ufffdu\ufffdf\ufffdh\ufffdts" +
-        "\ufffdch\ufffdsh\ufffdsch\ufffd\ufffdy\ufffd\ufffde\ufffdyu\ufffdya\ufffdA\ufffdB\ufffdV" +
-        "\ufffdG\ufffdD\ufffdE\ufffdE\ufffdZH\ufffdZ\ufffdI\ufffdY\ufffdK\ufffdL\ufffdM\ufffdN" +
-        "\ufffdO\ufffdP\ufffdR\ufffdS\ufffdT\ufffdU\ufffdF\ufffdH\ufffdTS\ufffdCH\ufffdSH" +
-        "\ufffdSCH\ufffd\ufffdY\ufffd\ufffdE\ufffdYU\ufffdYA";
-
     /**
      * Translates all non-basic-latin-letters characters into latin ones for use in URLs etc.
      * Here is the implementation for cyrillic (Russian) alphabet. Unknown characters are omitted.
@@ -303,4 +254,51 @@ public class WikiUtils
     public static String noNull(String s) { return s==null?"":s; }
     public static String noNull(String s, String val) { return s==null?val:s; }
     public static boolean isEmpty(String s) { return (s == null || s.length() == 0); }
+
+    private static synchronized Map<String,Character> getHtmlEntities () {
+        if (_entities == null) {
+            _entities = new HashMap<String, Character>();
+            _entities.put("lt", '<');
+            _entities.put("gt", '>');
+            _entities.put("amp", '&');
+            _entities.put("quot", '"');
+            _entities.put("apos", '\'');
+            _entities.put("nbsp", '\u00A0');
+            _entities.put("shy", '\u00AD');
+            _entities.put("copy", '\u00A9');
+            _entities.put("reg", '\u00AE');
+            _entities.put("trade", '\u2122');
+            _entities.put("mdash", '\u2014');
+            _entities.put("ndash", '\u2013');
+            _entities.put("ldquo", '\u201C');
+            _entities.put("rdquo", '\u201D');
+            _entities.put("euro", '\u20AC');
+            _entities.put("middot", '\u00B7');
+            _entities.put("bull", '\u2022');
+            _entities.put("laquo", '\u00AB');
+            _entities.put("raquo", '\u00BB');
+        }
+        return _entities;
+    }
+
+    private static synchronized Map<Character,String> getHtmlUnEntities () {
+        if (_unentities == null) {
+            _unentities = new HashMap<Character, String>();
+            for (Map.Entry<String, Character> entry : getHtmlEntities().entrySet()) {
+                _unentities.put(entry.getValue(), entry.getKey());
+            }
+        }
+        return _unentities;
+    }
+
+    private static Map<String,Character> _entities;
+    private static Map<Character,String> _unentities;
+
+    private static final String translitTable =
+        "\ufffda\ufffdb\ufffdv\ufffdg\ufffdd\ufffde\ufffde\ufffdzh\ufffdz\ufffdi\ufffdy\ufffdk" +
+        "\ufffdl\ufffdm\ufffdn\ufffdo\ufffdp\ufffdr\ufffds\ufffdt\ufffdu\ufffdf\ufffdh\ufffdts" +
+        "\ufffdch\ufffdsh\ufffdsch\ufffd\ufffdy\ufffd\ufffde\ufffdyu\ufffdya\ufffdA\ufffdB\ufffdV" +
+        "\ufffdG\ufffdD\ufffdE\ufffdE\ufffdZH\ufffdZ\ufffdI\ufffdY\ufffdK\ufffdL\ufffdM\ufffdN" +
+        "\ufffdO\ufffdP\ufffdR\ufffdS\ufffdT\ufffdU\ufffdF\ufffdH\ufffdTS\ufffdCH\ufffdSH" +
+        "\ufffdSCH\ufffd\ufffdY\ufffd\ufffdE\ufffdYU\ufffdYA";
 }
