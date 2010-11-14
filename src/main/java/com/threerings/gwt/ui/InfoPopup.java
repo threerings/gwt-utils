@@ -69,12 +69,18 @@ public class InfoPopup extends PopupPanel
         return this;
     }
 
+    /** @deprecated Use {@link #show(Popups.Position,Widget)} */ @Deprecated
+    public void showNear (Widget target)
+    {
+        show(Popups.Position.BELOW, target);
+    }
+
     /**
      * Displays this info popup directly below the specified widget.
      */
-    public void showNear (Widget target)
+    public void show (Popups.Position pos, Widget target)
     {
-        Popups.showNear(this, target);
+        Popups.show(this, pos, target);
     }
 
     /**
