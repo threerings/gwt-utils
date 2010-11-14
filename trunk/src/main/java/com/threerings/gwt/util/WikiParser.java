@@ -482,7 +482,7 @@ public class WikiParser
     }
 
     /**
-     * Same as parseItem(); blank line adds &lt;br/&gt;&lt;br/&gt;
+     * Same as parseItem(); blank line adds {@code <br/><br/>}.
      *
      * @param start
      */
@@ -628,19 +628,25 @@ public class WikiParser
                 if (c=='{') {
                     if (p+1<end && wikiChars[p+1]=='{') {
                         if (p+2<end && wikiChars[p+2]=='{') { // inline or block <nowiki>
-                            appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
+                            flushToText(tb); // flush text buffer
                             int startNowiki=p+3;
                             int endNowiki=findEndOfNowiki(startNowiki);
                             p=endNowiki+3;
                             if (wikiText.lastIndexOf('\n', endNowiki)>=startNowiki) { // block <pre>
-                                if (wikiChars[startNowiki]=='\n') startNowiki++; // skip the very first '\n'
-                                if (wikiChars[endNowiki-1]=='\n') endNowiki--; // omit the very last '\n'
-                                if (context==ContextType.PARAGRAPH) sb.append("</p>"); // break the paragraph because XHTML does not allow <pre> children of <p>
+                                // skip the very first '\n'
+                                if (wikiChars[startNowiki]=='\n') startNowiki++;
+                                // omit the very last '\n'
+                                if (wikiChars[endNowiki-1]=='\n') endNowiki--;
+                                // break the paragraph because XHTML does not allow <pre> children
+                                // of <p>
+                                if (context==ContextType.PARAGRAPH) sb.append("</p>");
                                 sb.append("<pre>");
                                 appendNowiki(wikiText.substring(startNowiki, endNowiki));
                                 sb.append("</pre>\n");
-                                if (context==ContextType.PARAGRAPH) sb.append("<p>"); // continue the paragraph
-                                //if (context==ContextType.NOWIKI_BLOCK) return p; // in this context return immediately after nowiki
+                                // continue the paragraph
+                                if (context==ContextType.PARAGRAPH) sb.append("<p>");
+                                // in this context return immediately after nowiki
+                                //if (context==ContextType.NOWIKI_BLOCK) return p;
                             }
                             else { // inline <nowiki>
                                 appendNowiki(wikiText.substring(startNowiki, endNowiki));
@@ -650,7 +656,7 @@ public class WikiParser
                         else if (p+2<end) { // {{image}}
                             int endImg=wikiText.indexOf("}}", p+2);
                             if (endImg>=0 && endImg<end) {
-                                appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
+                                flushToText(tb); // flush text buffer
                                 appendImage(wikiText.substring(p+2, endImg));
                                 p=endImg+2;
                                 continue;
@@ -662,7 +668,8 @@ public class WikiParser
                     if (p+1<end && wikiChars[p+1]=='[') { // [[link]]
                         int endLink=wikiText.indexOf("]]", p+2);
                         if (endLink>=0 && endLink<end) {
-                            appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
+                            // flush text buffer
+                            flushToText(tb);
                             appendLink(wikiText.substring(p+2, endLink));
                             p=endLink+2;
                             continue;
@@ -672,7 +679,7 @@ public class WikiParser
                 else if (c=='`') {
                     int endCode=wikiText.indexOf("`", p+1); // `inline code`
                     if (endCode>=0 && endCode<end) {
-                        appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
+                        flushToText(tb); // flush text buffer
                         sb.append("<code>");
                         sb.append(escapeHTML(wikiText.substring(p+1, endCode)));
                         sb.append("</code>");
@@ -682,7 +689,7 @@ public class WikiParser
                 }
                 else if (c=='\\') {
                     if (p+1<end && wikiChars[p+1]=='\\') { // \\ = <br/>
-                        appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
+                        flushToText(tb); // flush text buffer
                         sb.append("<br/>");
                         p+=2;
                         continue;
@@ -693,7 +700,8 @@ public class WikiParser
                 //         if (p+2<end && wikiChars[p+2]=='<') { // <<<macro>>>
                 //             int endMacro=wikiText.indexOf(">>>", p+3);
                 //             if (endMacro>=0 && endMacro<end) {
-                //                 appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
+                //                 // flush text buffer
+                //                 flushToText(tb);
                 //                 appendMacro(wikiText.substring(p+3, endMacro));
                 //                 p=endMacro+3;
                 //                 continue;
@@ -702,14 +710,18 @@ public class WikiParser
                 //     }
                 // }
                 else if ((formatType=FORMAT_CHARS.indexOf(c))>=0) {
-                    if (p+1<end && wikiChars[p+1]==c) {
-                        appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
-                        if (c=='/') { // special case for "//" - check if it is part of URL (scheme://etc)
+                    if (p+1 < end && wikiChars[p+1] == c &&
+                        // make sure we see a matching close delimiter somewhere ahead
+                        wikiText.substring(p+2, end).indexOf(""+c+c) != -1) {
+                        flushToText(tb); // flush text buffer
+                        if (c=='/') {
+                            // special case for "//" - check if it is part of URL (scheme://etc)
                             int[] uriOffs=checkURI(p, start, end);
                             if (uriOffs!=null) {
                                 int pb=uriOffs[0], pe=uriOffs[1];
                                 if (pb>start && wikiChars[pb-1]=='~') {
-                                    sb.delete(sb.length()-(p-pb+1), sb.length()); // roll back URL + tilde
+                                    // roll back URL + tilde
+                                    sb.delete(sb.length()-(p-pb+1), sb.length());
                                     sb.append(escapeHTML(wikiText.substring(pb, pe)));
                                 }
                                 else {
@@ -729,6 +741,14 @@ public class WikiParser
                         }
                         continue;
                     }
+                    else if (c=='-') { // ' -- ' => &mdash;
+                        if (p+2 < end && wikiChars[p+1] == '-' && wikiChars[p+2] == ' ' &&
+                            p > start && wikiChars[p-1] == ' ') {
+                            tb.append("&mdash; ");
+                            p+=3;
+                            continue;
+                        }
+                    }
                 }
                 else if (c=='~') { // escape
                     // most start line escapes are dealt with in parseBlock()
@@ -736,12 +756,14 @@ public class WikiParser
                         // same as block-level escaping: '*' '-' '#' '>' ':' '|' '='
                         if (p+1<end) {
                             char nc=wikiChars[p+1];
-                            if (nc=='>' || nc==':' || nc=='-' || nc=='|' || nc=='=' || nc=='!') { // can't be inline markup
+                            if (nc=='>' || nc==':' || nc=='-' || nc=='|' || nc=='=' || nc=='!') {
+                                // can't be inline markup
                                 tb.append(nc);
                                 p+=2; // skip '~' and nc
                                 continue nextChar;
                             }
-                            else if (nc=='*' || nc=='#') { // might be inline markup so need to double check
+                            else if (nc=='*' || nc=='#') {
+                                // might be inline markup so need to double check
                                 char nnc=p+2<end? wikiChars[p+2]:0;
                                 if (nnc!=nc) {
                                     tb.append(nc);
@@ -750,7 +772,8 @@ public class WikiParser
                                 }
                                 // otherwise escaping will be done at line level
                             }
-                            else if (nc=='{') { // might be inline {{{ markup so need to double check
+                            else if (nc=='{') {
+                                // might be inline {{{ markup so need to double check
                                 char nnc=p+2<end? wikiChars[p+2]:0;
                                 if (nnc=='|') { // mediawiki-table?
                                     tb.append(nc);
@@ -770,23 +793,17 @@ public class WikiParser
                         }
                     }
                 }
-                else if (c=='-') { // ' -- ' => &ndash;
-                    if (p+2<end && wikiChars[p+1]=='-' && wikiChars[p+2]==' ' && p>start && wikiChars[p-1]==' ') {
-                        //appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
-                        //sb.append("&ndash; ");
-                        tb.append("&ndash; "); // &ndash; = "\u2013 "
-                        p+=3;
-                        continue;
-                    }
-                }
                 tb.append(c);
                 p++;
             }
         } finally {
-            appendText(tb.toString()); tb.delete(0, tb.length()); // flush text buffer
+            flushToText(tb);
         }
     }
 
+    private void flushToText (StringBuilder flush) {
+        appendText(flush.toString()); flush.delete(0, flush.length());
+    }
 
     private static class EndOfContextException extends Exception {
         private static final long serialVersionUID=1L;
