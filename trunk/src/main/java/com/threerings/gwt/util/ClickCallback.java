@@ -146,7 +146,7 @@ public abstract class ClickCallback<T>
         if (near == null) {
             Popups.error(formatError(cause));
         } else {
-            Popups.errorNear(formatError(cause), near);
+            Popups.errorBelow(formatError(cause), near);
         }
     }
 
