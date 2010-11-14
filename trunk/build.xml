@@ -30,7 +30,6 @@
 
   <target name="clean" description="Cleans out compiled classes and docs.">
     <delete dir="${deploy.dir}/classes"/>
-    <delete dir="${deploy.dir}/docs"/>
     <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.jar"/></delete>
   </target>
 
