@@ -58,7 +58,23 @@ public class Popups
     /** @deprecated Use {@link #infoBelow} */ @Deprecated
     public static void infoNear (String message, Widget target)
     {
-        new InfoPopup(message).showNear(target);
+        info(message, Position.BELOW, target);
+    }
+
+    /**
+     * Displays an info message below the specified widget.
+     */
+    public static void infoAbove (String message, Widget target)
+    {
+        info(message, Position.ABOVE, target);
+    }
+
+    /**
+     * Displays an info message below the specified widget.
+     */
+    public static void infoBelow (String message, Widget target)
+    {
+        info(message, Position.BELOW, target);
     }
 
     /**
@@ -73,9 +89,9 @@ public class Popups
     /**
      * Displays an info message below the specified widget.
      */
-    public static void infoBelow (String message, Widget target)
+    public static void info (String message, Position pos, Widget target)
     {
-        show(new InfoPopup(message), Position.BELOW, target);
+        show(new InfoPopup(message), pos, target);
     }
 
     /**
@@ -99,12 +115,30 @@ public class Popups
      * Displays error feedback to the user in a non-offensive way. The error feedback is displayed
      * near the supplied component and if the component supports focus, it is focused.
      */
+    public static void errorAbove (String message, Widget source)
+    {
+        error(message, Position.ABOVE, source);
+    }
+
+    /**
+     * Displays error feedback to the user in a non-offensive way. The error feedback is displayed
+     * near the supplied component and if the component supports focus, it is focused.
+     */
     public static void errorBelow (String message, Widget source)
+    {
+        error(message, Position.BELOW, source);
+    }
+
+    /**
+     * Displays error feedback to the user in a non-offensive way. The error feedback is displayed
+     * near the supplied component and if the component supports focus, it is focused.
+     */
+    public static void error (String message, Position pos, Widget source)
     {
         if (source instanceof FocusWidget) {
             ((FocusWidget)source).setFocus(true);
         }
-        show(new InfoPopup(message).toError(), Position.BELOW, source);
+        show(new InfoPopup(message).toError(), pos, source);
     }
 
     /**
@@ -222,10 +256,11 @@ public class Popups
      * Creates a new popup with the specified style name and contents and shows it near the
      * specified target widget. Returns the newly created popup.
      */
-    public static PopupPanel newPopupNear (String styleName, Widget contents, Widget target)
+    public static PopupPanel newPopup (String styleName, Widget contents,
+                                       Position pos, Widget target)
     {
         PopupPanel panel = newPopup(styleName, contents);
-        showNear(panel, target);
+        show(panel, pos, target);
         return panel;
     }
 
