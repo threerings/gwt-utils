@@ -38,7 +38,7 @@ public abstract class PopupCallback<T> implements AsyncCallback<T>
         if (_errorNear == null) {
             Popups.error(formatError(cause));
         } else {
-            Popups.errorNear(formatError(cause), _errorNear);
+            Popups.errorBelow(formatError(cause), _errorNear);
         }
         Console.log("Service request failed", cause);
     }
