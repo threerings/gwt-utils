@@ -154,10 +154,10 @@
           <show>public</show>
           <excludePackageNames>javax.annotation:com.google.*</excludePackageNames>
           <links>
-            <link>http://samskivert.googlecode.com/svn/apidocs/</link>
-            <link>http://guava-libraries.googlecode.com/svn/trunk/javadoc/</link>
             <link>http://google-web-toolkit.googlecode.com/svn/javadoc/2.1/</link>
             <link>http://evgeny-goldin.org/ant/api/</link>
+            <link>http://guava-libraries.googlecode.com/svn/trunk/javadoc/</link>
+            <link>http://samskivert.googlecode.com/svn/apidocs/</link>
           </links>
         </configuration>
       </plugin>
