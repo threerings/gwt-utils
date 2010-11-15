@@ -29,7 +29,6 @@ import java.util.Map;
  * Used by {@link WikiParser}.
  *
  * @author Yaroslav Stavnichiy (yarosla@gmail.com)
- * @see http://code.google.com/p/t4-wiki-parser/
  */
 public class WikiUtils
 {

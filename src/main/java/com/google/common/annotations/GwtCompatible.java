@@ -55,9 +55,6 @@ import java.lang.annotation.Target;
  * The {@code newArrayList(E[])} method of all implementations of {@code
  * ListFactory} is expected to return a value with a GWT serializable type.
  *
- * <p>Note that a {@code GwtCompatible} type may have some {@link
- * GwtIncompatible} methods.
- *
  * @author Charles Fry
  * @author Hayward Chan
  */
