@@ -66,6 +66,18 @@
     </javac>
   </target>
 
+  <target name="javadoc" depends="-prepare" description="Builds javadocs.">
+    <mkdir dir="${deploy.dir}/docs"/>
+    <javadoc windowtitle="${lib.name} API" doctitle="${lib.name} API"
+             destdir="${deploy.dir}/docs" additionalparam="-breakiterator">
+      <packageset dir="${src.dir}"/>
+      <classpath refid="classpath"/>
+      <link href="http://download.oracle.com/javase/1.5.0/docs/api/"/>
+      <link href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.1/"/>
+      <link href="http://samskivert.googlecode.com/svn/apidocs/"/>
+    </javadoc>
+  </target>
+
   <target name="dist" depends="compile" description="Builds jar files.">
     <jar destfile="${deploy.dir}/${app.name}.jar">
       <fileset dir="${deploy.dir}/classes" includes="**"/>

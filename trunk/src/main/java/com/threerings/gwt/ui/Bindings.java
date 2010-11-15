@@ -188,7 +188,7 @@ public class Bindings
      * state of the supplied boolean `value`.
      *
      * @param onStyle the style name to be applied when the value is true, or null.
-     * @param onStyle the style name to be applied when the value is false, or null.
+     * @param offStyle the style name to be applied when the value is false, or null.
      */
     public static void bindStateStyle (Value<Boolean> value, final String onStyle,
                                        final String offStyle, final Widget... targets)

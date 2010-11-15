@@ -32,9 +32,9 @@ import static com.threerings.gwt.util.WikiUtils.*;
  * <p>WikiParser's behavior can be customized by overriding appendXxx() methods, which should make
  * integration of this class into any wiki/blog/forum software easy and painless.</p>
  *
+ * <p>See http://code.google.com/p/t4-wiki-parser/ and http://www.wikicreole.org/</p>
+ *
  * @author Yaroslav Stavnichiy (yarosla@gmail.com)
- * @see http://code.google.com/p/t4-wiki-parser/
- * @see http://www.wikicreole.org/
  */
 public class WikiParser
 {
