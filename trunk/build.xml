@@ -1,8 +1,9 @@
 <?xml version="1.0" standalone="yes"?>
 <project name="gwt-utils" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <!-- configuration properties -->
-  <property name="app.name"    value="gwt-utils"/>
+  <property name="lib.name"    value="gwt-utils"/>
   <property name="src.dir"     value="src/main/java"/>
+  <property name="test.dir"    value="src/test"/>
   <property name="deploy.dir"  value="dist"/>
 
   <property name="maven-ant.vers" value="2.1.1"/>
@@ -64,6 +65,38 @@
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
     </javac>
+
+    <mkdir dir="${deploy.dir}/test-classes"/>
+    <javac srcdir="${test.dir}/java" destdir="${deploy.dir}/test-classes" includeAntRuntime="false"
+           debug="on" optimize="${build.optimize}" source="1.5" target="1.5" encoding="utf-8">
+      <classpath>
+        <path refid="classpath"/>
+        <pathelement location="${deploy.dir}/classes"/>
+      </classpath>
+      <compilerarg value="-Xlint"/>
+      <compilerarg value="-Xlint:-serial"/>
+    </javac>
+  </target>
+
+  <property name="test" value=""/>
+  <target name="tests" depends="compile" 
+          description="Runs unit tests. Use -Dtest=Foo to run only FooTest.">
+    <taskdef name="unit" classpathref="classpath"
+      classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
+    <mkdir dir="${deploy.dir}/test-reports"/>
+    <unit printsummary="off" haltonfailure="yes" fork="${junit.fork}">
+      <classpath>
+        <path refid="classpath"/>
+        <pathelement location="${deploy.dir}/classes"/>
+        <pathelement location="${deploy.dir}/test-classes"/>
+      </classpath>
+      <sysproperty key="test_dir" value="${deploy.dir}/test-classes"/>
+      <formatter type="brief" usefile="false"/>
+      <formatter type="xml"/>
+      <batchtest todir="${deploy.dir}/test-reports">
+        <fileset dir="${test.dir}/java" includes="**/*${test}*Test.java"/>
+      </batchtest>
+    </unit>
   </target>
 
   <target name="javadoc" depends="-prepare" description="Builds javadocs.">
@@ -80,7 +113,7 @@
   </target>
 
   <target name="dist" depends="compile" description="Builds jar files.">
-    <jar destfile="${deploy.dir}/${app.name}.jar">
+    <jar destfile="${deploy.dir}/${lib.name}.jar">
       <fileset dir="${deploy.dir}/classes" includes="**"/>
       <!-- include the source for code to be compiled to JavaScript -->
       <fileset dir="${src.dir}">
@@ -92,5 +125,14 @@
         <include name="com/google/**"/>
       </fileset>
     </jar>
+  </target>
+
+  <property name="maven.deploy.repo" value="file://${user.home}/.m2/repository"/>
+  <target name="maven-deploy" depends="dist,tests" 
+          description="Deploys our build artifacts to a Maven repository.">
+    <artifact:deploy file="${deploy.dir}/${lib.name}.jar" uniqueVersion="false">
+      <remoteRepository url="${maven.deploy.repo}"/>
+      <pom refid="pom"/>
+    </artifact:deploy>
   </target>
 </project>
