@@ -99,6 +99,8 @@ public class WikiUtils
                     spaces.append(c);
                 }
                 else {
+                    // working around GWT issue
+                    // http://code.google.com/p/google-web-toolkit/issues/detail?id=4097
                     sb.append((CharSequence)spaces);
                     blankLine=false;
                     sb.append(c);
