@@ -1,0 +1,7 @@
+<!-- $Id$                                              -->
+<!-- Temporary Google Collections compatibility bits.  -->
+<module>
+  <inherits name="javax.Annotations"/>
+  <source path="annotations"/>
+  <source path="base"/>
+</module>
