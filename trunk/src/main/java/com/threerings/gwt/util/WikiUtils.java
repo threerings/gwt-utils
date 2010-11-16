@@ -99,7 +99,7 @@ public class WikiUtils
                     spaces.append(c);
                 }
                 else {
-                    sb.append((CharSequence)spaces);
+                    sb.append(spaces);
                     blankLine=false;
                     sb.append(c);
                 }
