@@ -63,9 +63,9 @@ public class WikiParserTest
 
     @Test public void testFloat ()
     {
-        assertEquals("<div style=\"float: left\">left floating text</div>",
+        assertEquals("<div style=\"float: left; margin-right: 5px\">left floating text</div>",
                      WikiParser.render("<<< left floating text"));
-        assertEquals("<div style=\"float: right\">right floating text</div>",
+        assertEquals("<div style=\"float: right; margin-left: 5px\">right floating text</div>",
                      WikiParser.render(">>> right floating text"));
     }
 
