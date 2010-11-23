@@ -305,7 +305,7 @@ public class WikiParser
                 pos = skipSpacesTabs(pos+3, wikiLength); // skip whitespace
                 String side = (c == '<') ? "left" : "right";
                 String margin = (c == '<') ? "right" : "left";
-                sb.append("<div style=\"float: " + side + "\; margin-" + margin + ": 5px\">");
+                sb.append("<div style=\"float: " + side + "; margin-" + margin + ": 5px\">");
                 pos = parseItem(pos, null, ContextType.HEADER);
                 sb.append("</div>");
                 return true;
