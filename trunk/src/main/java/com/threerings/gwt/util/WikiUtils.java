@@ -101,7 +101,8 @@ public class WikiUtils
                 else {
                     // working around GWT issue
                     // http://code.google.com/p/google-web-toolkit/issues/detail?id=4097
-                    sb.append((CharSequence)spaces);
+                    CharSequence cs = spaces;
+                    sb.append(cs);
                     blankLine=false;
                     sb.append(c);
                 }
