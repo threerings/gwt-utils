@@ -21,10 +21,20 @@
 
 package com.threerings.gwt.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasAllMouseHandlers;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -361,6 +371,51 @@ public class Popups
                 }
             }
         });
+    }
+
+    /**
+     * Adds mouse handlers to the specified drag handle that cause the supplied target popup to be
+     * dragged around the display. The drag handle is assumed to be a child of the popup.
+     */
+    public static void makeDraggable (HasAllMouseHandlers dragHandle, PopupPanel target)
+    {
+        DragHandler dragger = new DragHandler(target);
+        dragHandle.addMouseDownHandler(dragger);
+        dragHandle.addMouseUpHandler(dragger);
+        dragHandle.addMouseMoveHandler(dragger);
+    }
+
+    protected static class DragHandler implements MouseDownHandler, MouseUpHandler, MouseMoveHandler
+    {
+        public DragHandler (PopupPanel popup) {
+            _popup = popup;
+        }
+
+        public void onMouseDown (MouseDownEvent event) {
+            _dragging = ((Widget)event.getSource()).getElement();
+            DOM.setCapture(_dragging);
+            _dragStartX = event.getX();
+            _dragStartY = event.getY();
+        }
+
+        public void onMouseMove (MouseMoveEvent event) {
+            if (_dragging != null) {
+                int absX = event.getX() + _popup.getAbsoluteLeft();
+                int absY = event.getY() + _popup.getAbsoluteTop();
+                // TODO: prevent moving out of the window
+                _popup.setPopupPosition(absX - _dragStartX, absY - _dragStartY);
+            }
+        }
+
+        public void onMouseUp (MouseUpEvent event) {
+            DOM.releaseCapture(_dragging);
+            _dragging = null;
+        }
+
+        protected PopupPanel _popup;
+        protected Element _dragging;
+        protected int _dragStartX, _dragStartY;
+        protected int _popupStartX, _popupStartY;
     }
 
     protected static final int NEAR_GAP = 5;
