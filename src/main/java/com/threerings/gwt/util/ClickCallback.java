@@ -182,25 +182,21 @@ public abstract class ClickCallback<T>
         final PopupPanel confirm = new PopupPanel();
         confirm.setStyleName("gwt-ConfirmPopup");
         SmartTable contents = new SmartTable(5, 0);
-        if (_confirmHTML) {
-            contents.setHTML(0, 0, _confirmMessage, 2, "Message");
-        } else {
-            contents.setText(0, 0, _confirmMessage, 2, "Message");
-        }
-        contents.setWidget(1, 0, createButton(_confirmChoices[1], new ClickHandler() {
+        int row = addConfirmPopupMessage(contents, 0);
+        contents.setWidget(row, 0, createButton(_confirmChoices[1], new ClickHandler() {
             public void onClick (ClickEvent event) {
                 confirm.hide(); // abort!
                 onAborted();
             }
         }));
-        contents.getFlexCellFormatter().setHorizontalAlignment(1, 0, HasAlignment.ALIGN_CENTER);
-        contents.setWidget(1, 1, createButton(_confirmChoices[0], new ClickHandler() {
+        contents.getFlexCellFormatter().setHorizontalAlignment(row, 0, HasAlignment.ALIGN_CENTER);
+        contents.setWidget(row, 1, createConfirmButton(_confirmChoices[0], new ClickHandler() {
             public void onClick (ClickEvent event) {
                 confirm.hide();
                 onConfirmed();
             }
         }));
-        contents.getFlexCellFormatter().setHorizontalAlignment(1, 1, HasAlignment.ALIGN_CENTER);
+        contents.getFlexCellFormatter().setHorizontalAlignment(row, 1, HasAlignment.ALIGN_CENTER);
         confirm.setWidget(contents);
         Widget near = getPopupNear();
         if (near == null) {
@@ -208,6 +204,20 @@ public abstract class ClickCallback<T>
         } else {
             Popups.centerOn(confirm, near).show();
         }
+    }
+
+    /**
+     * Adds the message area for the confirmation popup to the given row and returns the row to
+     * insert next.
+     */
+    protected int addConfirmPopupMessage (SmartTable contents, int row)
+    {
+        if (_confirmHTML) {
+            contents.setHTML(row, 0, _confirmMessage, 2, "Message");
+        } else {
+            contents.setText(row, 0, _confirmMessage, 2, "Message");
+        }
+        return row + 1;
     }
 
     protected void onConfirmed ()
@@ -218,6 +228,15 @@ public abstract class ClickCallback<T>
     protected void onAborted ()
     {
         setEnabled(true);
+    }
+
+    /**
+     * Creates the confirm button that is added to the popup confirmation dialog. This is exposed
+     * in order to allow subclasses to make changes.
+     */
+    protected ButtonBase createConfirmButton (String text, ClickHandler onClick)
+    {
+        return createButton(text, onClick);
     }
 
     protected ButtonBase createButton (String text, ClickHandler onClick)
