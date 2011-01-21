@@ -12,7 +12,7 @@
 //
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public
@@ -22,8 +22,15 @@
 package com.threerings.gwt.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.HasAllKeyHandlers;
+import com.google.gwt.event.dom.client.HasChangeHandlers;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -32,6 +39,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * A text area with a character limit that displays the limit to the user.
  */
 public class LimitedTextArea extends VerticalPanel
+    implements HasText, HasAllKeyHandlers, HasChangeHandlers
 {
     public LimitedTextArea (int maxChars, int width, int height)
     {
@@ -70,6 +78,30 @@ public class LimitedTextArea extends VerticalPanel
     public TextArea getTextArea ()
     {
         return _area;
+    }
+
+    @Override
+    public HandlerRegistration addKeyDownHandler (KeyDownHandler handler)
+    {
+        return _area.addKeyDownHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addKeyUpHandler (KeyUpHandler handler)
+    {
+        return _area.addKeyUpHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addKeyPressHandler (KeyPressHandler handler)
+    {
+        return _area.addKeyPressHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addChangeHandler (ChangeHandler handler)
+    {
+        return _area.addChangeHandler(handler);
     }
 
     protected void updateRemaining ()
