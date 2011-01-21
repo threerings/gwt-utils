@@ -50,6 +50,12 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>com.samskivert-gwt</groupId>
+      <artifactId>samskivert</artifactId>
+      <version>[1.1,)</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <version>[2.1.0,)</version>
