@@ -21,8 +21,6 @@
 
 package com.threerings.gwt.util;
 
-import java.util.Arrays;
-
 import org.junit.*;
 import static org.junit.Assert.*;
 
