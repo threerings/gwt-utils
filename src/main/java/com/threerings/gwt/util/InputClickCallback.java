@@ -60,7 +60,7 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
      * Sets the text to be shown above the input explaining what the user should do. Note that this
      * just calls {@link #setConfirmText(String)}, but is included here for clarity.
      */
-    InputClickCallback<T, W> setPromptText(String prompt)
+    public InputClickCallback<T, W> setPromptText(String prompt)
     {
         setConfirmText(prompt);
         return this;
@@ -70,7 +70,7 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
      * Sets the html to be shown above the input explaining what the user should do. Note that this
      * just calls {@link #setConfirmHTML(String)}, but is included here for clarity.
      */
-    InputClickCallback<T, W> setPromptHTML(String promptHTML)
+    public InputClickCallback<T, W> setPromptHTML(String promptHTML)
     {
         setConfirmHTML(promptHTML);
         return this;
