@@ -154,6 +154,24 @@ public class SmartTable extends FlexTable
             return this;
         }
 
+        /**
+         * Sets the width of the cell.
+         */
+        public CellMutator width (String width)
+        {
+            getFlexCellFormatter().setWidth(_row, _col, width);
+            return this;
+        }
+
+        /**
+         * Sets the height of the cell.
+         */
+        public CellMutator height (String height)
+        {
+            getFlexCellFormatter().setHeight(_row, _col, height);
+            return this;
+        }
+
         protected CellMutator (int row, int col)
         {
             _row = row;
