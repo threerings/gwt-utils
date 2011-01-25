@@ -83,6 +83,15 @@ public class SmartTable extends FlexTable
         }
 
         /**
+         * Removes the given styles from the cell.
+         */
+        public CellMutator removeStyles (String... names)
+        {
+            removeStyleNames(_row, _col, names);
+            return this;
+        }
+
+        /**
          * Clears the widget or text from the cell. Does not affect styles.
          */
         public CellMutator clear ()
@@ -277,6 +286,16 @@ public class SmartTable extends FlexTable
             } else {
                 getFlexCellFormatter().addStyleName(row, column, style);
             }
+        }
+    }
+
+    /**
+     * Removes the specified style names on the specified row and column.
+     */
+    public void removeStyleNames (int row, int column, String... styles)
+    {
+        for (String style : styles) {
+            getFlexCellFormatter().removeStyleName(row, column, style);
         }
     }
 
