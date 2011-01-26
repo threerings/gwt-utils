@@ -132,14 +132,16 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
     {
         final ButtonBase button = super.createConfirmButton(text, onClick);
         EnterClickAdapter.bind(_widget, onClick);
-        _changeHandlerReg = _widget.addChangeHandler(new ChangeHandler() {
+        ChangeHandler handler = new ChangeHandler() {
             @Override
             public void onChange (ChangeEvent event)
             {
                 String text = _widget.getText();
                 button.setEnabled(text != null && text.length() > 0);
             }
-        });
+        };
+        _changeHandlerReg = _widget.addChangeHandler(handler);
+        handler.onChange(null);
         return button;
     }
 
