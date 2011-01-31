@@ -117,15 +117,6 @@ public abstract class ClickCallback<T>
     }
 
     /**
-     * Sets the instance to use to translate errors received from the server.
-     */
-    public ClickCallback<T> setErrorTranslator (ErrorTranslator errorTranslator)
-    {
-        _errorTranslator = errorTranslator;
-        return this;
-    }
-
-    /**
      * This method is called when the trigger button is clicked. Pass <code>this</code> as the
      * {@link AsyncCallback} to a service method. Return true from this method if a service request
      * was initiated and the button that triggered it should be disabled.
@@ -139,15 +130,11 @@ public abstract class ClickCallback<T>
     protected abstract boolean gotResult (T result);
 
     /**
-     * Formats the error indicated by the supplied throwable. The default implementation uses the
-     * error translator set by {@link #setErrorTranslator(ErrorTranslator)}, if it has been set. If
-     * not, returns {@link Throwable#getMessage}.
+     * Formats the error indicated by the supplied throwable. The default implementation returns
+     * {@link Throwable#getMessage}.
      */
     protected String formatError (Throwable cause)
     {
-        if (_errorTranslator != null) {
-            return _errorTranslator.translateServerError(cause);
-        }
         return cause.getMessage();
     }
 
@@ -316,7 +303,6 @@ public abstract class ClickCallback<T>
     protected String _confirmMessage;
     protected boolean _confirmHTML;
     protected String[] _confirmChoices = { "Yes", "No" };
-    protected ErrorTranslator _errorTranslator;
 
     protected TextBox _onEnter;
     protected HandlerRegistration _enterreg;
