@@ -32,6 +32,59 @@ import com.google.gwt.user.client.ui.ListBox;
 public class ItemListBox<T> extends ListBox
 {
     /**
+     * Simple builder that allows multiple items to be added to the list box during construction.
+     * @param <T> the type of item the list box holds
+     * @param <Box> the type of item list box
+     */
+    public static class Builder<T, Box extends ItemListBox<T>>
+    {
+        /** The box we are building. */
+        final public Box box;
+
+        /**
+         * Creates a new builder for the given list box.
+         */
+        public Builder (Box box)
+        {
+            this.box = box;
+        }
+
+        /**
+         * Adds a new item to the list box.
+         */
+        public Builder<T, Box> add (T item)
+        {
+            box.addItem(item);
+            return this;
+        }
+
+        /**
+         * Adds a new item to the list box with the supplied label.
+         */
+        public Builder<T, Box> add (T item, String label)
+        {
+            box.addItem(item, label);
+            return this;
+        }
+
+        /**
+         * Returns the list box.
+         */
+        public Box build ()
+        {
+            return box;
+        }
+    }
+
+    /**
+     * Creates a new builder for an ItemListBox.
+     */
+    public static <T> Builder<T, ItemListBox<T>> builder ()
+    {
+        return new Builder<T, ItemListBox<T>>(new ItemListBox<T>());
+    }
+
+    /**
      * Creates an empty item list box.
      */
     public ItemListBox ()
@@ -49,12 +102,31 @@ public class ItemListBox<T> extends ListBox
     }
 
     /**
+     * Adds the supplied item to this list box at the end of the list, using the supplied label
+     * if not null. If no label is given, {@link #toLabel()} is used to calculate it.
+     */
+    public void addItem (T item, String label)
+    {
+        addItem(label == null ? toLabel(item) : label);
+        _items.add(item);
+    }
+
+    /**
      * Adds the supplied item to this list box at the end of the list.
      */
     public void addItem (T item)
     {
-        addItem(toLabel(item));
-        _items.add(item);
+        addItem(item, null);
+    }
+
+    /**
+     * Inserts the supplied item into this list box at the specified position, using the specified
+     * label if given. If no label is given, {@link #toLabel()} is used to calculate it.
+     */
+    public void insertItem (T item, int index, String label)
+    {
+        insertItem(label == null ? toLabel(item) : label, index);
+        _items.add(index, item);
     }
 
     /**
@@ -62,8 +134,7 @@ public class ItemListBox<T> extends ListBox
      */
     public void insertItem (T item, int index)
     {
-        insertItem(toLabel(item), index);
-        _items.add(index, item);
+        insertItem(item, index, null);
     }
 
     /**
