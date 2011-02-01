@@ -21,12 +21,12 @@
 
 package com.threerings.gwt.util;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.HasKeyUpHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.HasText;
@@ -42,7 +42,8 @@ import com.threerings.gwt.ui.SmartTable;
  *
  * <p>NOTE: the input popup replaces the confirmation popup.</p>
  */
-public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyDownHandlers & HasChangeHandlers>
+public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyDownHandlers
+    & HasKeyUpHandlers>
         extends ClickCallback<T>
 {
     /**
@@ -107,8 +108,8 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
      */
     protected void removeHandlerReg ()
     {
-        _changeHandlerReg.removeHandler();
-        _changeHandlerReg = null;
+        _handlerReg.removeHandler();
+        _handlerReg = null;
     }
 
     @Override
@@ -132,19 +133,19 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
     {
         final ButtonBase button = super.createConfirmButton(text, onClick);
         EnterClickAdapter.bind(_widget, onClick);
-        ChangeHandler handler = new ChangeHandler() {
+        KeyUpHandler handler = new KeyUpHandler() {
             @Override
-            public void onChange (ChangeEvent event)
+            public void onKeyUp (KeyUpEvent event)
             {
                 String text = _widget.getText();
                 button.setEnabled(text != null && text.length() > 0);
             }
         };
-        _changeHandlerReg = _widget.addChangeHandler(handler);
-        handler.onChange(null);
+        _handlerReg = _widget.addKeyUpHandler(handler);
+        handler.onKeyUp(null);
         return button;
     }
 
     protected W _widget;
-    protected HandlerRegistration _changeHandlerReg;
+    protected HandlerRegistration _handlerReg;
 }
