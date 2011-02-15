@@ -122,6 +122,12 @@ public class DateUtil
     }
 
     @SuppressWarnings("deprecation")
+    public static int getDayOfWeek (Date date)
+    {
+        return date.getDay();
+    }
+
+    @SuppressWarnings("deprecation")
     public static int getMonth (Date date)
     {
         return date.getMonth();
