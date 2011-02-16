@@ -133,6 +133,18 @@ public class DateUtil
         return date.getMonth();
     }
 
+    @SuppressWarnings("deprecation")
+    public static int getHour (Date date)
+    {
+        return date.getHours();
+    }
+
+    @SuppressWarnings("deprecation")
+    public static int getMinute (Date date)
+    {
+        return date.getMinutes();
+    }
+
     /**
      * Returns the year component of the supplied date. <em>Note:</em> this is <em>not</em> the
      * year minus 1900 which the underlying {@link Date#getYear} method returns. It's the actual
@@ -150,6 +162,7 @@ public class DateUtil
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
+        // TODO: clear milliseconds?
     }
 
     protected static final DateTimeFormat _tfmt = DateTimeFormat.getFormat("h:mmaa");
