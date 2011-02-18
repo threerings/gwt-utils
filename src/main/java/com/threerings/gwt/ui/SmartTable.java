@@ -181,6 +181,53 @@ public class SmartTable extends FlexTable
             return this;
         }
 
+        /**
+         * Moves this cell mutator to the next column in the table.
+         */
+        public CellMutator nextCol ()
+        {
+            _col++;
+            return this;
+        }
+
+        /**
+         * Fills in the current row with the given column text values and advances the column.
+         */
+        public CellMutator fillText (String... values)
+        {
+            for (String text : values) {
+                text(text);
+                nextCol();
+            }
+            return this;
+        }
+
+        /**
+         * Moves this cell mutator to the next row in the table and the 0th column.
+         */
+        public CellMutator next ()
+        {
+            _row++;
+            _col = 0;
+            return this;
+        }
+
+        /**
+         * Returns the row number of the cell that this mutator is set to modify.
+         */
+        public int getRow ()
+        {
+            return _row;
+        }
+
+        /**
+         * Returns the column number of the cell that this mutator is set to modify.
+         */
+        public int getCol ()
+        {
+            return _col;
+        }
+
         protected CellMutator (int row, int col)
         {
             _row = row;
@@ -286,6 +333,18 @@ public class SmartTable extends FlexTable
             } else {
                 getFlexCellFormatter().addStyleName(row, column, style);
             }
+        }
+    }
+
+    /**
+     * Sets the style of all cells in the given column to the given values. The first style is set
+     * as the primary style and additional styles are added onto that.
+     */
+    public void setColumnCellStyles (int column, String... styles)
+    {
+        int rowCount = getRowCount();
+        for (int row = 0; row < rowCount; ++row) {
+            setStyleNames(row, column, styles);
         }
     }
 
