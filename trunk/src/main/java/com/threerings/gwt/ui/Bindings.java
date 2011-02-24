@@ -139,11 +139,16 @@ public class Bindings
      * in that only changes to the value will be reflected in the text-having widget. It is
      * expected that no other changes will be made to the widget.
      */
-    public static void bindLabel (final Value<String> value, final HasText text)
+    public static void bindLabel (final Value<String> value, final HasText target)
     {
         value.addListenerAndTrigger(new Value.Listener<String>() {
             public void valueChanged (String value) {
-                text.setText(value);
+                // avoid updating the target if the value is already the same; in the case where
+                // the target is a TextBox, setting the text will move the cursor to the end of the
+                // text, which is annoying if a value is being updated on every character edit
+                if (!target.getText().equals(value)) {
+                    target.setText(value);
+                }
             }
         });
     }
