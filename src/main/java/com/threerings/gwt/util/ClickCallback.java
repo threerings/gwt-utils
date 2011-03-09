@@ -119,7 +119,9 @@ public abstract class ClickCallback<T>
     /**
      * This method is called when the trigger button is clicked. Pass <code>this</code> as the
      * {@link AsyncCallback} to a service method. Return true from this method if a service request
-     * was initiated and the button that triggered it should be disabled.
+     * was initiated and the button that triggered it should be disabled. If an
+     * {@link InputException} is thrown, the button will be reenabled so the user can try again.
+     * @throws InputException if the service could not be called due to user input
      */
     protected abstract boolean callService ();
 
@@ -156,8 +158,12 @@ public abstract class ClickCallback<T>
 
         // if we have no confirmation message or are already confirmed, do the deed
         if (confirmed || _confirmMessage == null) {
-            if (callService()) {
-                setEnabled(false);
+            try {
+                if (callService()) {
+                    setEnabled(false);
+                }
+            } catch (InputException ex) {
+                setEnabled(true);
             }
             return;
         }
