@@ -228,6 +228,14 @@ public class SmartTable extends FlexTable
             return _col;
         }
 
+        /**
+         * Returns the table associated with this mutator.
+         */
+        public SmartTable finish ()
+        {
+            return SmartTable.this;
+        }
+
         protected CellMutator (int row, int col)
         {
             _row = row;
