@@ -23,7 +23,7 @@ public class InputUtil
     public static <T extends FocusWidget & HasText> String requireStr (T widget, String error)
     {
         String text = widget.getText().trim();
-        if (text == null || text.length() == 0) {
+        if (text.length() == 0) {
             Popups.errorBelow(error, widget);
             widget.setFocus(true);
             throw new InputException();
