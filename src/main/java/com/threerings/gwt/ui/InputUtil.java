@@ -20,7 +20,7 @@ public class InputUtil
      * Returns a text widget's value, making sure it is non-empty.
      * @throws InputException if the widget has no text
      */
-    public static <T extends FocusWidget & HasText> String requireStr (T widget, String error)
+    public static <T extends FocusWidget & HasText> String requireNonEmpty (T widget, String error)
     {
         String text = widget.getText().trim();
         if (text.length() == 0) {
