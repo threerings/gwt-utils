@@ -252,6 +252,7 @@ public abstract class ClickCallback<T>
 
     protected void setEnabled (boolean enabled)
     {
+        // set the enabled status of our trigger widget
         if (_trigger instanceof FocusWidget) {
             ((FocusWidget)_trigger).setEnabled(enabled);
 
@@ -261,6 +262,11 @@ public abstract class ClickCallback<T>
             if (enabled) {
                 tlabel.addStyleName("actionLabel");
             }
+        }
+
+        // set the enabled status of our associated text box if we've got one
+        if (_onEnter != null) {
+            _onEnter.setEnabled(enabled);
         }
 
         // always remove first so that if we do end up adding, we don't doubly add
