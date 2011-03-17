@@ -68,12 +68,26 @@ public class ItemListBox<T> extends ListBox
         }
 
         /**
+         * Causes the created list box to have the given item selected.
+         */
+        public Builder<T, Box> select (T item)
+        {
+            _select = item;
+            return this;
+        }
+
+        /**
          * Returns the list box.
          */
         public Box build ()
         {
+            if (_select != null) {
+                box.setSelectedItem(_select);
+            }
             return box;
         }
+
+        protected T _select;
     }
 
     /**
