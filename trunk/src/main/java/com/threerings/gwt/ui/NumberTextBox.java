@@ -137,5 +137,14 @@ public class NumberTextBox extends TextBox
         return _allowFloatingPoint ? (Number)(new Double(valstr)) : (Number)(new Long(valstr));
     }
 
+    /**
+     * Convenience method for setting a number and returning the text box in one step.
+     */
+    public NumberTextBox withValue (Number value)
+    {
+        setNumber(value);
+        return this;
+    }
+
     protected boolean _allowFloatingPoint;
 }
