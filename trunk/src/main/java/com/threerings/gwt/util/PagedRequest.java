@@ -29,7 +29,7 @@ public class PagedRequest implements IsSerializable
      */
     public PagedRequest (int offset, int count, boolean needCount)
     {
-        this.offset = 0;
+        this.offset = offset;
         this.count = count;
         this.needCount = needCount;
     }

@@ -99,8 +99,8 @@ public abstract class ServiceBackedDataModel<T, R> implements DataModel<T>
             callback.onSuccess(_pageItems);
 
         } else {
-            callFetchService(
-                _pageOffset = start, _pageCount = count, _count < 0, new AsyncCallback<R>() {
+            callFetchService(new PagedRequest(_pageOffset = start, _pageCount = count, _count < 0),
+                    new AsyncCallback<R>() {
                 public void onSuccess (R result) {
                     ServiceBackedDataModel.this.onSuccess(result, callback);
                 }
