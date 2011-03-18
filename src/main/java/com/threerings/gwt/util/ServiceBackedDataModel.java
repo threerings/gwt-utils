@@ -133,10 +133,29 @@ public abstract class ServiceBackedDataModel<T, R> implements DataModel<T>
      * Calls the service to obtain data. Implementations should make a service call using the
      * callback provided. If needCount is set, the implementation should also request the total
      * number of items from the server (this is normally done in the same call that requests a
-     * page but may be optional for performance reasons).
+     * page but may be optional for performance reasons). By default this implementation will
+     * throw an exception.
+     * NOTE: subclasses must override one of the two callFetchService methods
      */
-    protected abstract void callFetchService (
-        int start, int count, boolean needCount, AsyncCallback<R> callback);
+    protected void callFetchService (
+        int start, int count, boolean needCount, AsyncCallback<R> callback)
+    {
+       throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Calls the service to obtain data. Implementations should make a service call using the
+     * callback provided. If needCount is set, the implementation should also request the total
+     * number of items from the server (this is normally done in the same call that requests a
+     * page but may be optional for performance reasons). By default, this calls
+     * {@link #callFetchService(int, int, boolean, AsyncCallback)} method with the
+     * {@code requests}'s members.
+     * NOTE: subclasses must override one of the two callFetchService methods
+     */
+    protected void callFetchService (PagedRequest request, AsyncCallback<R> callback)
+    {
+        callFetchService(request.offset, request.count, request.needCount, callback);
+    }
 
     /**
      * Returns the count from the service result.
