@@ -77,6 +77,16 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
         return this;
     }
 
+    /**
+     * Sets whether or not pressing the enter key while typing will cause the confirmation to
+     * occur. By default, the enter key is bound.
+     */
+    public InputClickCallback<T, W> setBindEnterKey(boolean value)
+    {
+        _bindEnterKey = value;
+        return this;
+    }
+
     @Override
     protected boolean callService ()
     {
@@ -132,7 +142,9 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
     protected ButtonBase createConfirmButton (String text, ClickHandler onClick)
     {
         final ButtonBase button = super.createConfirmButton(text, onClick);
-        EnterClickAdapter.bind(_widget, onClick);
+        if (_bindEnterKey) {
+            EnterClickAdapter.bind(_widget, onClick);
+        }
         KeyUpHandler handler = new KeyUpHandler() {
             @Override
             public void onKeyUp (KeyUpEvent event)
@@ -147,5 +159,6 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
     }
 
     protected W _widget;
+    protected boolean _bindEnterKey;
     protected HandlerRegistration _handlerReg;
 }
