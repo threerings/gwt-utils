@@ -42,6 +42,14 @@
     <url>http://ooo-gwt-utils.googlecode.com/svn/trunk/</url>
   </scm>
 
+  <repositories>
+    <repository>
+      <!-- This is where guava-gwt is downloaded -->
+      <id>extooo.maven</id>
+      <url>http://ooo-maven.googlecode.com/hg/repository</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>com.samskivert</groupId>
@@ -53,6 +61,18 @@
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <version>2.1.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>r08</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-gwt</artifactId>
+      <version>r08</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
