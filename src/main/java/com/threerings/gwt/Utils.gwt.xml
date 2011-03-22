@@ -2,7 +2,8 @@
 <!-- Various GWT related tools and utilities.  -->
 <module>
   <inherits name="com.samskivert.Utils"/>
-  <inherits name="com.google.common.Collections"/>
+  <inherits name="com.google.common.collect.Collect"/>
+  <inherits name="com.google.common.base.Base"/>
 
   <source path="ui"/>
   <source path="util"/>
