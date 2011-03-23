@@ -165,6 +165,22 @@ public class DateUtil
         // TODO: clear milliseconds?
     }
 
+    /**
+     * Returns the equivalent of this date when it was in Greenwich. For example, a date at 4pm
+     * pacific would result in a new date at 4pm gmt, or 8am pacific. This has the effect of
+     * normalizing the date. It may be used to allow clients to send data requests to the server
+     * in absolute time, which can then be treated appropriately on the server.
+     */
+    @SuppressWarnings("deprecation")
+    public static Date toUtc (Date date)
+    {
+        if (date == null) {
+            return null;
+        }
+        return new Date(Date.UTC(date.getYear(), date.getMonth(), date.getDate(), date.getHours(),
+            date.getMinutes(), date.getSeconds()));
+    }
+
     protected static final DateTimeFormat _tfmt = DateTimeFormat.getFormat("h:mmaa");
     protected static final DateTimeFormat _mfmt = DateTimeFormat.getFormat("MMM dd");
     protected static final DateTimeFormat _yfmt = DateTimeFormat.getFormat("MMM dd, yyyy");
