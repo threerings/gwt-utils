@@ -152,6 +152,20 @@ public class ItemListBox<T> extends ListBox
     }
 
     /**
+     * Removes the supplied item from this list box, returning true if the item was found.
+     */
+    public boolean removeItem (T item)
+    {
+        int index = _items.indexOf(item);
+        if (index == -1) {
+            return false;
+        }
+        _items.remove(index);
+        removeItem(index);
+        return true;
+    }
+
+    /**
      * Returns the currently selected item, or null if no item is selected.
      */
     public T getSelectedItem ()
