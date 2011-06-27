@@ -80,21 +80,25 @@ public class LimitedTextArea extends VerticalPanel
         return _area;
     }
 
+    @Override
     public HandlerRegistration addKeyDownHandler (KeyDownHandler handler)
     {
         return _area.addKeyDownHandler(handler);
     }
 
+    @Override
     public HandlerRegistration addKeyUpHandler (KeyUpHandler handler)
     {
         return _area.addKeyUpHandler(handler);
     }
 
+    @Override
     public HandlerRegistration addKeyPressHandler (KeyPressHandler handler)
     {
         return _area.addKeyPressHandler(handler);
     }
 
+    @Override
     public HandlerRegistration addChangeHandler (ChangeHandler handler)
     {
         return _area.addChangeHandler(handler);

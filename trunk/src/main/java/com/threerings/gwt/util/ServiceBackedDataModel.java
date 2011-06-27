@@ -72,20 +72,20 @@ public abstract class ServiceBackedDataModel<T, R> implements DataModel<T>
         _pageItems = Collections.emptyList();
     }
 
-    // from interface DataModel
+    @Override // from interface DataModel
     public int getItemCount ()
     {
         return Math.max(_count, _pageOffset + _pageItems.size());
     }
 
-    // from interface DataModel
+    @Override // from interface DataModel
     public void removeItem (T item)
     {
         _pageItems.remove(item);
         _count--;
     }
 
-    // from interface DataModel
+    @Override // from interface DataModel
     public void doFetchRows (int start, int count, final AsyncCallback<List<T>> callback)
     {
         // if we have data, and are requesting the same data we have...

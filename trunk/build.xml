@@ -41,7 +41,7 @@
 
   <target name="gmsgs" depends="-prepare" description="Regenerates our i18n message classes.">
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
-           debug="on" deprecation="on" source="1.5" target="1.5">
+           debug="on" deprecation="on" source="1.6" target="1.6">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
@@ -60,7 +60,7 @@
 
   <target name="compile" depends="-prepare,gmsgs" description="Compiles main sources.">
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
-           debug="on" deprecation="on" source="1.5" target="1.5">
+           debug="on" deprecation="on" source="1.6" target="1.6">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
@@ -68,7 +68,7 @@
 
     <mkdir dir="${deploy.dir}/test-classes"/>
     <javac srcdir="${test.dir}/java" destdir="${deploy.dir}/test-classes" includeAntRuntime="false"
-           debug="on" optimize="${build.optimize}" source="1.5" target="1.5" encoding="utf-8">
+           debug="on" optimize="${build.optimize}" source="1.6" target="1.6" encoding="utf-8">
       <classpath>
         <path refid="classpath"/>
         <pathelement location="${deploy.dir}/classes"/>
@@ -105,7 +105,7 @@
              destdir="${deploy.dir}/docs" additionalparam="-breakiterator">
       <packageset dir="${src.dir}"/>
       <classpath refid="classpath"/>
-      <link href="http://download.oracle.com/javase/1.5.0/docs/api/"/>
+      <link href="http://download.oracle.com/javase/6/docs/api/"/>
       <link href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.1/"/>
       <link href="http://samskivert.googlecode.com/svn/apidocs/"/>
       <link href="http://evgeny-goldin.org/ant/api/"/>
