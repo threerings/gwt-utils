@@ -26,8 +26,6 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import com.threerings.gwt.util.DataModel;
-
 /**
  * A data model that can be customized for components that obtain their data by calling a service
  * method to fetch a range of items.  Type T is from DataModel, and must be the type that is
@@ -74,20 +72,20 @@ public abstract class ServiceBackedDataModel<T, R> implements DataModel<T>
         _pageItems = Collections.emptyList();
     }
 
-    @Override // from interface DataModel
+    // from interface DataModel
     public int getItemCount ()
     {
         return Math.max(_count, _pageOffset + _pageItems.size());
     }
 
-    @Override // from interface DataModel
+    // from interface DataModel
     public void removeItem (T item)
     {
         _pageItems.remove(item);
         _count--;
     }
 
-    @Override // from interface DataModel
+    // from interface DataModel
     public void doFetchRows (int start, int count, final AsyncCallback<List<T>> callback)
     {
         // if we have data, and are requesting the same data we have...
