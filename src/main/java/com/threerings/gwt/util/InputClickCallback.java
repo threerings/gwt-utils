@@ -42,9 +42,9 @@ import com.threerings.gwt.ui.SmartTable;
  *
  * <p>NOTE: the input popup replaces the confirmation popup.</p>
  */
-public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyDownHandlers
-    & HasKeyUpHandlers>
-        extends ClickCallback<T>
+public abstract class InputClickCallback<
+        T, W extends Widget & HasText & HasKeyDownHandlers & HasKeyUpHandlers>
+    extends ClickCallback<T>
 {
     /**
      * Creates a new click handler for the given trigger. Upon clicking, text input will be
@@ -146,8 +146,7 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
             EnterClickAdapter.bind(_widget, onClick);
         }
         KeyUpHandler handler = new KeyUpHandler() {
-            public void onKeyUp (KeyUpEvent event)
-            {
+            @Override public void onKeyUp (KeyUpEvent event) {
                 String text = _widget.getText();
                 button.setEnabled(text != null && text.length() > 0);
             }
