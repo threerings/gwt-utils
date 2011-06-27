@@ -146,7 +146,6 @@ public abstract class InputClickCallback<T, W extends Widget & HasText & HasKeyD
             EnterClickAdapter.bind(_widget, onClick);
         }
         KeyUpHandler handler = new KeyUpHandler() {
-            @Override
             public void onKeyUp (KeyUpEvent event)
             {
                 String text = _widget.getText();
