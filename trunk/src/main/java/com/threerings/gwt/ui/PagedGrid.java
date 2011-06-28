@@ -70,9 +70,9 @@ public abstract class PagedGrid<T> extends PagedWidget<T>
     @Override
     protected Widget createContents (int start, int count, List<T> list)
     {
-        int limit = padToFullPage() ? count : Math.min(list.size(), count);
-        int cells = padToFullPage() ? count : limit;
-        Grid grid = new Grid(Math.min((int)Math.ceil(cells / (float)_cols), _rows),
+        int limit = list.size();
+        int cells = padToFullPage() ? Math.max(count, limit) : limit;
+        Grid grid = new Grid((int)Math.ceil(cells / (float)_cols),
                              Math.min(_cols, cells));
         grid.setStyleName("Grid");
         grid.setCellPadding(0);

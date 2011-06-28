@@ -307,9 +307,9 @@ public abstract class PagedWidget<T> extends FlowPanel
         }
 
         _prev.setEnabled(start > 0);
-        _next.setEnabled(_lastItem < 0 || start + list.size() < _lastItem);
+        _next.setEnabled(_lastItem < 0 || start + count < _lastItem);
         if (_lastItem != 0) {
-            int shown = Math.min(list.size(), count);
+            int shown = Math.max(list.size(), count);
             configureNavi(_controls, 0, _infoCol, start, shown, _lastItem);
         } else {
             _controls.setHTML(0, _infoCol, "&nbsp;");
