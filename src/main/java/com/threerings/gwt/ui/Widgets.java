@@ -22,13 +22,14 @@
 package com.threerings.gwt.ui;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
@@ -262,6 +263,14 @@ public class Widgets
     public static Image newImage (ImageResource image, String... styles)
     {
         return setStyleNames(new Image(image), styles);
+    }
+
+    /**
+     * Creates an image with the supplied resource and style.
+     */
+    public static Image newImage (AbstractImagePrototype image, String... styles)
+    {
+        return setStyleNames(image.createImage(), styles);
     }
 
     /**
