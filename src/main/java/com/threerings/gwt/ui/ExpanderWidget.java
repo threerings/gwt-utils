@@ -35,7 +35,7 @@ import com.threerings.gwt.util.ExpanderResult;
 
 /**
  * A "click to see more" type of control that displays more elements on a click. This is an
- * alternative to PagedWidget if you want most of its features.
+ * alternative to PagedWidget if you don't want most of its features.
  */
 public abstract class ExpanderWidget<T> extends FlowPanel
 {
