@@ -21,8 +21,10 @@
 
 package com.threerings.gwt.ui;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -41,6 +43,16 @@ public abstract class ExpanderWidget<T> extends FlowPanel
 {
     public ExpanderWidget (FocusWidget expandButton)
     {
+        this(expandButton, true);
+    }
+
+    /**
+     * @param expandButton The clickable used to expand the list.
+     * @param appendMode True to append pages to the end of the list,
+     *     false to prepend to the beginning.
+     */
+    public ExpanderWidget (FocusWidget expandButton, boolean appendMode)
+    {
         _expandButton = expandButton;
         _expandButton.addClickHandler(new ClickHandler() {
             public void onClick (ClickEvent event) {
@@ -48,12 +60,13 @@ public abstract class ExpanderWidget<T> extends FlowPanel
             }
         });
         add(_expandButton);
-    }
 
-    protected void displayElements (List<Widget> widgets)
-    {
-        for (Widget widget : widgets) {
-            add(widget);
+        // Elements go above the expand button in append mode
+        _appendMode = appendMode;
+        if (_appendMode) {
+            insert(_content, 0);
+        } else {
+            add(_content);
         }
     }
 
@@ -72,15 +85,10 @@ public abstract class ExpanderWidget<T> extends FlowPanel
 
         fetchElements(new AsyncCallback<ExpanderResult<T>>() {
             public void onSuccess (ExpanderResult<T> result) {
-
                 _expandButton.setEnabled(true);
                 _expandButton.setVisible(result.hasMore);
 
-                List<Widget> widgets = new ArrayList<Widget>();
-                for (T element : result.page) {
-                    widgets.add(createElement(element));
-                }
-                displayElements(widgets);
+                addElements(result.page);
             }
             public void onFailure (Throwable error) {
                 handleError(error);
@@ -88,5 +96,33 @@ public abstract class ExpanderWidget<T> extends FlowPanel
         });
     }
 
+    public void addElements (List<T> elements)
+    {
+        FlowPanel page = new FlowPanel();
+        for (T element : elements) {
+            Widget w = createElement(element);
+            _elements.put(element, w);
+            page.add(w);
+        }
+
+        if (_appendMode) {
+            _content.add(page);
+        } else {
+            _content.insert(page, 0);
+        }
+    }
+
+    public void removeElement (T element)
+    {
+        Widget w = _elements.remove(element);
+        if (w != null) {
+            w.removeFromParent();
+        }
+    }
+
     protected FocusWidget _expandButton;
+    protected FlowPanel _content = new FlowPanel();
+    protected boolean _appendMode;
+
+    protected Map<T, Widget> _elements = Maps.newHashMap();
 }
