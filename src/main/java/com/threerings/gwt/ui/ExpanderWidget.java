@@ -30,7 +30,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import com.threerings.gwt.util.ExpanderResult;
@@ -41,25 +41,24 @@ import com.threerings.gwt.util.ExpanderResult;
  */
 public abstract class ExpanderWidget<T> extends FlowPanel
 {
-    public ExpanderWidget (FocusWidget expandButton)
+    public ExpanderWidget (String expandText)
     {
-        this(expandButton, true);
+        this(expandText, true);
     }
 
     /**
-     * @param expandButton The clickable used to expand the list.
      * @param appendMode True to append pages to the end of the list,
      *     false to prepend to the beginning.
      */
-    public ExpanderWidget (FocusWidget expandButton, boolean appendMode)
+    public ExpanderWidget (String expandText, boolean appendMode)
     {
-        _expandButton = expandButton;
-        _expandButton.addClickHandler(new ClickHandler() {
+        _expandLabel = new Label(expandText);
+        _expandLabel.addClickHandler(new ClickHandler() {
             public void onClick (ClickEvent event) {
                 expand();
             }
         });
-        add(_expandButton);
+        add(_expandLabel);
 
         // Elements go above the expand button in append mode
         _appendMode = appendMode;
@@ -81,22 +80,31 @@ public abstract class ExpanderWidget<T> extends FlowPanel
 
     public void expand ()
     {
-        _expandButton.setEnabled(false);
+        if (_loading) {
+            return;
+        }
+        _loading = true;
 
         fetchElements(new AsyncCallback<ExpanderResult<T>>() {
             public void onSuccess (ExpanderResult<T> result) {
-                _expandButton.setEnabled(true);
-                _expandButton.setVisible(result.hasMore);
+                _loading = false;
+                _expandLabel.setVisible(result.hasMore);
 
                 addElements(result.page);
             }
             public void onFailure (Throwable error) {
+                _loading = false;
                 handleError(error);
             }
         });
     }
 
     public void addElements (List<T> elements)
+    {
+        addElements(elements, _appendMode);
+    }
+
+    public void addElements (List<T> elements, boolean append)
     {
         FlowPanel page = new FlowPanel();
         for (T element : elements) {
@@ -105,7 +113,7 @@ public abstract class ExpanderWidget<T> extends FlowPanel
             page.add(w);
         }
 
-        if (_appendMode) {
+        if (append) {
             _content.add(page);
         } else {
             _content.insert(page, 0);
@@ -120,9 +128,10 @@ public abstract class ExpanderWidget<T> extends FlowPanel
         }
     }
 
-    protected FocusWidget _expandButton;
+    protected Label _expandLabel;
     protected FlowPanel _content = new FlowPanel();
     protected boolean _appendMode;
+    protected boolean _loading;
 
     protected Map<T, Widget> _elements = Maps.newHashMap();
 }
