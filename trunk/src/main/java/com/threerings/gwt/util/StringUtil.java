@@ -150,6 +150,22 @@ public class StringUtil
     }
 
     /**
+     * Returns a version of the supplied string with the first letter capitalized.
+     */
+    public static String capitalize (String s)
+    {
+        if (isBlank(s)) {
+            return s;
+        }
+        char c = s.charAt(0);
+        if (Character.isUpperCase(c)) {
+            return s;
+        } else {
+            return String.valueOf(Character.toUpperCase(c)) + s.substring(1);
+        }
+    }
+
+    /**
      * Joins the given sequence of strings with a command and space between each consecutive pair.
      */
     public static String join (Iterable<?> items)
