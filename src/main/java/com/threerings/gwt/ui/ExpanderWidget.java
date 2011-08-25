@@ -106,7 +106,6 @@ public abstract class ExpanderWidget<T> extends FlowPanel
 
     public void addElements (List<T> elements, boolean append)
     {
-        FlowPanel page = new FlowPanel();
         int ii = 0;
         for (T element : elements) {
             Widget w = createElement(element);
