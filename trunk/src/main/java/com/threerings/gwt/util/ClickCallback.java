@@ -21,6 +21,9 @@
 
 package com.threerings.gwt.util;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -57,19 +60,10 @@ public abstract class ClickCallback<T>
      * Creates a callback for the supplied trigger (the constructor will automatically add this
      * callback to the trigger as a click listener). Failure will automatically be reported.
      */
-    public ClickCallback (HasClickHandlers trigger)
-    {
-        this(trigger, null);
-    }
-
-    /**
-     * Creates a callback for the supplied trigger (the constructor will automatically add this
-     * callback to the trigger as a click listener). Failure will automatically be reported.
-     */
-    public ClickCallback (HasClickHandlers trigger, TextBox onEnter)
+    public ClickCallback (HasClickHandlers trigger, TextBox...onEnters)
     {
         _trigger = trigger;
-        _onEnter = onEnter;
+        _onEnters = onEnters;
         setEnabled(true); // this will wire up all of our bits
     }
 
@@ -177,7 +171,7 @@ public abstract class ClickCallback<T>
      * Updates the confirmation message just before taking action. This allows subclasses to set
      * the confirmation message based on the state of the other form fields without explicitly
      * updating it each time. By default does nothing so that the previously configured
-     * confirmation message is used. 
+     * confirmation message is used.
      */
     protected void updateConfirmMessage ()
     {
@@ -265,8 +259,8 @@ public abstract class ClickCallback<T>
         }
 
         // set the enabled status of our associated text box if we've got one
-        if (_onEnter != null) {
-            _onEnter.setEnabled(enabled);
+        for (TextBox onEnter : _onEnters) {
+            onEnter.setEnabled(enabled);
         }
 
         // always remove first so that if we do end up adding, we don't doubly add
@@ -274,33 +268,35 @@ public abstract class ClickCallback<T>
             _clickreg.removeHandler();
             _clickreg = null;
         }
-        if (_enterreg != null) {
-            _enterreg.removeHandler();
-            _enterreg = null;
+        for (HandlerRegistration enterReg : _enterRegs) {
+            enterReg.removeHandler();
         }
+        _enterRegs.clear();
         if (enabled) {
             _clickreg = _trigger.addClickHandler(_onClick);
-            if (_onEnter != null) {
-                _enterreg = EnterClickAdapter.bind(_onEnter, _onClick);
+            for (TextBox onEnter : _onEnters) {
+                _enterRegs.add(EnterClickAdapter.bind(onEnter, _onClick));
             }
         }
     }
 
     protected void reportFailure (Throwable cause)
     {
-        if (_onEnter != null) {
-            _onEnter.setFocus(true);
+        if (_onEnters.length > 0) {
+            _onEnters[0].setFocus(true);
         }
         showError(cause, getPopupNear());
     }
 
     protected Widget getPopupNear ()
     {
-        Widget near = _onEnter;
-        if (near == null && _trigger instanceof Widget) {
-            near = (Widget)_trigger;
+        if (_onEnters.length > 0) {
+            return _onEnters[0];
+        } else if (_trigger instanceof Widget) {
+            return (Widget)_trigger;
+        } else {
+            return null;
         }
-        return near;
     }
 
     protected ClickHandler _onClick = new ClickHandler() {
@@ -316,6 +312,6 @@ public abstract class ClickCallback<T>
     protected boolean _confirmHTML;
     protected String[] _confirmChoices = { "Yes", "No" };
 
-    protected TextBox _onEnter;
-    protected HandlerRegistration _enterreg;
+    protected TextBox[] _onEnters = {};
+    protected List<HandlerRegistration> _enterRegs = Lists.newArrayList();
 }
