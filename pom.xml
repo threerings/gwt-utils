@@ -64,13 +64,13 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>r08</version>
+      <version>10.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava-gwt</artifactId>
-      <version>r08</version>
+      <version>10.0</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -174,7 +174,7 @@
           <links>
             <link>http://google-web-toolkit.googlecode.com/svn/javadoc/2.1/</link>
             <link>http://evgeny-goldin.org/ant/api/</link>
-            <link>http://guava-libraries.googlecode.com/svn/trunk/javadoc/</link>
+            <link>http://docs.guava-libraries.googlecode.com/git/javadoc/</link>
             <link>http://samskivert.googlecode.com/svn/apidocs/</link>
           </links>
         </configuration>
