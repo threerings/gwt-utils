@@ -40,31 +40,15 @@
     <url>http://ooo-gwt-utils.googlecode.com/svn/trunk/</url>
   </scm>
 
-  <repositories>
-    <repository>
-      <!-- This is where guava-gwt is downloaded -->
-      <id>extooo.maven</id>
-      <url>http://ooo-maven.googlecode.com/hg/repository</url>
-    </repository>
-  </repositories>
+  <properties>
+    <gwt.version>2.3.0</gwt.version>
+  </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.samskivert</groupId>
       <artifactId>samskivert</artifactId>
-      <version>1.1</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-user</artifactId>
-      <version>2.1.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>10.0</version>
+      <version>1.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -75,8 +59,14 @@
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwt.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
-      <version>2.1.0</version>
+      <version>${gwt.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
