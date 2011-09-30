@@ -58,7 +58,13 @@ public abstract class ExpanderWidget<T> extends FlowPanel
                 expand();
             }
         });
-        add(_expandLabel);
+
+        _loadingPanel.setVisible(false);
+
+        FlowPanel controls = new FlowPanel();
+        controls.add(_expandLabel);
+        controls.add(_loadingPanel);
+        add(controls);
 
         // Elements go above the expand button in append mode
         _appendMode = appendMode;
@@ -83,17 +89,18 @@ public abstract class ExpanderWidget<T> extends FlowPanel
         if (_loading) {
             return;
         }
-        _loading = true;
+
+        setLoading(true);
 
         fetchElements(new AsyncCallback<ExpanderResult<T>>() {
             public void onSuccess (ExpanderResult<T> result) {
-                _loading = false;
+                setLoading(false);
                 _expandLabel.setVisible(result.hasMore);
 
                 addElements(result.page);
             }
             public void onFailure (Throwable error) {
-                _loading = false;
+                setLoading(false);
                 handleError(error);
             }
         });
@@ -127,10 +134,19 @@ public abstract class ExpanderWidget<T> extends FlowPanel
         }
     }
 
-    protected Label _expandLabel;
-    protected FlowPanel _content = new FlowPanel();
+    protected void setLoading (boolean loading)
+    {
+        _loading = loading;
+        _loadingPanel.setVisible(loading);
+        _expandLabel.setVisible(!loading);
+    }
+
     protected boolean _appendMode;
     protected boolean _loading;
+
+    protected FlowPanel _content = new FlowPanel();
+    protected FlowPanel _loadingPanel = new FlowPanel();
+    protected Label _expandLabel;
 
     protected Map<T, Widget> _elements = Maps.newHashMap();
 }
