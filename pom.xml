@@ -52,19 +52,17 @@
       <groupId>com.samskivert</groupId>
       <artifactId>samskivert</artifactId>
       <version>1.5</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava-gwt</artifactId>
       <version>10.0</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
       <version>${gwt.version}</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -109,9 +107,11 @@
             <phase>generate-sources</phase>
             <configuration>
               <target>
-                <taskdef name="i18nsync" classpath="${basedir}/lib/i18nsync.jar" classname="com.threerings.gwt.tools.I18nSyncTask" />
+                <taskdef name="i18nsync" classpath="${basedir}/lib/i18nsync.jar"
+                         classname="com.threerings.gwt.tools.I18nSyncTask" />
                 <i18nsync srcdir="${project.build.sourceDirectory}">
-                  <fileset dir="${project.build.sourceDirectory}" includes="**/*Messages.properties" />
+                  <fileset dir="${project.build.sourceDirectory}"
+                           includes="**/*Messages.properties" />
                 </i18nsync>
               </target>
             </configuration>
