@@ -86,9 +86,10 @@ public class InfoPopup extends PopupPanel
     /**
      * Displays this info popup in the center of the page.
      */
-    public void showCentered ()
+    public InfoPopup showCentered ()
     {
         center(); // this will show us
+        return this;
     }
 
     @Override

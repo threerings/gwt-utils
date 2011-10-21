@@ -54,14 +54,14 @@ public class Popups
     }
 
     /** Positions supported by {@link #show} and other methods. */
-    public enum Position { ABOVE, OVER, BELOW };
+    public enum Position { ABOVE, OVER, BELOW, RIGHT };
 
     /**
      * Displays an info message centered in the browser window.
      */
-    public static void info (String message)
+    public static InfoPopup info (String message)
     {
-        new InfoPopup(message).showCentered();
+        return new InfoPopup(message).showCentered();
     }
 
     /** @deprecated Use {@link #infoBelow} */ @Deprecated
@@ -73,42 +73,42 @@ public class Popups
     /**
      * Displays an info message below the specified widget.
      */
-    public static void infoAbove (String message, Widget target)
+    public static InfoPopup infoAbove (String message, Widget target)
     {
-        info(message, Position.ABOVE, target);
+        return info(message, Position.ABOVE, target);
     }
 
     /**
      * Displays an info message below the specified widget.
      */
-    public static void infoBelow (String message, Widget target)
+    public static InfoPopup infoBelow (String message, Widget target)
     {
-        info(message, Position.BELOW, target);
+        return info(message, Position.BELOW, target);
     }
 
     /**
      * Displays an info message centered horizontally on the page and centered vertically on the
      * specified target widget.
      */
-    public static void infoOn (String message, Widget target)
+    public static InfoPopup infoOn (String message, Widget target)
     {
-        centerOn(new InfoPopup(message), target);
+        return centerOn(new InfoPopup(message), target);
     }
 
     /**
      * Displays an info message below the specified widget.
      */
-    public static void info (String message, Position pos, Widget target)
+    public static InfoPopup info (String message, Position pos, Widget target)
     {
-        show(new InfoPopup(message), pos, target);
+        return show(new InfoPopup(message), pos, target);
     }
 
     /**
      * Displays error feedback to the user in a non-offensive way.
      */
-    public static void error (String message)
+    public static InfoPopup error (String message)
     {
-        new InfoPopup(message).toError().showCentered();
+        return new InfoPopup(message).toError().showCentered();
     }
 
     /** @deprecated Use {@link #errorBelow} */ @Deprecated
@@ -124,50 +124,62 @@ public class Popups
      * Displays error feedback to the user in a non-offensive way. The error feedback is displayed
      * near the supplied component and if the component supports focus, it is focused.
      */
-    public static void errorAbove (String message, Widget source)
+    public static InfoPopup errorAbove (String message, Widget source)
     {
-        error(message, Position.ABOVE, source);
+        return error(message, Position.ABOVE, source);
     }
 
     /**
      * Displays error feedback to the user in a non-offensive way. The error feedback is displayed
      * near the supplied component and if the component supports focus, it is focused.
      */
-    public static void errorBelow (String message, Widget source)
+    public static InfoPopup errorBelow (String message, Widget source)
     {
-        error(message, Position.BELOW, source);
+        return error(message, Position.BELOW, source);
     }
 
     /**
      * Displays error feedback to the user in a non-offensive way. The error feedback is displayed
      * near the supplied component and if the component supports focus, it is focused.
      */
-    public static void error (String message, Position pos, Widget source)
+    public static InfoPopup error (String message, Position pos, Widget source)
     {
         if (source instanceof FocusWidget) {
             ((FocusWidget)source).setFocus(true);
         }
-        show(new InfoPopup(message).toError(), pos, source);
+        return show(new InfoPopup(message).toError(), pos, source);
     }
 
     /**
      * Shows the supplied popup in the specified position relative to the specified target widget.
      */
-    public static void show (PopupPanel popup, Position pos, Widget target)
+    public static <T extends PopupPanel> T show (T popup, Position pos, Widget target)
     {
         popup.setVisible(false);
         popup.show();
 
-        int top, left = target.getAbsoluteLeft();
+        int left, top;
+        switch (pos) {
+        case RIGHT:
+            left = target.getAbsoluteLeft() + target.getOffsetWidth() + NEAR_GAP;
+            break;
+        default:
+            left = target.getAbsoluteLeft();
+            break;
+        }
         if (left + popup.getOffsetWidth() > Window.getClientWidth()) {
             left = Math.max(0, Window.getClientWidth() - popup.getOffsetWidth());
         }
+
         switch (pos) {
         case ABOVE:
             top = target.getAbsoluteTop() - popup.getOffsetHeight() - NEAR_GAP;
             break;
         case OVER:
             top = target.getAbsoluteTop();
+            break;
+        case RIGHT:
+            top = target.getAbsoluteTop() + (target.getOffsetHeight() - popup.getOffsetHeight())/2;
             break;
         default:
         case BELOW:
@@ -177,6 +189,7 @@ public class Popups
 
         popup.setPopupPosition(left, top);
         popup.setVisible(true);
+        return popup;
     }
 
     /** @deprecated Use {@link #showBelow} */ @Deprecated
@@ -188,32 +201,32 @@ public class Popups
     /**
      * Shows the supplied popup panel near the specified target.
      */
-    public static void showAbove (PopupPanel popup, Widget target)
+    public static <T extends PopupPanel> T showAbove (T popup, Widget target)
     {
-        show(popup, Position.ABOVE, target);
+        return show(popup, Position.ABOVE, target);
     }
 
     /**
      * Shows the supplied popup panel over the specified target.
      */
-    public static void showOver (PopupPanel popup, Widget target)
+    public static <T extends PopupPanel> T showOver (T popup, Widget target)
     {
-        show(popup, Position.OVER, target);
+        return show(popup, Position.OVER, target);
     }
 
     /**
      * Shows the supplied popup panel below the specified target.
      */
-    public static void showBelow (PopupPanel popup, Widget target)
+    public static <T extends PopupPanel> T showBelow (T popup, Widget target)
     {
-        show(popup, Position.BELOW, target);
+        return show(popup, Position.BELOW, target);
     }
 
     /**
      * Centers the supplied vertically on the supplied trigger widget. The popup's showing state
      * will be preserved.
      */
-    public static PopupPanel centerOn (PopupPanel popup, Widget centerOn)
+    public static <T extends PopupPanel> T centerOn (T popup, Widget centerOn)
     {
         return centerOn(popup, centerOn.getAbsoluteTop() + centerOn.getOffsetHeight()/2);
     }
@@ -224,7 +237,7 @@ public class Popups
      *
      * @return the supplied popup.
      */
-    public static PopupPanel centerOn (PopupPanel popup, int ypos)
+    public static <T extends PopupPanel> T centerOn (T popup, int ypos)
     {
         boolean wasHidden = !popup.isShowing();
         boolean wasVisible = popup.isVisible();
