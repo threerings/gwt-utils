@@ -27,6 +27,7 @@ import java.util.List;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -110,6 +111,44 @@ public class Validator
         }
     }
 
+    public class IntegerBoxValidator extends WidgetValidator<IntegerBoxValidator,IntegerBox> {
+        protected IntegerBoxValidator (IntegerBox target) {
+            super(target);
+        }
+
+        public IntegerBoxValidator requireNonEmpty (final String feedback) {
+            return require(new Rule() {
+                public String check () {
+                    return (_target.getText().trim().length() == 0) ? feedback : null;
+                }
+            });
+        }
+
+        /**
+         * Requires a value greater than the provided
+         */
+        public IntegerBoxValidator requireGreaterThan (final int value, final String feedback) {
+            return require(new Rule() {
+                public String check () {
+                    Integer boxValue = _target.getValue();
+                    return (boxValue != null && boxValue > value) ? null : feedback;
+                }
+            });
+        }
+
+        /**
+         * Requires a value less than the provided
+         */
+        public IntegerBoxValidator requireLessThan (final int value, final String feedback) {
+            return require(new Rule() {
+                public String check () {
+                    Integer boxValue = _target.getValue();
+                    return (boxValue != null && boxValue < value) ? null : feedback;
+                }
+            });
+        }
+    }
+
     /**
      * Returns a validator that provides rules for text boxes. The validator will automatically
      * validate the text box's contents when it loses focus.
@@ -120,6 +159,10 @@ public class Validator
 
     public CheckBoxValidator add (CheckBox box) {
         return add(new CheckBoxValidator(box));
+    }
+
+    public IntegerBoxValidator add (IntegerBox box) {
+        return add(new IntegerBoxValidator(box));
     }
 
     /**
