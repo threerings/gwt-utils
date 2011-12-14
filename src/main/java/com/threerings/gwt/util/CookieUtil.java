@@ -21,6 +21,9 @@
 
 package com.threerings.gwt.util;
 
+// import com.google.common.net.InternetDomainName;
+import com.google.gwt.user.client.Window.Location;
+
 /**
  * Wraps the necessary JavaScript fiddling to read and write cookies on the
  * client.
@@ -30,15 +33,47 @@ public class CookieUtil
     /**
      * Sets the specified cookie to the supplied value.
      *
-     * @param expires the number of days in which the cookie should expire.
+     * @param expires The number of days in which the cookie should expire.
+     * @param domain The domain to set this cookie on.
      */
-    public static void set (String path, int expires, String name, String value)
+    public static void set (
+        String path, int expires, String name, String value, String domain)
     {
         String extra = "";
         if (path.length() > 0) {
             extra += "; path=" + path;
         }
+        if (domain != null) {
+            extra += "; domain=" + domain;
+        }
         doSet(name, value, expires, extra);
+    }
+
+    /**
+     * Sets a cross-domain cookie to the supplied value, which can be accessed by other subdomains.
+     *
+     * WARNING!
+     * This doesn't work if you use it on a top level domain. InternetDomainName is the correct way
+     * to get the parent domain, but GWT fails to compile it (bug?). For backwards compatibility,
+     * the existing behavior of manually guessing the parent domain remains the default. If you try
+     * to use this on a top level owned domain (foo.com) this will try to set a cookie on an invalid
+     * domain (.com) which no browser will allow.
+     *
+     * Instead, call set() with an explicit domain, or null if you don't care about cross-domain
+     * cookies.
+     */
+    public static void set (String path, int expires, String name, String value)
+    {
+        // String domain = "." + InternetDomainName.from(
+        //     Location.getHostName()).topPrivateDomain().name();
+
+        String domain = Location.getHostName();
+        int didx = domain.indexOf(".");
+        if (didx != -1) {
+            domain = domain.substring(didx);
+        }
+
+        set(path, expires, name, value, domain);
     }
 
     /**
@@ -79,18 +114,6 @@ public class CookieUtil
             var date = new Date();
             date.setTime(date.getTime() + (expires*24*60*60*1000));
             extra += "; expires=" + date.toGMTString();
-        }
-        if (location.host.indexOf("localhost") != 0) {
-            var host = location.host;
-            var cidx = host.indexOf(":");
-            if (cidx != -1) {
-                host = host.substring(0, cidx);
-            }
-            var didx = host.indexOf(".");
-            if (didx != -1) {
-                host = host.substring(didx);
-            }
-            extra += "; domain=" + host;
         }
         $doc.cookie = name + "=" + escape(value) + extra;
     }-*/;
