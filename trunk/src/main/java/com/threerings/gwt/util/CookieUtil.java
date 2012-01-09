@@ -66,7 +66,7 @@ public class CookieUtil
      */
     public static void clear (String path, String name)
     {
-        set(path, -1, name, "");
+        set(path, -1, name, "", null);
     }
 
     /**
