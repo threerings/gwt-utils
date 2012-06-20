@@ -264,18 +264,14 @@ public abstract class ClickCallback<T>
         }
 
         // always remove first so that if we do end up adding, we don't doubly add
-        if (_clickreg != null) {
-            _clickreg.removeHandler();
-            _clickreg = null;
+        for (HandlerRegistration reg : _regs) {
+            reg.removeHandler();
         }
-        for (HandlerRegistration enterReg : _enterRegs) {
-            enterReg.removeHandler();
-        }
-        _enterRegs.clear();
+        _regs.clear();
         if (enabled) {
-            _clickreg = _trigger.addClickHandler(_onClick);
+            _regs.add(_trigger.addClickHandler(_onClick));
             for (TextBox onEnter : _onEnters) {
-                _enterRegs.add(EnterClickAdapter.bind(onEnter, _onClick));
+                _regs.add(onEnter.addKeyDownHandler(new EnterClickAdapter(_onClick)));
             }
         }
     }
@@ -305,13 +301,11 @@ public abstract class ClickCallback<T>
         }
     };
 
-    protected HasClickHandlers _trigger;
-    protected HandlerRegistration _clickreg;
+    protected final HasClickHandlers _trigger;
+    protected final List<HandlerRegistration> _regs = Lists.newArrayList();
+    protected final TextBox[] _onEnters;
 
     protected String _confirmMessage;
     protected boolean _confirmHTML;
     protected String[] _confirmChoices = { "Yes", "No" };
-
-    protected TextBox[] _onEnters = {};
-    protected List<HandlerRegistration> _enterRegs = Lists.newArrayList();
 }
