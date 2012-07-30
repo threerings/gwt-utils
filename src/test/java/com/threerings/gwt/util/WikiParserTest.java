@@ -77,4 +77,18 @@ public class WikiParserTest
         assertEquals("<p>This is some code with an &mdash; in it.</p>\n",
                      WikiParser.render("This is some code with an -- in it."));
     }
+
+    @Test public void testURLs ()
+    {
+        assertEquals("<a href=\"http://www.foo.com\" rel=\"nofollow\">link</a>",
+                     WikiParser.renderSnippet("[[http://www.foo.com|link]]"));
+        assertEquals("Blah <a href=\"http://www.foo.com/\" rel=\"nofollow\">" +
+                     "http://www.foo.com/</a> blah",
+                     WikiParser.renderSnippet("Blah http://www.foo.com/ blah"));
+        assertEquals("<a href=\"http://www.foo.com/\" rel=\"nofollow\">http://www.foo.com/</a>",
+                     WikiParser.renderSnippet("http://www.foo.com/"));
+        assertEquals("<a href=\"http://www.foo.com/\" rel=\"nofollow\">http://www.foo.com/</a> " +
+                     "foo <em>bar</em>",
+                     WikiParser.renderSnippet("http://www.foo.com/ foo //bar//"));
+    }
 }
