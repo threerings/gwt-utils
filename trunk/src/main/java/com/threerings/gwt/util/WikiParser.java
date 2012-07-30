@@ -534,6 +534,23 @@ public class WikiParser
         return null;
     }
 
+    private int checkApplyURI (StringBuilder tb, int p, int start, int end) {
+        int[] uriOffs=checkURI(p, start, end);
+        if (uriOffs == null) return p;
+
+        flushToText(tb); // flush text buffer
+        int pb=uriOffs[0], pe=uriOffs[1];
+        if (pb>start && wikiChars[pb-1]=='~') {
+            sb.delete(sb.length()-(p-pb+1), sb.length()); // roll back URL + ~
+            sb.append(escapeHTML(wikiText.substring(pb, pe)));
+        }
+        else {
+            sb.delete(sb.length()-(p-pb), sb.length()); // roll back URL
+            appendLink(wikiText.substring(pb, pe));
+        }
+        return pe;
+    }
+
     private int parseItem (int start, String delimiter, ContextType context) {
         try {
             return parseItemThrow(start, delimiter, context);
@@ -714,25 +731,13 @@ public class WikiParser
                     if (p+1 < end && wikiChars[p+1] == c &&
                         // make sure we see a matching close delimiter somewhere ahead
                         wikiText.substring(p+2, end).indexOf(""+c+c) != -1) {
-                        flushToText(tb); // flush text buffer
-                        if (c=='/') {
-                            // special case for "//" - check if it is part of URL (scheme://etc)
-                            int[] uriOffs=checkURI(p, start, end);
-                            if (uriOffs!=null) {
-                                int pb=uriOffs[0], pe=uriOffs[1];
-                                if (pb>start && wikiChars[pb-1]=='~') {
-                                    // roll back URL + tilde
-                                    sb.delete(sb.length()-(p-pb+1), sb.length());
-                                    sb.append(escapeHTML(wikiText.substring(pb, pe)));
-                                }
-                                else {
-                                    sb.delete(sb.length()-(p-pb), sb.length()); // roll back URL
-                                    appendLink(wikiText.substring(pb, pe));
-                                }
-                                p=pe;
-                                continue;
-                            }
+                        // special case for "//" - check if it is part of URL (scheme://etc)
+                        int np = checkApplyURI(tb, p, start, end);
+                        if (np != p) {
+                            p = np;
+                            continue;
                         }
+                        flushToText(tb); // flush text buffer
                         sb.append(FORMAT_TAG_OPEN[formatType]);
                         try {
                             p=parseItemThrow(p+2, FORMAT_DELIM[formatType], context);
@@ -741,6 +746,14 @@ public class WikiParser
                             sb.append(FORMAT_TAG_CLOSE[formatType]);
                         }
                         continue;
+                    }
+                    else if (c=='/') {
+                        // special case for "//" - check if it is part of URL (scheme://etc)
+                        int np = checkApplyURI(tb, p, start, end);
+                        if (np != p) {
+                            p = np;
+                            continue;
+                        }
                     }
                     else if (c=='-') { // ' -- ' => &mdash;
                         if (p+2 < end && wikiChars[p+1] == '-' && wikiChars[p+2] == ' ' &&
