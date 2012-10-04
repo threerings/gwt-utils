@@ -53,6 +53,9 @@
       <artifactId>samskivert</artifactId>
       <version>1.7</version>
     </dependency>
+    <!-- Bring in the latest guava-gwt, but that depends on the JDK6 version of guava, so
+         we manually exclude it and bring in guava-jdk5 instead, which seems to have
+         a slightly different version number. -->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava-gwt</artifactId>
