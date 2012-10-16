@@ -1,0 +1,72 @@
+/**
+ * Styles for our GWT components.
+ */
+
+/** FloatPanel styles */
+.fpFloatLeft {
+  float: left;
+}
+
+.fpClear {
+  clear: both;
+}
+
+/** InfoPopup styles */
+.infoPopup, .errorPopup {
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  padding: 5px;
+}
+
+.errorPopup {
+  border: 2px solid #FF0000;
+  color: #FF0000;
+}
+
+/** AbstractPanelCallback styles */
+.errorLabel {
+  font-size: 18px;
+  padding: 25px;
+  color: #FF0000;
+}
+
+/** Widgets styles */
+.actionLabel {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.inline {
+  display: inline;
+}
+
+/** InlineLabel styles */
+.inlineL {
+  display: inline;
+  margin-left: 5px;
+}
+
+.inlineR {
+  display: inline;
+  margin-right: 5px;
+}
+
+.inlineLR {
+  display: inline;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+/** LimitedTextArea styles */
+.gwt-LimitedTextArea .Remaining {
+  font-size: 12px;
+}
+
+/** ClickCallback styles */
+.gwt-ConfirmPopup {
+  border: 1px solid;
+  background: #FFFFFF;
+}
+
+.gwt-ConfirmPopup .Message {
+}

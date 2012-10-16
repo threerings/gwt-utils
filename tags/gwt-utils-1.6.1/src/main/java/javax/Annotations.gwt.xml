@@ -1,0 +1,5 @@
+<!-- $Id$                                              -->
+<!-- Temporary Google Collections compatibility bits.  -->
+<module>
+  <source path="annotation"/>
+</module>
