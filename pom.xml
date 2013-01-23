@@ -10,7 +10,7 @@
   <groupId>com.threerings</groupId>
   <artifactId>gwt-utils</artifactId>
   <packaging>jar</packaging>
-  <version>1.7</version>
+  <version>1.8-SNAPSHOT</version>
 
   <name>GWT Utils</name>
   <description>Utilities for use in developing GWT applications.</description>
@@ -36,11 +36,11 @@
   </developers>
 
   <scm>
-    <connection>scm:svn:http://ooo-gwt-utils.googlecode.com/svn/tags/gwt-utils-1.7</connection>
+    <connection>scm:svn:http://ooo-gwt-utils.googlecode.com/svn/trunk/</connection>
     <developerConnection>
-      scm:svn:https://ooo-gwt-utils.googlecode.com/svn/tags/gwt-utils-1.7
+      scm:svn:https://ooo-gwt-utils.googlecode.com/svn/trunk/
     </developerConnection>
-    <url>http://ooo-gwt-utils.googlecode.com/svn/tags/gwt-utils-1.7</url>
+    <url>http://ooo-gwt-utils.googlecode.com/svn/trunk/</url>
   </scm>
 
   <properties>
