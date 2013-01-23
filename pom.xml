@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.sonatype.oss</groupId>
@@ -10,7 +10,7 @@
   <groupId>com.threerings</groupId>
   <artifactId>gwt-utils</artifactId>
   <packaging>jar</packaging>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.7</version>
 
   <name>GWT Utils</name>
   <description>Utilities for use in developing GWT applications.</description>
@@ -36,11 +36,11 @@
   </developers>
 
   <scm>
-    <connection>scm:svn:http://ooo-gwt-utils.googlecode.com/svn/trunk/</connection>
+    <connection>scm:svn:http://ooo-gwt-utils.googlecode.com/svn/tags/gwt-utils-1.7</connection>
     <developerConnection>
-      scm:svn:https://ooo-gwt-utils.googlecode.com/svn/trunk/
+      scm:svn:https://ooo-gwt-utils.googlecode.com/svn/tags/gwt-utils-1.7
     </developerConnection>
-    <url>http://ooo-gwt-utils.googlecode.com/svn/trunk/</url>
+    <url>http://ooo-gwt-utils.googlecode.com/svn/tags/gwt-utils-1.7</url>
   </scm>
 
   <properties>
