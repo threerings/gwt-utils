@@ -171,13 +171,13 @@ public class Validator
      * false will be returned. If all validators succeed, true will be returned.
      */
     public boolean validate (boolean asError) {
-        for (WidgetValidator validator : _validators) {
+        for (WidgetValidator<?,?> validator : _validators) {
             if (!validator.validate(asError)) return false;
         }
         return true;
     }
 
-    protected <T extends WidgetValidator> T add (T validator) {
+    protected <T extends WidgetValidator<?,?>> T add (T validator) {
         _validators.add(validator);
         return validator;
     }
@@ -188,7 +188,7 @@ public class Validator
         else _popup = Popups.info(feedback, Popups.Position.RIGHT, target);
     }
 
-    protected abstract class WidgetValidator<S extends WidgetValidator, T extends Widget>
+    protected abstract class WidgetValidator<S extends WidgetValidator<?,?>, T extends Widget>
         implements BlurHandler {
         public boolean validate (boolean asError) {
             for (Rule rule : _rules) {
@@ -223,6 +223,6 @@ public class Validator
         protected List<Rule> _rules = new ArrayList<Rule>();
     }
 
-    protected List<WidgetValidator> _validators = new ArrayList<WidgetValidator>();
+    protected List<WidgetValidator<?,?>> _validators = new ArrayList<WidgetValidator<?,?>>();
     protected InfoPopup _popup;
 }
