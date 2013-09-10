@@ -111,6 +111,15 @@ public abstract class ClickCallback<T>
     }
 
     /**
+     * Programatically clicks the button. This is a workaround for gwt's {@link Button#click()}
+     * not doing anything.
+     */
+    public void click ()
+    {
+        takeAction(false);
+    }
+
+    /**
      * This method is called when the trigger button is clicked. Pass <code>this</code> as the
      * {@link AsyncCallback} to a service method. Return true from this method if a service request
      * was initiated and the button that triggered it should be disabled. If an
