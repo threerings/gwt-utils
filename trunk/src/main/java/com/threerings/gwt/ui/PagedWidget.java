@@ -141,6 +141,14 @@ public abstract class PagedWidget<T> extends FlowPanel
     }
 
     /**
+     * Returns the controls in use by this panel or null if we have no model.
+     */
+    public SmartTable getControls ()
+    {
+        return _controls;
+    }
+
+    /**
      * Displays the specified page. Does nothing if we are already displaying
      * that page unless forceRefresh is true.
      */
