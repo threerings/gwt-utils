@@ -148,6 +148,11 @@ public abstract class PagedWidget<T> extends FlowPanel
         return _controls;
     }
 
+    public void reloadPage ()
+    {
+        displayPage(getPage(), true);
+    }
+
     /**
      * Displays the specified page. Does nothing if we are already displaying
      * that page unless forceRefresh is true.
