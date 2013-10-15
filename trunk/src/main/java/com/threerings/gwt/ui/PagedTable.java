@@ -54,7 +54,7 @@ public abstract class PagedTable<T> extends PagedWidget<T>
             table.getRowFormatter().setStyleName(0, "header");
         }
 
-        for (int row=0; row<list.size() && row<count; ++row) {
+        for (int row=start; row<list.size() && row<start+count; ++row) {
             if (addRow(table, createRow(list.get(row)))) {
                 table.getRowFormatter().setStyleName(table.getRowCount()-1, "row" + (row%2));
                 didAddRow(table, table.getRowCount()-1, list.get(row));
