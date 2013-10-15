@@ -1,0 +1,105 @@
+<?xml version="1.0" standalone="yes"?>
+<project name="gwt-utils" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+  <!-- configuration properties -->
+  <property name="src.dir" location="src/main/java"/>
+  <property name="test.dir" location="src/test"/>
+  <property name="deploy.dir" location="dist"/>
+  <property name="classes.dir" location="${deploy.dir}/classes"/>
+
+  <property name="ooo-build.vers" value="2.8"/>
+  <ant antfile="lib/bootstrap.xml"/>
+  <import file="${user.home}/.m2/ooo-build/${ooo-build.vers}/ooo-build.xml"/>
+
+  <path id="built.path">
+    <path refid="pom.xml.path"/>
+    <pathelement location="${classes.dir}"/>
+  </path>
+
+  <target name="-prepare" depends="-init-ooo">
+    <mavendep pom="pom.xml" scope="test"/>
+    <mkdir dir="${classes.dir}"/>
+  </target>
+
+  <target name="clean" description="Cleans out compiled classes and docs.">
+    <delete dir="${classes.dir}"/>
+    <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.jar"/></delete>
+  </target>
+
+  <target name="distclean" description="Cleans out all build resultss.">
+    <delete dir="${deploy.dir}"/>
+    <delete><fileset dir="${src.dir}" includes="**/*Messages.java"/></delete>
+  </target>
+
+  <target name="gmsgs" depends="-prepare" description="Regenerates our i18n message classes.">
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="pom.xml.path">
+      <include name="**/I18nSyncTask.java"/>
+    </ooojavac>
+    <taskdef name="i18nsync" classname="com.threerings.gwt.tools.I18nSyncTask"
+      classpathref="built.path"/>
+    <i18nsync srcdir="${src.dir}">
+      <fileset dir="${src.dir}" includes="**/*Messages.properties"/>
+    </i18nsync>
+  </target>
+
+  <target name="compile" depends="-prepare,gmsgs" description="Compiles main sources.">
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="pom.xml.path"/>
+
+    <mkdir dir="${deploy.dir}/test-classes"/>
+    <ooojavac srcdir="${test.dir}/java" destdir="${deploy.dir}/test-classes"
+      classpathref="built.path"/>
+  </target>
+
+  <property name="test" value=""/>
+  <target name="tests" depends="compile"
+          description="Runs unit tests. Use -Dtest=Foo to run only FooTest.">
+    <taskdef name="unit" classpathref="pom.xml.path"
+      classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
+    <mkdir dir="${deploy.dir}/test-reports"/>
+    <unit printsummary="off" haltonfailure="yes" fork="${junit.fork}">
+      <classpath>
+        <path refid="built.path"/>
+        <pathelement location="${deploy.dir}/test-classes"/>
+      </classpath>
+      <sysproperty key="test_dir" value="${deploy.dir}/test-classes"/>
+      <formatter type="brief" usefile="false"/>
+      <formatter type="xml"/>
+      <batchtest todir="${deploy.dir}/test-reports">
+        <fileset dir="${test.dir}/java" includes="**/*${test}*Test.java"/>
+      </batchtest>
+    </unit>
+  </target>
+
+  <target name="javadoc" depends="-prepare" description="Builds javadocs.">
+    <mkdir dir="${deploy.dir}/docs"/>
+    <javadoc windowtitle="${ant.project.name} API" doctitle="${ant.project.name} API"
+             destdir="${deploy.dir}/docs" additionalparam="-breakiterator">
+      <packageset dir="${src.dir}"/>
+      <classpath refid="pom.xml.path"/>
+      <link href="http://download.oracle.com/javase/6/docs/api/"/>
+      <link href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.1/"/>
+      <link href="http://samskivert.googlecode.com/svn/apidocs/"/>
+      <link href="http://evgeny-goldin.org/ant/api/"/>
+    </javadoc>
+  </target>
+
+  <target name="dist" depends="compile" description="Builds jar files.">
+    <jar destfile="${deploy.dir}/${ant.project.name}.jar">
+      <fileset dir="${deploy.dir}/classes" includes="**"/>
+      <!-- include the source for code to be compiled to JavaScript -->
+      <fileset dir="${src.dir}">
+        <include name="com/threerings/gwt/**"/>
+        <exclude name="com/threerings/gwt/rebind/**"/>
+        <exclude name="com/threerings/gwt/tools/**"/>
+        <!-- include our sneaky duplicates of Google Collections stuff -->
+        <include name="javax/**"/>
+        <include name="com/google/**"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="maven-deploy" depends="dist,tests,javadoc"
+      description="Deploys our build artifacts to a Maven repository.">
+    <mavendeploy pom="pom.xml" file="${deploy.dir}/${ant.project.name}.jar"
+                 srcdir="${src.dir}" docdir="${deploy.dir}/docs"/>
+  </target>
+</project>
