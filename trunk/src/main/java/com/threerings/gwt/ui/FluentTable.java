@@ -138,7 +138,7 @@ public class FluentTable extends FlexTable
 
         /** Returns the cell below this cell, (row+1, column). */
         public Cell down () {
-            return new Cell(_table, row, column+1);
+            return new Cell(_table, row+1, column);
         }
 
         /** Returns the cell below this cell at column 0, (row+1, 0). */
