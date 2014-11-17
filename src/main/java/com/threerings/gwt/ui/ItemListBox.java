@@ -117,7 +117,7 @@ public class ItemListBox<T> extends ListBox
 
     /**
      * Adds the supplied item to this list box at the end of the list, using the supplied label
-     * if not null. If no label is given, {@link #toLabel()} is used to calculate it.
+     * if not null. If no label is given, {@link #toLabel(Object)} is used to calculate it.
      */
     public void addItem (T item, String label)
     {
@@ -135,7 +135,7 @@ public class ItemListBox<T> extends ListBox
 
     /**
      * Inserts the supplied item into this list box at the specified position, using the specified
-     * label if given. If no label is given, {@link #toLabel()} is used to calculate it.
+     * label if given. If no label is given, {@link #toLabel(Object)} is used to calculate it.
      */
     public void insertItem (T item, int index, String label)
     {
