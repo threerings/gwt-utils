@@ -27,7 +27,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * Like PagedResult, but for streaming data where we don't know or care about the total page count.
- * @see ExpanderWidget
  */
 public class ExpanderResult<T>
     implements IsSerializable

@@ -111,8 +111,8 @@ public abstract class ClickCallback<T>
     }
 
     /**
-     * Programatically clicks the button. This is a workaround for gwt's {@link Button#click()}
-     * not doing anything.
+     * Programatically clicks the button. This is a workaround for gwt's {@link
+     * com.google.gwt.user.client.ui.Button#click()} not doing anything.
      */
     public void click ()
     {
