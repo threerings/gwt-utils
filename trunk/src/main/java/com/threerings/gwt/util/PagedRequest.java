@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * including a {@code needCount} value.
  * @see PagedResult
  * @see PagedServiceDataModel
- * @see ServiceBackedDataModel#callFetchService()
+ * @see ServiceBackedDataModel#callFetchService(PagedRequest, com.google.gwt.user.client.rpc.AsyncCallback)
  */
 public class PagedRequest implements IsSerializable
 {
