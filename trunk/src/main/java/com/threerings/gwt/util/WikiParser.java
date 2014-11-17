@@ -436,7 +436,6 @@ public class WikiParser
 
     /**
      * @param start points to first char after pipe '|'
-     * @return
      */
     private int parseTableRow (int start) {
         if (start>=wikiLength) return wikiLength;

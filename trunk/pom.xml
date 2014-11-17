@@ -161,7 +161,7 @@
         <version>2.7</version>
         <configuration>
           <quiet>true</quiet>
-          <show>public</show>
+          <show>protected</show>
           <excludePackageNames>javax.annotation:com.google.*</excludePackageNames>
           <links>
             <link>http://google-web-toolkit.googlecode.com/svn/javadoc/2.1/</link>
