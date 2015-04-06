@@ -67,16 +67,15 @@ public abstract class PagedTable<T> extends PagedWidget<T>
     /** Convenience function to append a list of widgets to a table as a new row. */
     protected static boolean addRow (SmartTable table, List<Widget> widgets)
     {
-        int row = table.getRowCount();
-        if (widgets != null) {
-            for (int col=0; col<widgets.size(); ++col) {
-                table.setWidget(row, col, widgets.get(col));
-                table.getFlexCellFormatter().setStyleName(row, col, "col"+col);
-            }
-            return true;
-        } else {
+        if (widgets == null) {
             return false;
         }
+        int row = table.getRowCount();
+        for (int col=0; col<widgets.size(); ++col) {
+            table.setWidget(row, col, widgets.get(col));
+            table.getFlexCellFormatter().setStyleName(row, col, "col"+col);
+        }
+        return true;
     }
 
     protected List<Widget> createHeader ()
