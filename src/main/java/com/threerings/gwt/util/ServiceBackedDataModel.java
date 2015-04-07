@@ -103,6 +103,7 @@ public abstract class ServiceBackedDataModel<T, R> implements DataModel<T>
                     ServiceBackedDataModel.this.onSuccess(result, callback);
                 }
                 public void onFailure (Throwable cause) {
+                    callback.onFailure(cause);
                     ServiceBackedDataModel.this.reportFailure(cause);
                 }
             });
