@@ -190,7 +190,7 @@ public abstract class PagedWidget<T> extends FlowPanel
                 displayResults(start, count, result);
             }
             public void onFailure (Throwable caught) {
-                // TODO
+                reportFailure(caught);
             }
         });
     }
@@ -358,6 +358,19 @@ public abstract class PagedWidget<T> extends FlowPanel
     protected Widget getNowLoadingWidget ()
     {
         return null;
+    }
+
+    /**
+     * Report a service failure.
+     */
+    protected void reportFailure (Throwable caught)
+    {
+        java.util.logging.Logger.getLogger("PagedWidget").warning("Failure to page: " + caught);
+//        if (_model instanceof ServiceBackedDataModel<?,?>) {
+//            ((ServiceBackedDataModel<?,?>)_model).reportFailure(caught);
+//        } else {
+//            // TODO?!
+//        }
     }
 
     protected abstract String getEmptyMessage ();
