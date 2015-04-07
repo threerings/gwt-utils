@@ -366,11 +366,6 @@ public abstract class PagedWidget<T> extends FlowPanel
     protected void reportFailure (Throwable caught)
     {
         java.util.logging.Logger.getLogger("PagedWidget").warning("Failure to page: " + caught);
-//        if (_model instanceof ServiceBackedDataModel<?,?>) {
-//            ((ServiceBackedDataModel<?,?>)_model).reportFailure(caught);
-//        } else {
-//            // TODO?!
-//        }
     }
 
     protected abstract String getEmptyMessage ();
