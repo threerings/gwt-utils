@@ -103,7 +103,9 @@ public class I18nSync
                 if (idx > 0) {
                     buf.append(", ");
                 }
-                // TODO: make {N:integer} into an int argument, {N:percent} into a float, etc.
+                // TODO: make {N,number,integer} into an int argument, {N,number,percent}
+                // into a float, etc.
+                // http://docs.oracle.com/javase/1.5.0/docs/api/java/text/MessageFormat.html
                 buf.append("String arg").append(idx);
                 idx++;
             }
