@@ -56,6 +56,7 @@ public class ConstantsSync extends I18nTool
                 buf.append("\n");
             }
             String key = String.valueOf(names.nextElement());
+            buf.append("    // \"" + props.get(key) + "\"\n");
             buf.append("    String ").append(keyToMethod(key)).append(" ();\n");
         }
         buf.append("}\n");
