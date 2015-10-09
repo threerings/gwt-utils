@@ -172,6 +172,7 @@
         <configuration>
           <quiet>true</quiet>
           <show>protected</show>
+          <additionalparam>-Xdoclint:all -Xdoclint:-missing</additionalparam>
           <excludePackageNames>javax.annotation:com.google.*</excludePackageNames>
           <links>
             <link>http://google-web-toolkit.googlecode.com/svn/javadoc/2.1/</link>

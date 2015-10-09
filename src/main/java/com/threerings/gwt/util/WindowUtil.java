@@ -34,8 +34,8 @@ public class WindowUtil
 {
     /**
      * Returns the query parameters tacked onto our URL as a mapping from key to value. Parameters
-     * that have no value will be mapped to "true". For example: ?foo=bar&biff=baz&boink will be
-     * returned in a map with { foo -> bar, biff -> baz, boink -> true }.
+     * that have no value will be mapped to "true". For example: {@code ?foo=bar&biff=baz&boink}
+     * will be returned in a map with {@code { foo -> bar, biff -> baz, boink -> true }}.
      */
     public static Map<String, String> getQueryParams ()
     {

@@ -23,8 +23,8 @@ package com.threerings.gwt.util;
 
 import java.util.Iterator;
 
-/** 
- * Useful string utilities, brought over to GWT land from {@link com.samskivert.util.StringUtil}. 
+/**
+ * Useful string utilities, brought over to GWT land from {@link com.samskivert.util.StringUtil}.
  */
 public class StringUtil
 {
@@ -33,8 +33,8 @@ public class StringUtil
      * bytes.  Returns the empty string for a <code>null</code> or empty byte array.
      *
      * @param bytes the bytes for which we want a string representation.
-     * @param count the number of bytes to stop at (which will be coerced into being <= the length
-     * of the array).
+     * @param count the number of bytes to stop at (which will be coerced into being {@code <=}
+     * length of the array).
      */
     public static String hexlate (byte[] bytes, int count)
     {

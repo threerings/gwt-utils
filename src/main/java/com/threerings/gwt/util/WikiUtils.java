@@ -66,9 +66,6 @@ public class WikiUtils
      * Filters text so there are no '\r' chars in it ("\r\n" -&gt; "\n"; then "\r" -&gt; "\n").
      * Most importantly makes all blank lines (lines with only spaces) exactly like this: "\n\n".
      * WikiParser relies on that.
-     *
-     * @param text
-     * @return filtered text
      */
     public static String preprocessWikiText(String text) {
         if (text==null) return "";

@@ -35,14 +35,14 @@ import com.google.gwt.user.client.ui.Widget;
  * Simplifies the process of validating a collection of form fields and providing validation
  * feedback.
  *
- * <p> Usage is like so:
+ * Usage is like so:
  * <pre>{@code
  * _validator.add(_username).requireNonEmpty("Please enter your username.");
  * _validator.add(_password).requireLengthOf(6, "Enter a password of at least 6 characters.");
  * _validator.add(_agreeTOS).requireChecked("Agreement with the Terms of Service is required.");
  * // ..before submitting form...
  * if (!_validator.validate(true)) // abort!
- * }</pre></p>
+ * }</pre>
  */
 public class Validator
 {

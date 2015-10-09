@@ -237,7 +237,7 @@ public class WidgetUtil
     }
 
     /**
-     * Creates a <param> tag with the supplied name and value.
+     * Creates a {@code <param>} tag with the supplied name and value.
      */
     public static Element createParam (String name, String value)
     {
