@@ -67,7 +67,7 @@ public class EnumListBox<E extends Enum<E>> extends ListBox
     /**
      * Returns the currently selected value, or null if no value is selected.
      */
-    public E getSelectedValue ()
+    public E getSelectedEnum ()
     {
         int selidx = getSelectedIndex();
         return (selidx < 0) ? null : Enum.valueOf(_eclass, getValue(selidx));
