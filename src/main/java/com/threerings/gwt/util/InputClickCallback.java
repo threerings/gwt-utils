@@ -61,7 +61,7 @@ public abstract class InputClickCallback<
      * Sets the text to be shown above the input explaining what the user should do. Note that this
      * just calls {@link #setConfirmText(String)}, but is included here for clarity.
      */
-    public InputClickCallback<T, W> setPromptText(String prompt)
+    public InputClickCallback<T, W> setPromptText (String prompt)
     {
         setConfirmText(prompt);
         return this;
@@ -71,7 +71,7 @@ public abstract class InputClickCallback<
      * Sets the html to be shown above the input explaining what the user should do. Note that this
      * just calls {@link #setConfirmHTML(String)}, but is included here for clarity.
      */
-    public InputClickCallback<T, W> setPromptHTML(String promptHTML)
+    public InputClickCallback<T, W> setPromptHTML (String promptHTML)
     {
         setConfirmHTML(promptHTML);
         return this;
@@ -81,7 +81,7 @@ public abstract class InputClickCallback<
      * Sets whether or not pressing the enter key while typing will cause the confirmation to
      * occur. By default, the enter key is bound.
      */
-    public InputClickCallback<T, W> setBindEnterKey(boolean value)
+    public InputClickCallback<T, W> setBindEnterKey (boolean value)
     {
         _bindEnterKey = value;
         return this;
