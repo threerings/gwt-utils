@@ -182,6 +182,13 @@ public class ItemListBox<T> extends ListBox
         setSelectedIndex(_items.indexOf(value));
     }
 
+    @Override
+    public void clear ()
+    {
+        super.clear();
+        _items.clear();
+    }
+
     // @Override // from ListBox
     // public void addItem (String item)
     // {
